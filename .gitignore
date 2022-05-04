@@ -1,0 +1,16 @@
+.DS_Store
+node_modules
+/build
+/.svelte-kit
+/package
+.vercel_build_output/
+.env
+.env.*
+!.env.example
+!.github
+
+# inter fonts
+static/inter*.woff
+static/inter*.woff2
+src/assets/inter*.woff
+src/assets/inter*.woff2
