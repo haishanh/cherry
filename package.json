@@ -23,6 +23,7 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "1.0.0-next.40",
     "@sveltejs/kit": "1.0.0-next.324",
+    "@types/better-sqlite3": "7.5.0",
     "@types/dotenv": "8.2.0",
     "@typescript-eslint/eslint-plugin": "5.22.0",
     "@typescript-eslint/parser": "5.22.0",
@@ -31,7 +32,6 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-svelte3": "3.4.1",
     "global-agent": "3.0.0",
-    "ley": "0.7.1",
     "prettier": "2.6.2",
     "prettier-plugin-svelte": "2.7.0",
     "sass": "1.51.0",
@@ -44,6 +44,8 @@
   "type": "module",
   "dependencies": {
     "@sveltejs/adapter-vercel": "1.0.0-next.50",
+    "better-sqlite3": "7.5.1",
+    "html-metadata-parser": "2.0.4",
     "node-fetch": "3.2.4"
   }
 }

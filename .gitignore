@@ -9,6 +9,9 @@ node_modules
 !.env.example
 !.github
 
+*.db
+*.sqlite
+
 # inter fonts
 static/inter*.woff
 static/inter*.woff2
