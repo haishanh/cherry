@@ -5,6 +5,7 @@ specifiers:
   '@sveltejs/adapter-vercel': 1.0.0-next.50
   '@sveltejs/kit': 1.0.0-next.324
   '@types/better-sqlite3': 7.5.0
+  '@types/debug': 4.1.7
   '@types/dotenv': 8.2.0
   '@types/jsonwebtoken': 8.5.8
   '@typescript-eslint/eslint-plugin': 5.22.0
@@ -38,6 +39,7 @@ devDependencies:
   '@sveltejs/adapter-auto': 1.0.0-next.40
   '@sveltejs/kit': 1.0.0-next.324_sass@1.51.0+svelte@3.48.0
   '@types/better-sqlite3': 7.5.0
+  '@types/debug': 4.1.7
   '@types/dotenv': 8.2.0
   '@types/jsonwebtoken': 8.5.8
   '@typescript-eslint/eslint-plugin': 5.22.0_lnjlwhtxjffjmj5o7dnwvwyqxq
@@ -199,6 +201,12 @@ packages:
       '@types/node': 17.0.29
     dev: true
 
+  /@types/debug/4.1.7:
+    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
+    dependencies:
+      '@types/ms': 0.7.31
+    dev: true
+
   /@types/dotenv/8.2.0:
     resolution: {integrity: sha512-ylSC9GhfRH7m1EUXBXofhgx4lUWmFeQDINW5oLuS+gxWdfUeW4zJdeVTYVkexEW+e2VUvlZR2kGnGGipAWR7kw==}
     deprecated: This is a stub types definition. dotenv provides its own type definitions, so you do not need this installed.
@@ -214,6 +222,10 @@ packages:
     resolution: {integrity: sha512-zm6xBQpFDIDM6o9r6HSgDeIcLy82TKWctCXEPbJJcXb5AKmi5BNNdLXneixK4lplX3PqIVcwLBCGE/kAGnlD4A==}
     dependencies:
       '@types/node': 17.0.29
+    dev: true
+
+  /@types/ms/0.7.31:
+    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
   /@types/node/17.0.29:

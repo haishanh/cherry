@@ -4,7 +4,7 @@ import { DATABASE_PATH } from '$lib/env';
 import { HttpStatus, ApiError } from './api.error';
 
 import { logger } from './logger';
-import type { BookmarkCreateDto, BookmarkUpdateDto, BookmarkFromDb } from '$lib/type';
+import type { BookmarkCreateDto, BookmarkUpdateDto, BookmarkFromDb, UserCreateDto } from '$lib/type';
 
 // import  pino  from 'pino';
 // const logger = pino();
@@ -48,8 +48,10 @@ v01.up = (db: Database.Database) => {
     `
     create table if not exists user(
       id integer,
-      username text,
+      username text unique,
       password text,
+      createdAt integer,
+      updatedAt integer,
       isAdmin integer,
       isBlocked integer,
       PRIMARY KEY(id))
@@ -126,6 +128,12 @@ export const bookmark = {
   get: getBookmark,
   all: getAll,
   search: searchBookmark,
+};
+
+export const user = {
+  create: createUser,
+  // get user by username
+  get: getUser,
 };
 
 // TODO userId
@@ -254,6 +262,55 @@ function updateBookmark(opts: BookmarkUpdateDto) {
     if (ret.changes === 0) {
       error = new ApiError(HttpStatus.NOT_FOUND);
     }
+  } catch (e) {
+    error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+    logger.error({ error });
+  }
+  return { data, error };
+}
+
+function createUser(opts: UserCreateDto) {
+  const db = lite();
+  const stmt = db.prepare(
+    `
+    insert into user (username, isAdmin, createdAt, updatedAt)
+    values (@username, @isAdmin, strftime('%s','now'), strftime('%s','now'))
+    `
+  );
+  let data: { id: number };
+  let error: ApiError;
+  const input = { username: opts.username ?? '', isAdmin: opts.isAdmin ?? '' };
+  try {
+    const ret = stmt.run(input);
+    data = { id: ret.lastInsertRowid as number };
+  } catch (e) {
+    if (e instanceof Database.SqliteError && e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      error = new ApiError(HttpStatus.CONFLICT);
+    } else {
+      error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+      logger.error({ error: e });
+    }
+  }
+  return { data, error };
+}
+
+function getUser(opts: { username: string }) {
+  const db = lite();
+
+  let data: { id: number; username: string; isAdmin: number; };
+  let error: ApiError;
+  const stmt = db.prepare(
+    `
+    select id
+         , username
+         , isAdmin
+      from user
+     where username = @username
+    `
+  );
+  try {
+    const ret = stmt.get({ username: opts.username });
+    data = ret;
   } catch (e) {
     error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
     logger.error({ error });

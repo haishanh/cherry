@@ -12,7 +12,7 @@ export const get: RequestHandler = async ({ params }) => {
   return {
     status: 307,
     headers: {
-      'set-cookie': `oauthstate=${state}; Path=/; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`,
+      'set-cookie': `oauthstate=${state}; Path=/; SameSite=Lax; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`,
       location: authUrl,
     },
   };

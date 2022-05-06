@@ -17,3 +17,9 @@ export type BookmarkUpdateDto = {
   title?: string;
   desc?: string;
 }
+
+export type UserCreateDto = {
+  username: string;
+  // password?: string;
+  isAdmin?: number;
+}

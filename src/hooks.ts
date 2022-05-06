@@ -55,7 +55,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
   // we lost our redirect set-cookie header
   if (response.status === 307) {
     const ONE_DAY_IN_SECOND = 24 * 3600;
-    const cookie = `redirect=${request.url}; Path=/; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`;
+    const cookie = `redirect=${request.url}; Path=/; SameSite=Lax; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`;
     response.headers.set('set-cookie', cookie);
   }
 
