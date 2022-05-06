@@ -25,7 +25,6 @@ export const handle: Handle = async function handle({ event, resolve }) {
   const cookieHeader = request.headers.get('cookie');
   // logger.info('cookieHeader', cookieHeader);
   const cookies = cookieUtil.parseCookie(cookieHeader);
-  // logger.info('cookies', cookies);
 
   const token = cookies.token;
 
@@ -56,7 +55,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
   if (response.status === 307) {
     const ONE_DAY_IN_SECOND = 24 * 3600;
     const cookie = `redirect=${request.url}; Path=/; SameSite=Lax; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`;
-    response.headers.set('set-cookie', cookie);
+    response.headers.append('set-cookie', cookie);
   }
 
   return response;

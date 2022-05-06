@@ -136,8 +136,7 @@ export const user = {
   get: getUser,
 };
 
-// TODO userId
-function searchBookmark(opts: { text: string }) {
+function searchBookmark(userId: number, opts: { text: string }) {
   const db = lite();
   let data: BookmarkFromDb[];
   let error: ApiError;
@@ -145,14 +144,14 @@ function searchBookmark(opts: { text: string }) {
     `
     select rowid as id, title, desc, url
       from bookmark_fts
-     where userId = 1
+     where userId = @userId
        and bookmark_fts match @text
      order by rank;
     `
   );
 
   try {
-    data = stmt.all({ text: opts.text });
+    data = stmt.all({ userId, text: opts.text });
   } catch (e) {
     error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
     logger.error({ error });

@@ -1,18 +1,21 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import * as dbUtil from '$lib/server/sqlite.util';
 import assert from 'assert';
+import {ensureLoggedIn} from '$lib/server/guard/user.guard'
 
 export const get: RequestHandler = async (event) => {
-  const userId = event.locals?.user?.userId;
-  if (!userId) return { status: 401 };
+  const eli = ensureLoggedIn(event);
+  const userId = eli.userId;
+  if (!userId) return eli.handle();
 
   const ret = dbUtil.bookmark.all({ userId });
   return { status: 200, body: ret.data };
 };
 
 export const post: RequestHandler = async (event) => {
-  const userId = event.locals?.user?.userId;
-  if (!userId) return { status: 401 };
+  const eli = ensureLoggedIn(event);
+  const userId = eli.userId;
+  if (!userId) return eli.handle();
 
   const body = await event.request.json();
 
