@@ -1,4 +1,18 @@
 <script context="module" lang="ts">
+  import type { Load } from '@sveltejs/kit';
+
+  export const load: Load = async ({ url, session }) => {
+    if (url.pathname !== '/login') {
+      if (!session || !session.user) {
+        return {
+          status: 307,
+          redirect: '/login',
+        };
+      }
+    }
+
+    return {};
+  };
 </script>
 
 <script lang="ts">
