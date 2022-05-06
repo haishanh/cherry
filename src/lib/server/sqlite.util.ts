@@ -49,9 +49,11 @@ v01.up = (db: Database.Database) => {
     create table if not exists user(
       id integer,
       username text,
-      passwordHash text,
+      password text,
+      isAdmin integer,
+      isBlocked integer,
       PRIMARY KEY(id))
-`
+    `
   ).run();
 
   db.prepare(
@@ -132,13 +134,6 @@ function searchBookmark(opts: { text: string }) {
   let data: BookmarkFromDb[];
   let error: ApiError;
   const stmt = db.prepare(
-    // `
-    // select rowid, desc
-    //   from project_fts
-    //  where userId = 1
-    //    and desc match @text
-    //  order by rank;
-    // `
     `
     select rowid as id, title, desc, url
       from bookmark_fts
