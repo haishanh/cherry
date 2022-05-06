@@ -1,13 +1,13 @@
 ## Development
 
 ```
-yarn dev
-yarn dev --open
-yarn build
-yarn preview
+pnpm dev
+pnpm dev --open
+pnpm build
+pnpm preview
 
 # upgrade SvelteKit
-yarn add -E @sveltejs/{kit,adapter-auto,adapter-vercel}@next
+pnpm add -E @sveltejs/{kit,adapter-auto,adapter-vercel}@next
 ```
 
 ## References

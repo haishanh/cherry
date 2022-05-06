@@ -38,6 +38,10 @@
   export let bookmarks: BookmarkFromDb[] = [];
 </script>
 
+<svelte:head>
+  <title>Cherry</title>
+</svelte:head>
+
 <div class="main">
   <SearchForm />
   <div class="list">
