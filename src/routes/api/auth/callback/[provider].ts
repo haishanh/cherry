@@ -31,11 +31,12 @@ export const get: RequestHandler = async (event) => {
   const username = await oidcUtil.extractEmail(json.id_token);
 
   const retGetUser = dbUtil.user.get({ username });
-  if (!retGetUser.data?.username) {
+  const userId = retGetUser.data?.id;
+  if (!userId) {
     return { status: 403 };
   }
 
-  const token = await jwtUtil.sign({ username }, COOKIE_SECRET);
+  const token = await jwtUtil.sign({ userId }, COOKIE_SECRET);
   const ONE_MONTH_IN_SECOND = 30 * 24 * 3600;
   const location = cookies.redirect || '/';
   return {

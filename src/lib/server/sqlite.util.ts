@@ -160,7 +160,9 @@ function searchBookmark(opts: { text: string }) {
   return { data, error };
 }
 
-function getAll() {
+function getAll(opts: { userId: number }) {
+  assert(opts.userId);
+
   const db = lite();
 
   let data: BookmarkFromDb[];
@@ -172,11 +174,12 @@ function getAll() {
          , desc
          , url
       from bookmark
+     where userId = @userId
   order by updatedAt desc
     `
   );
   try {
-    data = stmt.all();
+    data = stmt.all({ userId: opts.userId });
   } catch (e) {
     error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
     logger.error({ error });
@@ -209,7 +212,7 @@ function getBookmark(opts: { id: string | number }) {
   return { data, error };
 }
 
-function createBookmark(opts: BookmarkCreateDto) {
+function createBookmark(userId: number, opts: BookmarkCreateDto) {
   const db = lite();
   const stmt = db.prepare(
     `
@@ -220,7 +223,7 @@ function createBookmark(opts: BookmarkCreateDto) {
   let data: { id: number };
   let error: ApiError;
 
-  const input = { title: opts.title ?? '', desc: opts.desc ?? '', url: opts.url ?? '', userId: 1 };
+  const input = { title: opts.title ?? '', desc: opts.desc ?? '', url: opts.url ?? '', userId };
   try {
     const ret = stmt.run(input);
     data = { id: ret.lastInsertRowid as number };
@@ -297,7 +300,7 @@ function createUser(opts: UserCreateDto) {
 function getUser(opts: { username: string }) {
   const db = lite();
 
-  let data: { id: number; username: string; isAdmin: number; };
+  let data: { id: number; username: string; isAdmin: number };
   let error: ApiError;
   const stmt = db.prepare(
     `
