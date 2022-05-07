@@ -14,7 +14,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
   const url = new URL(request.url);
 
-  console.log('request.url', request.url);
+  console.log('request host', request.headers.get('host'));
 
   if (isPublic(url)) {
     return await resolve(event);
@@ -55,7 +55,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
   // we lost our redirect set-cookie header
   if (response.status === 307) {
     const ONE_DAY_IN_SECOND = 24 * 3600;
-    const cookie = `redirect=${request.url}; Path=/; SameSite=Lax; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`;
+    const cookie = `redirect=${url.pathname}; Path=/; SameSite=Lax; Max-Age=${ONE_DAY_IN_SECOND}; HttpOnly`;
     response.headers.append('set-cookie', cookie);
   }
 
