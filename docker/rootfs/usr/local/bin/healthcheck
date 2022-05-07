@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+
+curl --fail http://127.0.0.1:3000/api/ping || exit 1

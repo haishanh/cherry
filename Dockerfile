@@ -1,9 +1,3 @@
-# FROM --platform=$TARGETPLATFORM node:16-alpine AS deps
-# RUN apk add --no-cache libc6-compat
-# WORKDIR /app
-# COPY package.json yarn.lock ./
-# RUN yarn
-
 # FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.15-2.2.0.3 AS init
 FROM crazymax/alpine-s6:3.15-2.2.0.3 AS init
 RUN apk --update --no-cache add \
@@ -15,17 +9,21 @@ RUN apk --update --no-cache add \
   sqlite \
   nodejs \
   npm
-RUN npm i -g yarn
+RUN npm i -g pnpm
 
 FROM init as deps
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn
+RUN mkdir -p src/assets
+COPY ./scripts ./scripts
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm i
 
 FROM init as modules
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --production
+RUN mkdir -p src/assets
+COPY ./scripts ./scripts
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm i --prod
 
 # FROM --platform=$TARGETPLATFORM node:16-alpine AS builder
 FROM init AS builder
@@ -34,24 +32,19 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json tsconfig.json svelte.config.js ./
 COPY ./static ./static
 COPY ./src ./src
-RUN yarn build
+COPY --from=modules /app/src ./src
+
+RUN pnpm build
 
 FROM crazymax/yasu:latest AS yasu
 FROM init AS base
 
-ENV PUID="1000" PGID="1000" DOCKER_PGID="1001"
+ENV PUID="1000" PGID="1000"
 
 COPY --from=yasu / /
 COPY docker/rootfs /
 RUN addgroup --system --gid ${PGID} nodejs
 RUN adduser --system --uid ${PUID} -G nodejs -h /home/nodejs -s /bin/bash nodejs
-# see also fix-perms script
-RUN addgroup --gid ${DOCKER_PGID} docker
-RUN addgroup nodejs docker
-
-# install docker
-RUN curl -fsSL "https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz" \
-  | tar -xzvf - docker/docker -C . --strip-components 1 && mv docker /usr/bin/docker
 
 WORKDIR /app
 ENV NODE_ENV production
