@@ -34,6 +34,7 @@ dependencies:
   '@sveltejs/adapter-vercel': 1.0.0-next.50
   better-sqlite3: 7.5.1
   debug: 4.3.4
+  dotenv: 16.0.0
   html-metadata-parser: 2.0.4_debug@4.3.4
   jsonwebtoken: 8.5.1
   node-fetch: 3.2.4
@@ -48,7 +49,6 @@ devDependencies:
   '@types/jsonwebtoken': 8.5.8
   '@typescript-eslint/eslint-plugin': 5.22.0_tal4xlmvnofklupd3hwjtzfb4q
   '@typescript-eslint/parser': 5.22.0_hcfsmds2fshutdssjqluwm76uu
-  dotenv: 16.0.0
   eslint: 8.15.0
   eslint-config-prettier: 8.5.0_eslint@8.15.0
   eslint-plugin-svelte3: 4.0.0_usjo443ynfgvutifl4ot2fkxzy
@@ -712,7 +712,6 @@ packages:
   /dotenv/16.0.0:
     resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
     engines: {node: '>=12'}
-    dev: true
 
   /ecdsa-sig-formatter/1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
