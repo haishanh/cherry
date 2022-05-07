@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import type { Load } from '@sveltejs/kit';
-  
+
   import { isProtected } from '$lib/utils/access.util';
 
   export const load: Load = async ({ url, session }) => {
