@@ -56,10 +56,10 @@ async function createRecords() {
     'https://dribbble.com/shots/17426720-Benkei-Financial-dashboard',
   ];
 
-  let ids: number[] = [];
+  const ids: number[] = [];
   for (const url of urls) {
     const result = await fetchMeta(url);
-    const x = dbUtil.bookmark.create(result);
+    const x = dbUtil.bookmark.create(1, result);
     ids.push(x.data.id);
   }
   return ids;
