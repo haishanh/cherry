@@ -2,7 +2,7 @@ import type { GetSession, Handle } from '@sveltejs/kit';
 
 import { COOKIE_SECRET } from '$lib/env';
 import { logger } from '$lib/server/logger';
-import { isProtected, isPublic } from '$lib/utils/access.util';
+import { isPublic } from '$lib/utils/access.util';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as jwtUtil from '$lib/utils/jwt.util';
 
@@ -13,8 +13,6 @@ export const getSession: GetSession = (event) => {
 export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
   const url = new URL(request.url);
-
-  console.log('request host', request.headers.get('host'));
 
   if (isPublic(url)) {
     return await resolve(event);
