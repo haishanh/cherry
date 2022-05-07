@@ -14,6 +14,8 @@ export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
   const url = new URL(request.url);
 
+  console.log('request.url', request.url);
+
   if (isPublic(url)) {
     return await resolve(event);
   }
