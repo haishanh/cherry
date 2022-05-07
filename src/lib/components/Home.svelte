@@ -13,7 +13,11 @@
   <div class="list">
     {#each bookmarks as l}
       <a href={l.url} target="_blank" rel="noopener noreferrer">
-        <img loading="lazy" src={`https://icons.duckduckgo.com/ip3/${new URL(l.url).hostname}.ico`} alt={'favicon of the site'} />
+        <img
+          loading="lazy"
+          src={`https://icons.duckduckgo.com/ip3/${new URL(l.url).hostname}.ico`}
+          alt={'favicon of the site'}
+        />
         {l.title}
       </a>
     {/each}

@@ -1,4 +1,3 @@
-
 function info(...args: any[]) {
   const now = new Date();
   const t = now.toISOString();

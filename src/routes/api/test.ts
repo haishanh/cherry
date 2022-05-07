@@ -53,7 +53,7 @@ async function createRecords() {
     'https://twitter.com/0xngmi/status/1498132477579350017?s=12',
     'https://github.com/welai/glow-sans',
     'https://www.clearrivergames.com/2022/02/16/the-classic-arcade-game-is-back-in-a-modern-version-snow-bros-special-comes-to-nintendo-switch-later-this-year/',
-    'https://dribbble.com/shots/17426720-Benkei-Financial-dashboard'
+    'https://dribbble.com/shots/17426720-Benkei-Financial-dashboard',
   ];
 
   let ids: number[] = [];

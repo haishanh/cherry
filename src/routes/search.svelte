@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  export { load } from '$lib/server/load/home.load'
+  export { load } from '$lib/server/load/home.load';
 </script>
 
 <script lang="ts">
@@ -9,7 +9,7 @@
   export let bookmarks: BookmarkFromDb[] = [];
 </script>
 
-<Home bookmarks={bookmarks} />
+<Home {bookmarks} />
 
 <style lang="scss">
 </style>
