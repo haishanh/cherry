@@ -24,7 +24,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
 
   if (!token) {
     const authHeader = request.headers.get('authorization');
-    token = authHeader.replace(/[bB]earer\s/, '');
+    if (authHeader) token = authHeader.replace(/[bB]earer\s/, '');
   }
 
   if (token) {
