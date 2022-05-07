@@ -1,8 +1,10 @@
 import type { GetSession, Handle } from '@sveltejs/kit';
+
+import { COOKIE_SECRET } from '$lib/env';
+import { logger } from '$lib/server/logger';
+import { isProtected, isPublic } from '$lib/utils/access.util';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as jwtUtil from '$lib/utils/jwt.util';
-import { logger } from '$lib/server/logger';
-import { COOKIE_SECRET } from '$lib/env';
 
 export const getSession: GetSession = (event) => {
   return event.locals.user ? { user: event.locals.user } : {};
@@ -12,9 +14,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
   const url = new URL(request.url);
 
-  // logger.info('request', request.url);
-
-  if (url.pathname === '/login' || url.pathname === '/api/ping' || url.pathname.startsWith('/api/auth/')) {
+  if (isPublic(url)) {
     return await resolve(event);
   }
 

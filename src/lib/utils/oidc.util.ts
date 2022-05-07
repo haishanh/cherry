@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URI } from '$lib/env';
-
 import dbg from 'debug';
+
+import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URI } from '$lib/env';
 
 const debug = dbg('cherry:util:oidc');
 

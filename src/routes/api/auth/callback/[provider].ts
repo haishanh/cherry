@@ -1,12 +1,12 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { COOKIE_SECRET } from '$lib/env';
-
-import * as cookieUtil from '$lib/utils/cookie.util';
-import * as oidcUtil from '$lib/utils/oidc.util';
-import * as jwtUtil from '$lib/utils/jwt.util';
-import * as dbUtil from '$lib/server/sqlite.util';
 import assert from 'assert';
 import dbg from 'debug';
+
+import { COOKIE_SECRET } from '$lib/env';
+import * as dbUtil from '$lib/server/sqlite.util';
+import * as cookieUtil from '$lib/utils/cookie.util';
+import * as jwtUtil from '$lib/utils/jwt.util';
+import * as oidcUtil from '$lib/utils/oidc.util';
 
 const debug = dbg('cherry:auth:callback');
 
@@ -31,9 +31,10 @@ export const get: RequestHandler = async (event) => {
   const username = await oidcUtil.extractEmail(json.id_token);
 
   const retGetUser = dbUtil.user.get({ username });
+  debug('user from db %o', retGetUser);
   const userId = retGetUser.data?.id;
   if (!userId) {
-    return { status: 403 };
+    return { status: 307, headers: { location: '/error/forbidden' } };
   }
 
   const token = await jwtUtil.sign({ userId }, COOKIE_SECRET);

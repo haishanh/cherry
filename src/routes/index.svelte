@@ -3,8 +3,8 @@
 </script>
 
 <script lang="ts">
-  import type { BookmarkFromDb } from '$lib/type';
   import Home from '$lib/components/Home.svelte';
+  import type { BookmarkFromDb } from '$lib/type';
 
   export let bookmarks: BookmarkFromDb[] = [];
 </script>

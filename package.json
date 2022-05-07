@@ -8,7 +8,7 @@
     "singleQuote": true
   },
   "scripts": {
-    "start": "DEBUG=cherry:* node -r 'global-agent/bootstrap' node_modules/@sveltejs/kit/svelte-kit.js dev",
+    "start": "DEBUG=cherry:* NODE_ENV=development node -r 'global-agent/bootstrap' node_modules/@sveltejs/kit/svelte-kit.js dev",
     "dev": "svelte-kit dev",
     "postinstall": "node scripts/font.mjs",
     "build": "svelte-kit build",
@@ -18,7 +18,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. src scripts && eslint --ignore-path .gitignore .",
-    "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. src scripts"
+    "fix": "prettier --ignore-path .gitignore --write --plugin-search-dir=. src scripts && eslint --fix --ignore-path .gitignore ."
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "1.0.0-next.73",
@@ -31,6 +31,7 @@
     "@typescript-eslint/parser": "5.22.0",
     "eslint": "8.15.0",
     "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-svelte3": "4.0.0",
     "global-agent": "3.0.0",
     "prettier": "2.6.2",

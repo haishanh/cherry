@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 export const DATABASE_PATH = (process.env.DATABASE_PATH as string) || '/data/01.db';
+export const ENABLE_REGISTRATION = process.env.ENABLE_REGISTRATION === '1';
 export const COOKIE_SECRET = process.env.COOKIE_SECRET as string;
 
 // prettier-ignore

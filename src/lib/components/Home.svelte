@@ -2,8 +2,8 @@
 </script>
 
 <script lang="ts">
-  import type { BookmarkFromDb } from '$lib/type';
   import SearchForm from '$lib/components/SearchForm.svelte';
+  import type { BookmarkFromDb } from '$lib/type';
 
   export let bookmarks: BookmarkFromDb[] = [];
 </script>

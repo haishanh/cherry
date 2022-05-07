@@ -14,6 +14,7 @@ specifiers:
   dotenv: 16.0.0
   eslint: 8.15.0
   eslint-config-prettier: 8.5.0
+  eslint-plugin-simple-import-sort: 7.0.0
   eslint-plugin-svelte3: 4.0.0
   global-agent: 3.0.0
   html-metadata-parser: 2.0.4
@@ -47,6 +48,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.22.0_hcfsmds2fshutdssjqluwm76uu
   eslint: 8.15.0
   eslint-config-prettier: 8.5.0_eslint@8.15.0
+  eslint-plugin-simple-import-sort: 7.0.0_eslint@8.15.0
   eslint-plugin-svelte3: 4.0.0_usjo443ynfgvutifl4ot2fkxzy
   global-agent: 3.0.0
   prettier: 2.6.2
@@ -919,6 +921,14 @@ packages:
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
+    dependencies:
+      eslint: 8.15.0
+    dev: true
+
+  /eslint-plugin-simple-import-sort/7.0.0_eslint@8.15.0:
+    resolution: {integrity: sha512-U3vEDB5zhYPNfxT5TYR7u01dboFZp+HNpnGhkDB2g/2E4wZ/g1Q9Ton8UwCLfRV9yAKyYqDh62oHOamvkFxsvw==}
+    peerDependencies:
+      eslint: '>=5.0.0'
     dependencies:
       eslint: 8.15.0
     dev: true

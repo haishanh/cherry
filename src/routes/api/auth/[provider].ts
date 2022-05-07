@@ -1,5 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import assert from 'assert';
+
 import * as oidcUtil from '$lib/utils/oidc.util';
 
 export const get: RequestHandler = async ({ params }) => {

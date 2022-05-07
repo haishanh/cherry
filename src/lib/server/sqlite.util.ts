@@ -1,10 +1,11 @@
-import Database from 'better-sqlite3';
 import assert from 'assert';
-import { DATABASE_PATH } from '$lib/env';
-import { HttpStatus, ApiError } from './api.error';
+import Database from 'better-sqlite3';
 
+import { DATABASE_PATH } from '$lib/env';
+import type { BookmarkCreateDto, BookmarkFromDb, BookmarkUpdateDto, UserCreateDto } from '$lib/type';
+
+import { ApiError, HttpStatus } from './api.error';
 import { logger } from './logger';
-import type { BookmarkCreateDto, BookmarkUpdateDto, BookmarkFromDb, UserCreateDto } from '$lib/type';
 
 // import  pino  from 'pino';
 // const logger = pino();
@@ -281,7 +282,7 @@ function createUser(opts: UserCreateDto) {
   );
   let data: { id: number };
   let error: ApiError;
-  const input = { username: opts.username ?? '', isAdmin: opts.isAdmin ?? '' };
+  const input = { username: opts.username ?? '', isAdmin: opts.isAdmin ?? 0 };
   try {
     const ret = stmt.run(input);
     data = { id: ret.lastInsertRowid as number };
