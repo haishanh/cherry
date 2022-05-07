@@ -21,7 +21,6 @@
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. src scripts"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "1.0.0-next.40",
     "@sveltejs/adapter-node": "1.0.0-next.73",
     "@sveltejs/kit": "1.0.0-next.326",
     "@types/better-sqlite3": "7.5.0",
@@ -45,7 +44,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@sveltejs/adapter-vercel": "1.0.0-next.50",
     "better-sqlite3": "7.5.1",
     "debug": "4.3.4",
     "dotenv": "16.0.0",
