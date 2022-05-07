@@ -10,6 +10,14 @@ pnpm preview
 pnpm add -E @sveltejs/{kit,adapter-auto,adapter-vercel}@next
 ```
 
+## Operation
+
+```sql
+-- create an admin user
+insert into user (username, isAdmin, createdAt, updatedAt)
+values ('haishanhan@gmail.com', 1, strftime('%s','now'), strftime('%s','now'));
+```
+
 ## References
 
 - [Cloudflare Pages doc](https://developers.cloudflare.com/pages/get-started)
