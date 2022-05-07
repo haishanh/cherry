@@ -10,7 +10,7 @@ declare namespace App {
   // interface Platform {}
 
   interface Session {
-    user?: any;
+    user?: { userId: number };
   }
 
   // interface Stuff {}

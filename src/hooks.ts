@@ -14,24 +14,23 @@ export const handle: Handle = async function handle({ event, resolve }) {
 
   // logger.info('request', request.url);
 
-  if (
-    url.pathname === '/login' ||
-    url.pathname === '/api/ping' ||
-    url.pathname.startsWith('/api/auth/')
-  ) {
+  if (url.pathname === '/login' || url.pathname === '/api/ping' || url.pathname.startsWith('/api/auth/')) {
     return await resolve(event);
   }
 
   const cookieHeader = request.headers.get('cookie');
-  // logger.info('cookieHeader', cookieHeader);
   const cookies = cookieUtil.parseCookie(cookieHeader);
+  let token = cookies.token;
 
-  const token = cookies.token;
+  if (!token) {
+    const authHeader = request.headers.get('authorization');
+    token = authHeader.replace(/[bB]earer\s/, '');
+  }
 
   if (token) {
     let claims: any;
     try {
-      claims = await jwtUtil.verify(cookies.token, COOKIE_SECRET);
+      claims = await jwtUtil.verify(token, COOKIE_SECRET);
     } catch (e) {
       logger.info(e);
       const res = new Response(undefined, { status: 403 });
