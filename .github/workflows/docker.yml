@@ -1,5 +1,8 @@
+name: Docker workflow
 on: [push]
-name: Deploy workflow
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   docker:
     runs-on: ubuntu-20.04
