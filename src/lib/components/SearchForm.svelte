@@ -16,7 +16,7 @@
 
 <style lang="scss">
   form {
-    padding: 20px;
+    padding: 25px;
     max-width: 800px;
     margin: 0 auto;
   }
@@ -43,12 +43,22 @@
     width: 100%;
   }
 
+  input:hover {
+    @media (prefers-color-scheme: dark) {
+      --lightness: 30%;
+    }
+    @media (prefers-color-scheme: light) {
+      --lightness: 50%;
+    }
+    border-color: hsl(0deg 0% var(--lightness));
+  }
+
   input:focus {
     @media (prefers-color-scheme: dark) {
       --lightness: 70%;
     }
     @media (prefers-color-scheme: light) {
-      --lightness: 7%;
+      --lightness: 15%;
     }
     border-color: hsl(0deg 0% var(--lightness));
   }

@@ -27,12 +27,12 @@
 <style lang="scss">
   .main {
     max-width: 1000px;
-    padding: 15px;
+    padding: 0 15px 15px;
     margin: 0 auto;
-    font-size: 0.9em;
   }
 
   .list {
+    font-size: 0.9em;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
