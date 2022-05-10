@@ -1,6 +1,7 @@
 <script lang="ts">
-  import PopoverAction from './bookmark-chip/PopoverAction.svelte';
   import type { BookmarkFromDb } from '$lib/type';
+  
+  import PopoverAction from './bookmark-chip/PopoverAction.svelte';
 
   export let bookmark: BookmarkFromDb;
 
@@ -54,10 +55,10 @@
     if (t.bottom + vOffset + p.height <= window.innerHeight) {
       // try place below the trigger
       top = t.top + t.height + vOffset + window.pageYOffset;
-      popoverPlace = 'south'
+      popoverPlace = 'south';
     } else {
       top = t.top - vOffset - p.height + window.pageYOffset;
-      popoverPlace = 'north'
+      popoverPlace = 'north';
     }
 
     const tmid = Math.floor((t.right - t.left) / 2) + t.left;
@@ -196,5 +197,4 @@
   .clamp-2 {
     -webkit-line-clamp: 2;
   }
-
 </style>
