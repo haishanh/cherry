@@ -1,7 +1,7 @@
 name: Deploy workflow
 on: [push]
 concurrency:
-  group: build-${{ github.ref }}
+  group: push-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   install:

@@ -1,7 +1,7 @@
 name: Docker workflow
 on: [push]
 concurrency:
-  group: build-${{ github.ref }}
+  group: docker-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   docker:
