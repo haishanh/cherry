@@ -1,7 +1,7 @@
 <script lang="ts">
   import Edit from '@hsjs/svelte-icons/feather/Edit.svelte';
   import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
-  
+
   import Button from '$lib/components/base/Button.svelte';
   import type { BookmarkFromDb } from '$lib/type';
 
