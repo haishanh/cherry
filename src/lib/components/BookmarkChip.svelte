@@ -1,8 +1,5 @@
 <script lang="ts">
-  import Edit from '@hsjs/svelte-icons/feather/Edit.svelte';
-  import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
-
-  import Button from '$lib/components/base/Button.svelte';
+  import PopoverAction from './bookmark-chip/PopoverAction.svelte';
   import type { BookmarkFromDb } from '$lib/type';
 
   export let bookmark: BookmarkFromDb;
@@ -15,6 +12,7 @@
   let openTimeoutId: ReturnType<typeof setTimeout>;
   let closeTimeoutId: ReturnType<typeof setTimeout>;
   let isOpen = false;
+  let popoverPlace = 'north';
 
   function handleItemOnMouseEnter() {
     closeTimeoutId && clearTimeout(closeTimeoutId);
@@ -56,13 +54,15 @@
     if (t.bottom + vOffset + p.height <= window.innerHeight) {
       // try place below the trigger
       top = t.top + t.height + vOffset + window.pageYOffset;
+      popoverPlace = 'south'
     } else {
       top = t.top - vOffset - p.height + window.pageYOffset;
+      popoverPlace = 'north'
     }
 
     const tmid = Math.floor((t.right - t.left) / 2) + t.left;
     // try to center align it if possible
-    if (tmid + Math.ceil(p.width / 2) <= window.innerWidth) {
+    if (tmid + Math.ceil(p.width / 2) <= window.innerWidth && tmid <= t.left) {
       left = tmid - Math.ceil(p.width / 2);
     } else if (t.left + p.width <= window.innerWidth) {
       // try align left edge with the trigger
@@ -113,22 +113,18 @@
 
   {#if isOpen}
     <div class="popover" use:poped {style} role="menu" aria-labelledby="menubutton">
-      <div class="action">
-        <Button kind="icon" title="View and Edit">
-          <span class="vh">View and Edit</span>
-          <Edit size={14} />
-        </Button>
-        <Button kind="icon" title="Delete">
-          <span class="vh">Delete</span>
-          <Trash size={14} />
-        </Button>
-      </div>
+      {#if popoverPlace === 'south'}
+        <PopoverAction />
+      {/if}
       <div>
         <h4>Link</h4>
         <p class="clamp clamp-2">{bookmark.url}</p>
         <h4>Description</h4>
         <p class="clamp">{bookmark.desc}</p>
       </div>
+      {#if popoverPlace === 'north'}
+        <PopoverAction />
+      {/if}
     </div>
   {/if}
 </div>
@@ -170,10 +166,8 @@
                 0 4px 4px rgba(0,0,0,0.15),
                 0 8px 8px rgba(0,0,0,0.15);
     border-radius: 10px;
-    // border-radius: 1000px;
-    padding: 10px;
+    padding: 8px;
     overflow: hidden;
-    // border
     border: 1px solid transparent;
     @media (prefers-color-scheme: dark) {
       --lightness: 30%;
@@ -203,19 +197,4 @@
     -webkit-line-clamp: 2;
   }
 
-  .action {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  .vh {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-  }
 </style>
