@@ -114,7 +114,7 @@
   {#if isOpen}
     <div class="popover" use:poped {style} role="menu" aria-labelledby="menubutton">
       {#if popoverPlace === 'south'}
-        <PopoverAction />
+        <PopoverAction on:close={closePopup} />
       {/if}
       <div>
         <h4>Link</h4>
@@ -123,7 +123,7 @@
         <p class="clamp">{bookmark.desc}</p>
       </div>
       {#if popoverPlace === 'north'}
-        <PopoverAction />
+        <PopoverAction on:close={closePopup} />
       {/if}
     </div>
   {/if}
