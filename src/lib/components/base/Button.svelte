@@ -1,13 +1,16 @@
 <script lang="ts">
-  export let type: string;
+  export let type: string | null = null;
+  export let kind = '';
+  // native tooltip
+  export let title: string | null = null;
 </script>
 
-<button {type} class="btn" on:click>
+<button {type} {title} class={kind} on:click>
   <slot />
 </button>
 
 <style lang="scss">
-  .btn {
+  button {
     -webkit-appearance: none;
     outline: none;
     user-select: none;
@@ -33,23 +36,41 @@
     }
 
     padding: 9px 13px;
-    @media (--breakpoint-not-small) {
-      font-size: 1em;
-      padding: 10px 14px;
-    }
 
     &.minimal {
       border-color: transparent;
       background: none;
+
       &:hover {
         color: #fff;
         background: #387cec;
         border: 1px solid #387cec;
       }
     }
+    &.icon {
+      padding: 7px;
+      @media (prefers-color-scheme: dark) {
+        --lightness: 30%;
+      }
+      @media (prefers-color-scheme: light) {
+        --lightness: 50%;
+      }
+      border-color: hsl(0deg 0% var(--lightness));
+      background: none;
+      &:hover {
+        @media (prefers-color-scheme: dark) {
+          --lightness: 70%;
+        }
+        @media (prefers-color-scheme: light) {
+          --lightness: 15%;
+        }
+        border-color: hsl(0deg 0% var(--lightness));
+        background: var(--bg-btn);
+      }
+    }
   }
 
-  .btn:disabled {
+  button:disabled {
     opacity: 0.5;
   }
 </style>

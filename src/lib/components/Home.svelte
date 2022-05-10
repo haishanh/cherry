@@ -3,6 +3,7 @@
 
 <script lang="ts">
   import SearchForm from '$lib/components/SearchForm.svelte';
+  import BookmarkChip from '$lib/components/BookmarkChip.svelte';
   import type { BookmarkFromDb } from '$lib/type';
 
   export let bookmarks: BookmarkFromDb[] = [];
@@ -11,15 +12,8 @@
 <div class="main">
   <SearchForm />
   <div class="list">
-    {#each bookmarks as l}
-      <a href={l.url} target="_blank" rel="noopener noreferrer">
-        <img
-          loading="lazy"
-          src={`https://icons.duckduckgo.com/ip3/${new URL(l.url).hostname}.ico`}
-          alt={'favicon of the site'}
-        />
-        {l.title}
-      </a>
+    {#each bookmarks as bookmark}
+      <BookmarkChip {bookmark} />
     {/each}
   </div>
 </div>
@@ -36,19 +30,5 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    a {
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background-color: var(--bg-card);
-      padding: 10px;
-      border-radius: 300px;
-    }
-    img {
-      width: 20px;
-      height: 20px;
-    }
   }
 </style>
