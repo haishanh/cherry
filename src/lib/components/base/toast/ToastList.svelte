@@ -17,6 +17,10 @@
     }
   }
 
+  function closeToast(item: ToastItem) {
+    removeToast(item.id);
+  }
+
   function armTimeout(_node: HTMLDivElement, item: ToastItem) {
     if (item.duration) {
       const tid = setTimeout(() => {
@@ -74,7 +78,7 @@
       {#if item.action}
         <button on:click={item.action.fn}>{item.action.label}</button>
       {/if}
-      <button title="Close" class="close">
+      <button title="Close" class="close" on:click={() => closeToast(item)}>
         <span class="vh">Close</span><CloseIcon size={14} />
       </button>
     </div>
