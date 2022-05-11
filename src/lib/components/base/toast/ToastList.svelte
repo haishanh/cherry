@@ -123,7 +123,7 @@
     border-radius: 8px;
     margin: 14px 0;
     max-width: 90vw;
-    min-width: min(50vw, 400px);
+    min-width: min(85vw, 400px);
     color: #ddd;
 
     display: grid;
