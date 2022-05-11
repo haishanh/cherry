@@ -24,8 +24,8 @@
 <style lang="scss">
   .main {
     max-width: 1000px;
-    padding: 0 15px 15px;
     margin: 0 auto;
+    padding: 0 15px 15px;
   }
 
   .list {

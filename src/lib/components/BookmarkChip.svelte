@@ -72,14 +72,24 @@
     const tmid = Math.floor((t.right - t.left) / 2) + t.left;
     // try to center align it if possible
     if (tmid + Math.ceil(p.width / 2) <= window.innerWidth && tmid <= t.left) {
-      left = tmid - Math.ceil(p.width / 2);
-    } else if (t.left + p.width <= window.innerWidth) {
+      left = tmid - Math.ceil(p.width / 2) + window.pageXOffset;
+      console.log(1);
+    } else if (t.left >= 0 && t.left + p.width <= window.innerWidth) {
       // try align left edge with the trigger
       left = t.left + window.pageXOffset;
-    } else {
+      console.log(2);
+    } else if (t.right >= p.width) {
+      // aight with right edge of the trigger
       left = t.right - p.width + window.pageXOffset;
+      console.log(3);
+    } else {
+      // center to the *window*
+      left = Math.floor((window.innerWidth - p.width) / 2) + window.pageXOffset;
+      console.log(4);
     }
     style = `top:${top}px;left:${left}px`;
+    console.log(window.pageXOffset, t.left, left);
+    // style = `top:50px;left:300px`;
 
     function listener(event: MouseEvent | TouchEvent) {
       // in this case it's not a click "outside"
