@@ -71,7 +71,8 @@
         --lightness: 15%;
       }
       border-color: hsl(0deg 0% var(--lightness));
-      background: var(--bg-btn);
+      background: none;
+      color: var(--color-text);
     }
   }
 </style>
