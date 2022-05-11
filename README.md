@@ -10,6 +10,13 @@ pnpm preview
 pnpm add -E @sveltejs/{kit,adapter-auto,adapter-vercel}@next
 ```
 
+## API
+
+```sh
+http localhost:3000/api/bookmarks "Authorization: Bearer ${JWT}"
+http DELETE localhost:3000/api/bookmarks/42 "Authorization: Bearer ${JWT}"
+```
+
 ## Operation
 
 ```sql
@@ -17,6 +24,7 @@ pnpm add -E @sveltejs/{kit,adapter-auto,adapter-vercel}@next
 insert into user (username, isAdmin, createdAt, updatedAt)
 values ('haishanhan@gmail.com', 1, strftime('%s','now'), strftime('%s','now'));
 ```
+
 
 ## References
 

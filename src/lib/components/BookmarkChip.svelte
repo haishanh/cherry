@@ -1,9 +1,17 @@
 <script lang="ts">
   import type { BookmarkFromDb } from '$lib/type';
-  
+
+  import Modal from './base/Modal.svelte';
+  import { add as toast } from './base/toast/store';
   import PopoverAction from './bookmark-chip/PopoverAction.svelte';
 
   export let bookmark: BookmarkFromDb;
+
+  let modal: Modal;
+
+  function showModal() {
+    modal && modal.open();
+  }
 
   let style = 'top:0;left:0;';
   let trigger: HTMLElement;
@@ -92,6 +100,19 @@
       },
     };
   }
+
+  async function handleDelete() {
+    toast({
+      description: 'Bookmark deleted.',
+      action: {
+        label: 'UNDO',
+        // TODO
+        fn: () => {
+          console.log('done');
+        },
+      },
+    });
+  }
 </script>
 
 <div>
@@ -115,7 +136,7 @@
   {#if isOpen}
     <div class="popover" use:poped {style} role="menu" aria-labelledby="menubutton">
       {#if popoverPlace === 'south'}
-        <PopoverAction on:close={closePopup} />
+        <PopoverAction on:close={closePopup} on:delete={handleDelete} />
       {/if}
       <div>
         <h4>Link</h4>
@@ -124,7 +145,7 @@
         <p class="clamp">{bookmark.desc}</p>
       </div>
       {#if popoverPlace === 'north'}
-        <PopoverAction on:close={closePopup} />
+        <PopoverAction on:close={closePopup} on:delete={handleDelete} />
       {/if}
     </div>
   {/if}

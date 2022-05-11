@@ -6,6 +6,8 @@
   import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb } from '$lib/type';
 
+  import ToastList from './base/toast/ToastList.svelte';
+
   export let bookmarks: BookmarkFromDb[] = [];
 </script>
 
@@ -16,6 +18,7 @@
       <BookmarkChip {bookmark} />
     {/each}
   </div>
+  <ToastList />
 </div>
 
 <style lang="scss">

@@ -1,8 +1,8 @@
 <script lang="ts">
   import TextInput from '$lib/components/base/TextInput.svelte';
-  import { genId } from '$lib/utils/common.util';
+  import { makeId } from '$lib/utils/common.util';
 
-  let id = '' + genId();
+  let id = '' + makeId();
 
   export let name = 'Field Name';
   export let value = '';

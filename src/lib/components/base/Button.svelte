@@ -1,6 +1,6 @@
 <script lang="ts">
   export let type: string | null = null;
-  export let kind = '';
+  export let kind: string | null = null;
   // native tooltip
   export let title: string | null = null;
 </script>
@@ -11,10 +11,10 @@
 
 <style lang="scss">
   button {
-    -webkit-appearance: none;
+    position: relative;
+    appearance: none;
     outline: none;
     user-select: none;
-    position: relative;
     cursor: pointer;
     display: inline-flex;
     align-items: center;

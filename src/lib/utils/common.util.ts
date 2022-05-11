@@ -1,4 +1,4 @@
-let id = 0;
-export function genId() {
+let id = 1;
+export function makeId() {
   return id++;
 }

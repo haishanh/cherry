@@ -18,6 +18,11 @@ export type BookmarkUpdateDto = {
   desc?: string;
 };
 
+export type BookmarkDeleteDto = {
+  id: string | number;
+  userId: string | number;
+};
+
 export type UserCreateDto = {
   username: string;
   // password?: string;

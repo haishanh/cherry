@@ -2,7 +2,7 @@ import assert from 'assert';
 import Database from 'better-sqlite3';
 
 import { DATABASE_PATH } from '$lib/env';
-import type { BookmarkCreateDto, BookmarkFromDb, BookmarkUpdateDto, UserCreateDto } from '$lib/type';
+import type { BookmarkCreateDto, BookmarkDeleteDto, BookmarkFromDb, BookmarkUpdateDto, UserCreateDto } from '$lib/type';
 
 import { ApiError, HttpStatus } from './api.error';
 import { logger } from './logger';
@@ -126,6 +126,7 @@ export const lite = () => {
 export const bookmark = {
   create: createBookmark,
   update: updateBookmark,
+  delete: deleteBookmark,
   get: getBookmark,
   all: getAll,
   search: searchBookmark,
@@ -234,6 +235,36 @@ function createBookmark(userId: number, opts: BookmarkCreateDto) {
       error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
       logger.error({ error: e });
     }
+  }
+  return { data, error };
+}
+
+function deleteBookmark(opts: BookmarkDeleteDto) {
+  const db = lite();
+  // const updates: string[] = [];
+  const id = opts.id;
+  const userId = opts.userId;
+  const stmt = db.prepare(
+    `
+    delete from bookmark
+     where id = @id
+   and userId = @userId
+    `
+  );
+
+  let data = null;
+  let error: ApiError;
+  try {
+    const ret = stmt.run({ id, userId });
+    console.log(ret);
+    if (ret.changes === 0) {
+      error = new ApiError(HttpStatus.NOT_FOUND);
+    } else {
+      data = { id };
+    }
+  } catch (e) {
+    error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+    logger.error({ error });
   }
   return { data, error };
 }
