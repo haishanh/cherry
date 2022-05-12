@@ -1,17 +1,15 @@
 <script lang="ts">
   import type { BookmarkFromDb } from '$lib/type';
+  import { createEventDispatcher, onMount } from 'svelte';
 
-  import Modal from './base/Modal.svelte';
+  // import Modal from './base/Modal.svelte';
   import { add as toast } from './base/toast/store';
   import PopoverAction from './bookmark-chip/PopoverAction.svelte';
+  import * as httpUtil from '$lib/utils/http.util';
 
   export let bookmark: BookmarkFromDb;
 
-  let modal: Modal;
-
-  function showModal() {
-    modal && modal.open();
-  }
+  const dispatch = createEventDispatcher();
 
   let style = 'top:0;left:0;';
   let trigger: HTMLElement;
@@ -51,7 +49,7 @@
     isOpen = false;
   }
 
-  function poped(node: HTMLDivElement) {
+  function positionPopover(node: HTMLDivElement) {
     // popover rect
     const p = node.getBoundingClientRect();
     // trigger rect
@@ -88,8 +86,12 @@
       console.log(4);
     }
     style = `top:${top}px;left:${left}px`;
-    console.log(window.pageXOffset, t.left, left);
-    // style = `top:50px;left:300px`;
+  }
+
+  function poped(node: HTMLDivElement) {
+    requestAnimationFrame(() => {
+      positionPopover(node);
+    });
 
     function listener(event: MouseEvent | TouchEvent) {
       // in this case it's not a click "outside"
@@ -111,14 +113,42 @@
     };
   }
 
+  async function delBookmark(id: string | number) {
+    const ret = await httpUtil.request({ method: 'DELETE', url: `/api/bookmarks/${id}` });
+    console.log(ret.data);
+  }
+
+  async function restoreBookmark(id: string | number) {
+    console.log('restore', id);
+    const ret = await httpUtil.request({ method: 'POST', url: `/api/bookmarks/${id}`, data: { op: 'restore' } });
+    console.log(ret.data);
+  }
+
   async function handleDelete() {
+    if (!bookmark) return;
+    console.log('deleted', bookmark.id);
+    // delete
+    await delBookmark(bookmark.id);
+
+    let bookmarkId = bookmark.id;
+    dispatch('remove', bookmark);
+
+    const restore = async () => {
+      await restoreBookmark(bookmarkId);
+    };
+
     toast({
       description: 'Bookmark deleted.',
       action: {
         label: 'UNDO',
-        // TODO
         fn: () => {
-          console.log('done');
+          restore()
+            .then(() => {
+              // TODO dispatch restore event
+            })
+            .catch((e) => {
+              console.log(e);
+            });
         },
       },
     });

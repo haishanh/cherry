@@ -9,13 +9,21 @@
   import ToastList from './base/toast/ToastList.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
+
+  function handleRemoveBookmark(e: CustomEvent<BookmarkFromDb>) {
+    const bookmark = e.detail;
+    const idx = bookmarks.findIndex((item) => item === bookmark);
+    console.log(idx, 'removed');
+    bookmarks.splice(idx, 1);
+    bookmarks = bookmarks;
+  }
 </script>
 
 <div class="main">
   <SearchForm />
   <div class="list">
     {#each bookmarks as bookmark}
-      <BookmarkChip {bookmark} />
+      <BookmarkChip {bookmark} on:remove={handleRemoveBookmark} />
     {/each}
   </div>
   <ToastList />

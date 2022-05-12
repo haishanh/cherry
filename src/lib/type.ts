@@ -23,6 +23,9 @@ export type BookmarkDeleteDto = {
   userId: string | number;
 };
 
+export type BookmarkStashDto = BookmarkDeleteDto;
+export type BookmarkRestoreDto = BookmarkDeleteDto;
+
 export type UserCreateDto = {
   username: string;
   // password?: string;

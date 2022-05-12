@@ -13,9 +13,9 @@
   // focus the first button on mount
   function focus0(node: HTMLDivElement) {
     const btn = node.querySelector('button') as HTMLButtonElement;
-    if (btn) {
-      btn.focus();
-    }
+    requestAnimationFrame(() => {
+      btn && btn.focus({ preventScroll: true });
+    });
   }
 </script>
 

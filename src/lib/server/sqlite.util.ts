@@ -2,7 +2,15 @@ import assert from 'assert';
 import Database from 'better-sqlite3';
 
 import { DATABASE_PATH } from '$lib/env';
-import type { BookmarkCreateDto, BookmarkDeleteDto, BookmarkFromDb, BookmarkUpdateDto, UserCreateDto } from '$lib/type';
+import type {
+  BookmarkCreateDto,
+  BookmarkDeleteDto,
+  BookmarkFromDb,
+  BookmarkRestoreDto,
+  BookmarkStashDto,
+  BookmarkUpdateDto,
+  UserCreateDto,
+} from '$lib/type';
 
 import { ApiError, HttpStatus } from './api.error';
 import { logger } from './logger';
@@ -16,6 +24,8 @@ type MigrateFn = (db: Database.Database) => void;
 const noop: MigrateFn = () => {};
 
 const v01 = { version: 1, up: noop, down: noop };
+const v02 = { version: 2, up: noop, down: noop };
+const migrations = [v01, v02];
 
 v01.up = (db: Database.Database) => {
   db.prepare(`CREATE TABLE IF NOT EXISTS migration(version INTEGER)`).run();
@@ -102,10 +112,37 @@ v01.up = (db: Database.Database) => {
   ).run({ version: v01.version });
 };
 
+v02.up = (db: Database.Database) => {
+  db.prepare(
+    ` insert into migration (version)
+      values (@version)`
+  ).run({ version: v02.version });
+
+  db.prepare(
+    `
+    create table if not exists bookmark_stash(
+      id integer PRIMARY KEY,
+      userId integer,
+      data text,
+      createdAt integer);
+    `
+  ).run();
+};
+
 let migrated = false;
 function migrate(db: Database.Database) {
   const run = db.transaction(() => {
-    v01.up(db);
+    let version = 0;
+    try {
+      const row = db.prepare(`select version from migration`).get();
+      assert(typeof row.version === 'number');
+      version = row.version;
+    } catch (e) {
+      // ignore
+    }
+    for (const m of migrations) {
+      if (m.version > version) m.up(db);
+    }
   });
   run();
 }
@@ -116,6 +153,7 @@ export const lite = () => {
 
   db = new Database(DATABASE_PATH);
   if (!migrated) {
+    db.pragma('journal_mode = WAL');
     migrate(db);
     migrated = true;
   }
@@ -127,6 +165,8 @@ export const bookmark = {
   create: createBookmark,
   update: updateBookmark,
   delete: deleteBookmark,
+  stash: stashBookmark,
+  restore: restoreBookmark,
   get: getBookmark,
   all: getAll,
   search: searchBookmark,
@@ -256,6 +296,112 @@ function deleteBookmark(opts: BookmarkDeleteDto) {
   let error: ApiError;
   try {
     const ret = stmt.run({ id, userId });
+    if (ret.changes === 0) {
+      error = new ApiError(HttpStatus.NOT_FOUND);
+    } else {
+      data = { id };
+    }
+  } catch (e) {
+    error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+    logger.error({ error });
+  }
+  return { data, error };
+}
+
+function stashBookmark(opts: BookmarkStashDto) {
+  const db = lite();
+  const id = opts.id;
+  const userId = opts.userId;
+
+  const run = db.transaction(() => {
+    const stmt0 = db.prepare(
+      `
+    select *
+      from bookmark
+     where id = @id
+   and userId = @userId
+      `
+    );
+    const row = stmt0.get({ id, userId });
+    const data = JSON.stringify(row);
+
+    const stmt1 = db.prepare(
+      `
+    insert into bookmark_stash (id, userId, data, createdAt)
+    values (@id, @userId, @data, strftime('%s','now'))
+    `
+    );
+    stmt1.run({ id, userId, data });
+
+    const stmtDelete = db.prepare(
+      `
+      delete from bookmark
+       where id = @id
+     and userId = @userId
+      `
+    );
+    return stmtDelete.run({ id, userId });
+  });
+
+  let data = null;
+  let error: ApiError;
+  try {
+    const ret = run();
+    if (ret.changes === 0) {
+      error = new ApiError(HttpStatus.NOT_FOUND);
+    } else {
+      data = { id };
+    }
+  } catch (e) {
+    error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+    logger.error({ error });
+  }
+  return { data, error };
+}
+
+function restoreBookmark(opts: BookmarkRestoreDto) {
+  const db = lite();
+  const id = opts.id;
+  const userId = opts.userId;
+
+  const run = db.transaction(() => {
+    const stmtRead = db.prepare(
+      `
+      select data
+        from bookmark_stash
+       where id = @id
+     and userId = @userId
+      `
+    );
+    const retRead = stmtRead.get({ id, userId });
+    console.log(retRead);
+    const b = JSON.parse(retRead.data);
+
+    console.log(b);
+
+    const stmtInsert = db.prepare(
+      `
+    insert into bookmark (id, title, desc, url, userId, createdAt, updatedAt)
+    values (@id, @title, @desc, @url, @userId, @createdAt, @updatedAt)
+    `
+    );
+    stmtInsert.run(b);
+
+    const stmtDelete = db.prepare(
+      `
+      delete from bookmark_stash
+       where id = @id
+     and userId = @userId
+      `
+    );
+    const retDelete = stmtDelete.run({ id, userId });
+    return retDelete;
+  });
+
+  let data = null;
+  let error: ApiError;
+  try {
+    const ret = run();
     console.log(ret);
     if (ret.changes === 0) {
       error = new ApiError(HttpStatus.NOT_FOUND);
