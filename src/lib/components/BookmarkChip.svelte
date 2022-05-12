@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   import type { BookmarkFromDb } from '$lib/type';
   import * as httpUtil from '$lib/utils/http.util';
 
-  // import Modal from './base/Modal.svelte';
   import { add as toast } from './base/toast/store';
   import PopoverAction from './bookmark-chip/PopoverAction.svelte';
 
@@ -33,13 +32,14 @@
   }
 
   function handleItemOnMouseLeave() {
+    console.log('on leave');
     openTimeoutId && clearTimeout(openTimeoutId);
     if (!isOpen) return;
 
-    // closeTimeoutId && clearTimeout(closeTimeoutId);
-    // closeTimeoutId = setTimeout(() => {
-    //   if (isOpen) isOpen = false;
-    // }, 1000);
+    closeTimeoutId && clearTimeout(closeTimeoutId);
+    closeTimeoutId = setTimeout(() => {
+      if (isOpen) isOpen = false;
+    }, 1000);
   }
 
   // function openPopup() {
@@ -90,6 +90,7 @@
   }
 
   function poped(node: HTMLDivElement) {
+    console.log('popover mount');
     requestAnimationFrame(() => {
       positionPopover(node);
     });
@@ -108,6 +109,7 @@
     //node.ownerDocument.addEventListener("keydown", onKeydown);
     return {
       destroy() {
+        console.log('popover xxx');
         node.ownerDocument.removeEventListener('mousedown', listener);
         // node.ownerDocument.removeEventListener("keydown", onKeydown);
       },
@@ -136,6 +138,8 @@
 
     const restore = async () => {
       await restoreBookmark(bookmarkId);
+      console.log('dispatch resotre', bookmarkId);
+      dispatch('restore', bookmarkId);
     };
 
     toast({
@@ -175,7 +179,13 @@
   </a>
 
   {#if isOpen}
-    <div class="popover" use:poped {style} role="menu" aria-labelledby="menubutton">
+    <div
+      class="popover"
+      use:poped
+      {style}
+      on:mouseenter={handleItemOnMouseEnter}
+      on:mouseleave={handleItemOnMouseLeave}
+    >
       {#if popoverPlace === 'south'}
         <PopoverAction on:close={closePopup} on:delete={handleDelete} />
       {/if}

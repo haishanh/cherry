@@ -64,5 +64,4 @@ VOLUME [ "/data" ]
 
 ENTRYPOINT [ "/init" ]
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=20s \
-  CMD healthcheck
+HEALTHCHECK --interval=10s --timeout=5s --start-period=20s CMD healthcheck

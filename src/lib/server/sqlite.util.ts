@@ -375,6 +375,9 @@ function restoreBookmark(opts: BookmarkRestoreDto) {
     );
     const retRead = stmtRead.get({ id, userId });
     console.log(retRead);
+    if (!retRead) {
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    }
     const b = JSON.parse(retRead.data);
 
     console.log(b);
@@ -409,8 +412,12 @@ function restoreBookmark(opts: BookmarkRestoreDto) {
       data = { id };
     }
   } catch (e) {
-    error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-    logger.error({ error });
+    logger.error({ error: e });
+    if (e instanceof ApiError) {
+      error = e;
+    } else {
+      error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   return { data, error };
 }
