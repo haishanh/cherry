@@ -39,6 +39,7 @@ dependencies:
   html-metadata-parser: 2.0.4_debug@4.3.4
   jsonwebtoken: 8.5.1
   node-fetch: 3.2.4
+  tiny-invariant: 1.2.0
 
 devDependencies:
   '@fontsource/inter': 4.5.10
@@ -62,7 +63,6 @@ devDependencies:
   svelte: 3.48.0
   svelte-check: 2.7.0_sass@1.51.0+svelte@3.48.0
   svelte-preprocess: 4.10.6_24ezlekk4ocevlsjgs2qnqmjum
-  tiny-invariant: 1.2.0
   tslib: 2.4.0
   typescript: 4.6.4
 
@@ -2206,7 +2206,7 @@ packages:
 
   /tiny-invariant/1.2.0:
     resolution: {integrity: sha512-1Uhn/aqw5C6RI4KejVeTg6mIS7IqxnLJ8Mv2tV5rTc0qWobay7pDUz6Wi392Cnc8ak1H0F2cjoRzb2/AW4+Fvg==}
-    dev: true
+    dev: false
 
   /to-regex-range/5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
