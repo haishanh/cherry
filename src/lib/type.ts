@@ -3,6 +3,7 @@ export type BookmarkFromDb = {
   title: string;
   desc: string;
   url: string;
+  updatedAt?: number;
 };
 
 export type BookmarkCreateDto = {
@@ -25,6 +26,11 @@ export type BookmarkDeleteDto = {
 
 export type BookmarkStashDto = BookmarkDeleteDto;
 export type BookmarkRestoreDto = BookmarkDeleteDto;
+
+export type BookmarkGetAllOpts = {
+  userId: number;
+  next?: { updatedAt: number; id: number };
+};
 
 export type UserCreateDto = {
   username: string;

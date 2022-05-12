@@ -9,6 +9,17 @@ export const get: RequestHandler = async (event) => {
   if (!userId) return eli.handle();
 
   const text = event.url.searchParams.get('q');
-  const ret = dbUtil.bookmark.search(userId, { text });
-  return { status: 200, body: ret.data };
+  const { data, error } = dbUtil.bookmark.search(userId, { text });
+  if (data) {
+    return {
+      status: 201,
+      body: {
+        meta: {},
+        data,
+      },
+    };
+  } else {
+    console.log('ERROR', error);
+    return { status: 500 };
+  }
 };

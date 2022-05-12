@@ -12,6 +12,7 @@
   import Header from './feature/Header.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
+  export let meta: { next?: string } = {};
 
   // we only support restore last deleted
   const removed: { bookmark?: BookmarkFromDb; idx?: number } = {};
@@ -49,6 +50,11 @@
     {/each}
   </div>
   <ToastList />
+  {#if meta && meta.next}
+    <div class="pagination">
+      <a href={'/?next=' + meta.next}>Next</a>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -63,5 +69,25 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+  }
+  .pagination {
+    padding: 25px 5px;
+    text-align: right;
+    a {
+      color: inherit;
+      border: 1px solid transparent;
+      padding: 10px 16px;
+      border-radius: 200px;
+      @media (prefers-color-scheme: dark) {
+        --lightness: 30%;
+      }
+      @media (prefers-color-scheme: light) {
+        --lightness: 50%;
+      }
+      &:hover {
+        border-color: hsl(0deg 0% var(--lightness));
+        background-color: var(--bg-card);
+      }
+    }
   }
 </style>

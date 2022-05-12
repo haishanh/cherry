@@ -7,9 +7,10 @@
   import type { BookmarkFromDb } from '$lib/type';
 
   export let bookmarks: BookmarkFromDb[] = [];
+  export let meta: { next?: string } = {};
 </script>
 
-<Home {bookmarks} />
+<Home {bookmarks} {meta} />
 
 <style lang="scss">
 </style>

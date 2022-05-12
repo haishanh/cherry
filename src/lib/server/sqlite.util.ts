@@ -1,11 +1,12 @@
 import assert from 'assert';
 import Database from 'better-sqlite3';
 
-import { DATABASE_PATH } from '$lib/env';
+import { DATABASE_PATH, PAGE_BOOKMARK_LIMIT } from '$lib/env';
 import type {
   BookmarkCreateDto,
   BookmarkDeleteDto,
   BookmarkFromDb,
+  BookmarkGetAllOpts,
   BookmarkRestoreDto,
   BookmarkStashDto,
   BookmarkUpdateDto,
@@ -201,26 +202,50 @@ function searchBookmark(userId: number, opts: { text: string }) {
   return { data, error };
 }
 
-function getAll(opts: { userId: number }) {
+function getAll(opts: BookmarkGetAllOpts) {
   assert(opts.userId);
 
   const db = lite();
 
   let data: BookmarkFromDb[];
   let error: ApiError;
-  const stmt = db.prepare(
-    `
+  let stmt: Database.Statement;
+  const params: any = { userId: opts.userId };
+  if (opts.next) {
+    const next = opts.next;
+    params.updatedAt = next.updatedAt;
+    params.id = next.id;
+    stmt = db.prepare(
+      `
     select id
          , title
          , desc
          , url
+         , updatedAt
+      from bookmark
+     where userId = @userId and updatedAt <= @updatedAt and id >= @id
+  order by updatedAt desc, id asc
+    limit ${PAGE_BOOKMARK_LIMIT}
+    offset 1
+    `
+    );
+  } else {
+    stmt = db.prepare(
+      `
+    select id
+         , title
+         , desc
+         , url
+         , updatedAt
       from bookmark
      where userId = @userId
-  order by updatedAt desc
+  order by updatedAt desc, id asc
+    limit ${PAGE_BOOKMARK_LIMIT}
     `
-  );
+    );
+  }
   try {
-    data = stmt.all({ userId: opts.userId });
+    data = stmt.all(params);
   } catch (e) {
     error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
     logger.error({ error });
@@ -323,6 +348,9 @@ function stashBookmark(opts: BookmarkStashDto) {
       `
     );
     const row = stmt0.get({ id, userId });
+    if (!row) {
+      throw new ApiError(HttpStatus.NOT_FOUND);
+    }
     const data = JSON.stringify(row);
 
     const stmt1 = db.prepare(
@@ -353,8 +381,12 @@ function stashBookmark(opts: BookmarkStashDto) {
       data = { id };
     }
   } catch (e) {
-    error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-    logger.error({ error });
+    logger.error({ error: e });
+    if (e instanceof ApiError) {
+      error = e;
+    } else {
+      error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   return { data, error };
 }
@@ -374,13 +406,10 @@ function restoreBookmark(opts: BookmarkRestoreDto) {
       `
     );
     const retRead = stmtRead.get({ id, userId });
-    console.log(retRead);
     if (!retRead) {
       throw new ApiError(HttpStatus.NOT_FOUND);
     }
     const b = JSON.parse(retRead.data);
-
-    console.log(b);
 
     const stmtInsert = db.prepare(
       `
@@ -405,7 +434,6 @@ function restoreBookmark(opts: BookmarkRestoreDto) {
   let error: ApiError;
   try {
     const ret = run();
-    console.log(ret);
     if (ret.changes === 0) {
       error = new ApiError(HttpStatus.NOT_FOUND);
     } else {
@@ -450,8 +478,8 @@ function updateBookmark(opts: BookmarkUpdateDto) {
       error = new ApiError(HttpStatus.NOT_FOUND);
     }
   } catch (e) {
+    logger.error({ error: e });
     error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-    logger.error({ error });
   }
   return { data, error };
 }

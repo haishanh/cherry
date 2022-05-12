@@ -5,19 +5,21 @@ export const load: Load = async (input) => {
 
   const qs0 = input.url.searchParams;
   const q0 = qs0.get('q');
-  // rebuild this to ensure we only include what we want
-  const qs1 = new URLSearchParams({ q: q0 });
 
   let res: Response;
   if (q0) {
-    res = await fetch(`/api/search?${qs1}`);
+    res = await fetch(`/api/search?${qs0}`);
   } else {
-    res = await fetch('/api/bookmarks');
+    res = await fetch(`/api/bookmarks?${qs0}`);
   }
 
   if (res.ok) {
-    const bookmarks = await res.json();
-    return { props: { bookmarks } };
+    const { data, meta } = await res.json();
+    console.log('home.load', meta);
+
+    return {
+      props: { bookmarks: data, meta },
+    };
   }
 
   return {
