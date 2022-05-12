@@ -3,7 +3,7 @@
 
 <script lang="ts">
   import invariant from 'tiny-invariant';
-  
+
   import BookmarkChip from '$lib/components/BookmarkChip.svelte';
   import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb } from '$lib/type';
