@@ -21,6 +21,7 @@
     "fix": "prettier --ignore-path .gitignore --write --plugin-search-dir=. src scripts && eslint --fix --ignore-path .gitignore ."
   },
   "devDependencies": {
+    "@fontsource/inter": "4.5.10",
     "@hsjs/svelte-icons": "0.0.1-rc.4",
     "@sveltejs/adapter-node": "1.0.0-next.73",
     "@sveltejs/kit": "1.0.0-next.326",

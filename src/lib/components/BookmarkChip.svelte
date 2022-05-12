@@ -1,9 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
-  
+
   import type { BookmarkFromDb } from '$lib/type';
   import * as httpUtil from '$lib/utils/http.util';
-  
+
   // import Modal from './base/Modal.svelte';
   import { add as toast } from './base/toast/store';
   import PopoverAction from './bookmark-chip/PopoverAction.svelte';

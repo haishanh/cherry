@@ -15,6 +15,8 @@
 </script>
 
 <script lang="ts">
+  import '@fontsource/inter/latin-400.css';
+  import '@fontsource/inter/latin-800.css';
   import '../app.scss';
 </script>
 
@@ -25,22 +27,22 @@
 <slot />
 
 <style lang="scss">
-  @font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    // prettier-ignore
-    src: local('Inter-Regular'), url('../assets/interJD5f6rvu.woff2') format('woff2'), url('../assets/interJD5f6rvu.woff') format('woff');
-  }
-  @font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 800;
-    font-display: swap;
-    // prettier-ignore
-    src: local('Inter-ExtraBold'), url('../assets/interIoAYgYqv.woff2') format('woff2'), url('../assets/interIoAYgYqv.woff') format('woff');
-  }
+  // @font-face {
+  //   font-family: 'Inter';
+  //   font-style: normal;
+  //   font-weight: 400;
+  //   font-display: swap;
+  //   // prettier-ignore
+  //   src: local('Inter-Regular'), url('../assets/interJD5f6rvu.woff2') format('woff2'), url('../assets/interJD5f6rvu.woff') format('woff');
+  // }
+  // @font-face {
+  //   font-family: 'Inter';
+  //   font-style: normal;
+  //   font-weight: 800;
+  //   font-display: swap;
+  //   // prettier-ignore
+  //   src: local('Inter-ExtraBold'), url('../assets/interIoAYgYqv.woff2') format('woff2'), url('../assets/interIoAYgYqv.woff') format('woff');
+  // }
 
   @mixin dark {
     // --bg-main: #050505;

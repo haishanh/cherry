@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fontsource/inter': 4.5.10
   '@hsjs/svelte-icons': 0.0.1-rc.4
   '@sveltejs/adapter-node': 1.0.0-next.73
   '@sveltejs/kit': 1.0.0-next.326
@@ -39,6 +40,7 @@ dependencies:
   node-fetch: 3.2.4
 
 devDependencies:
+  '@fontsource/inter': 4.5.10
   '@hsjs/svelte-icons': 0.0.1-rc.4
   '@sveltejs/adapter-node': 1.0.0-next.73
   '@sveltejs/kit': 1.0.0-next.326_sass@1.51.0+svelte@3.48.0
@@ -79,6 +81,10 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@fontsource/inter/4.5.10:
+    resolution: {integrity: sha512-YOt2/K8yo25MVBjrTImHxVimmyZEt0GcrWp2w7O29sdFX9SJqbGlOqjFJ1wI5yBbP6AmTeimyPE0UC/jjFRoIA==}
     dev: true
 
   /@hsjs/svelte-icons/0.0.1-rc.4:
