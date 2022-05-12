@@ -9,6 +9,7 @@ node_modules
 !.env.example
 !.github
 
+db/*
 *.db
 *.sqlite
 

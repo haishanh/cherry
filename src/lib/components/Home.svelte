@@ -5,8 +5,9 @@
   import BookmarkChip from '$lib/components/BookmarkChip.svelte';
   import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb } from '$lib/type';
-
+  
   import ToastList from './base/toast/ToastList.svelte';
+  import Header from './feature/Header.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
 
@@ -19,6 +20,7 @@
   }
 </script>
 
+<Header />
 <div class="main">
   <SearchForm />
   <div class="list">
