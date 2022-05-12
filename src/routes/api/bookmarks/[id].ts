@@ -52,5 +52,4 @@ export const post: RequestHandler = async (event) => {
       return { status: 500 };
     }
   }
-
 };
