@@ -31,13 +31,13 @@ jobs:
           version: 7.0.0-rc.8
           run_install: true
 
-      - run: echo "- Setup :white_check_mark:"
+      - run: echo "- Setup :white_check_mark:" >> $GITHUB_STEP_SUMMARY
       - name: Lint
         run: pnpm lint
-      - run: echo "- Lint :white_check_mark:"
+      - run: echo "- Lint :white_check_mark:" >> $GITHUB_STEP_SUMMARY
       - name: Build
         run: pnpm build
-      - run: echo "- Build :white_check_mark:"
+      - run: echo "- Build :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
       - name: Send Notification
         uses: haishanh/actions-telegram-notification@v1
