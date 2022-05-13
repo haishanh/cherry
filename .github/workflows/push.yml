@@ -28,7 +28,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.1
         with:
-          version: 7.0.0-rc.8
+          version: 7.1.0
           run_install: true
 
       - run: echo "- Setup :white_check_mark:" >> $GITHUB_STEP_SUMMARY
