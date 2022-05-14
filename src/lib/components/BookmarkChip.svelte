@@ -40,12 +40,8 @@
     closeTimeoutId && clearTimeout(closeTimeoutId);
     closeTimeoutId = setTimeout(() => {
       if (isOpen) isOpen = false;
-    }, 1000);
+    }, 750);
   }
-
-  // function openPopup() {
-  //   isOpen = true;
-  // }
 
   function closePopup() {
     isOpen = false;
