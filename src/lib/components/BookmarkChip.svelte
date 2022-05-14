@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
 
+  import { goto } from '$app/navigation';
   import type { BookmarkFromDb } from '$lib/type';
   import * as httpUtil from '$lib/utils/http.util';
 
@@ -90,7 +91,6 @@
   }
 
   function poped(node: HTMLDivElement) {
-    console.log('popover mount');
     requestAnimationFrame(() => {
       positionPopover(node);
     });
@@ -129,7 +129,6 @@
 
   async function handleDelete() {
     if (!bookmark) return;
-    console.log('deleted', bookmark.id);
     // delete
     await delBookmark(bookmark.id);
 
@@ -157,6 +156,11 @@
         },
       },
     });
+  }
+
+  async function handleEdit() {
+    if (!bookmark) return;
+    goto('/edit/' + bookmark.id);
   }
 </script>
 
@@ -187,7 +191,7 @@
       on:mouseleave={handleItemOnMouseLeave}
     >
       {#if popoverPlace === 'south'}
-        <PopoverAction on:close={closePopup} on:delete={handleDelete} />
+        <PopoverAction on:close={closePopup} on:delete={handleDelete} on:edit={handleEdit} />
       {/if}
       <div>
         <h4>Link</h4>

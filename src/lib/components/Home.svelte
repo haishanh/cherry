@@ -1,6 +1,3 @@
-<script context="module" lang="ts">
-</script>
-
 <script lang="ts">
   import invariant from 'tiny-invariant';
 
@@ -49,7 +46,9 @@
       <BookmarkChip {bookmark} on:remove={handleRemoveBookmark} on:restore={handleRestoreBookmark} />
     {/each}
   </div>
+
   <ToastList />
+
   {#if meta && meta.next}
     <div class="pagination">
       <a href={'/?next=' + meta.next}>Next</a>

@@ -4,17 +4,17 @@
   export let placeholder = '';
 </script>
 
-<input {id} {placeholder} type="text" bind:value />
+<textarea {id} {placeholder} rows={9} bind:value />
 
 <style lang="scss">
-  input {
-    height: 40px;
+  textarea {
     width: 100%;
-    margin: 1px 0;
+    resize: vertical;
     padding: 15px 10px;
     outline: none;
     border-radius: 7px;
-    // font-size: inherit;
+    font-family: inherit;
+
     border: 1px solid var(--color-input-bo);
     &:hover {
       border-color: var(--color-input-bo-hover);

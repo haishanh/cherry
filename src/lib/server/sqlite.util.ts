@@ -7,6 +7,7 @@ import type {
   BookmarkDeleteDto,
   BookmarkFromDb,
   BookmarkGetAllOpts,
+  BookmarkGetDto,
   BookmarkRestoreDto,
   BookmarkStashDto,
   BookmarkUpdateDto,
@@ -253,7 +254,7 @@ function getAll(opts: BookmarkGetAllOpts) {
   return { data, error };
 }
 
-function getBookmark(opts: { id: string | number }) {
+function getBookmark(opts: BookmarkGetDto) {
   const db = lite();
 
   let data: { id: number; title: string; desc: string; url: string };
@@ -266,10 +267,11 @@ function getBookmark(opts: { id: string | number }) {
          , url
       from bookmark
      where id = @id
+  and userId = @userId
     `
   );
   try {
-    const ret = stmt.get({ id: opts.id });
+    const ret = stmt.get({ id: opts.id, userId: opts.userId });
     data = ret;
   } catch (e) {
     error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -455,6 +457,7 @@ function updateBookmark(opts: BookmarkUpdateDto) {
   const updates: string[] = [];
 
   assert(opts.id, 'Must have id in input');
+  const id = opts.id;
 
   for (const field in opts) {
     if (field === 'id' || !opts[field]) continue;
@@ -468,14 +471,17 @@ function updateBookmark(opts: BookmarkUpdateDto) {
     update bookmark
        set ${updateStr}
      where id = @id
+   and userId = @userId
     `
   );
-  const data = null;
+  let data = null;
   let error: ApiError;
   try {
     const ret = stmt.run(opts);
     if (ret.changes === 0) {
       error = new ApiError(HttpStatus.NOT_FOUND);
+    } else {
+      data = { id };
     }
   } catch (e) {
     logger.error({ error: e });

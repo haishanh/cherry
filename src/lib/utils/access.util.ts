@@ -1,6 +1,7 @@
 const publicEndpoints = [
   '/login',
   '/join',
+  '/style',
   '/api/ping',
   { type: 'startsWith', value: '/api/auth/' },
   { type: 'startsWith', value: '/error/' },

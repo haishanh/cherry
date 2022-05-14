@@ -14,15 +14,18 @@ export type BookmarkCreateDto = {
 
 export type BookmarkUpdateDto = {
   id: string;
+  userId: string | number;
   url?: string;
   title?: string;
   desc?: string;
 };
 
-export type BookmarkDeleteDto = {
+export type BookmarkGetDto = {
   id: string | number;
   userId: string | number;
 };
+
+export type BookmarkDeleteDto = BookmarkGetDto;
 
 export type BookmarkStashDto = BookmarkDeleteDto;
 export type BookmarkRestoreDto = BookmarkDeleteDto;
