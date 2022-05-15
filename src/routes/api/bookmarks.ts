@@ -35,7 +35,7 @@ export const get: RequestHandler = async (event) => {
   }
 
   if (data) {
-    return { status: 201, body: { meta, data } };
+    return { status: 200, body: { meta, data } };
   } else {
     console.log('ERROR', error);
     return { status: 500 };

@@ -156,7 +156,7 @@
 
   async function handleEdit() {
     if (!bookmark) return;
-    goto('/edit/' + bookmark.id);
+    dispatch('edit', bookmark);
   }
 </script>
 

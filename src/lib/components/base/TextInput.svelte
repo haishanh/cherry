@@ -14,7 +14,7 @@
     padding: 15px 10px;
     outline: none;
     border-radius: 7px;
-    // font-size: inherit;
+    font-size: inherit;
     border: 1px solid var(--color-input-bo);
     &:hover {
       border-color: var(--color-input-bo-hover);

@@ -4,9 +4,9 @@
   import type { BookmarkFromDb } from '$lib/type';
   import { request } from '$lib/utils/http.util';
 
-  export let bookmark: BookmarkFromDb;
+  export let bookmark: Pick<BookmarkFromDb, 'id' | 'url' | 'title' | 'desc'>;
 
-  async function updateBookmark(opts: BookmarkFromDb) {
+  async function updateBookmark(opts: { id: string | number }) {
     await request({ url: '/api/bookmarks/' + bookmark.id, method: 'PATCH', data: opts });
   }
 

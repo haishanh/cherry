@@ -1,15 +1,17 @@
 <script lang="ts">
   import invariant from 'tiny-invariant';
 
-  import BookmarkChip from '$lib/components/BookmarkChip.svelte';
-  import SearchForm from '$lib/components/SearchForm.svelte';
-  import type { BookmarkFromDb } from '$lib/type';
-
   import ToastList from './base/toast/ToastList.svelte';
+  import SearchForm from '$lib/components/SearchForm.svelte';
+  import BookmarkChip from '$lib/components/BookmarkChip.svelte';
+  import type { BookmarkFromDb } from '$lib/type';
   import Header from './feature/Header.svelte';
+  import EditModal from './feature/EditModal.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
   export let meta: { next?: string } = {};
+
+  let editModal: EditModal;
 
   // we only support restore last deleted
   const removed: { bookmark?: BookmarkFromDb; idx?: number } = {};
@@ -36,6 +38,12 @@
     bookmarks = bookmarks;
     removed.bookmark = undefined;
   }
+
+  function handleEditBookmark(e: CustomEvent<BookmarkFromDb>) {
+    const bookmark = e.detail;
+    editModal.open(bookmark);
+    //
+  }
 </script>
 
 <Header />
@@ -43,11 +51,17 @@
   <SearchForm />
   <div class="list">
     {#each bookmarks as bookmark (bookmark.id)}
-      <BookmarkChip {bookmark} on:remove={handleRemoveBookmark} on:restore={handleRestoreBookmark} />
+      <BookmarkChip
+        {bookmark}
+        on:remove={handleRemoveBookmark}
+        on:restore={handleRestoreBookmark}
+        on:edit={handleEditBookmark}
+      />
     {/each}
   </div>
 
   <ToastList />
+  <EditModal bind:this={editModal} />
 
   {#if meta && meta.next}
     <div class="pagination">
