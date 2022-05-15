@@ -1,10 +1,13 @@
 <script lang="ts">
-  import EditForm from '$lib/components/feature/EditForm.svelte';
+  import AutocompleteForm from '$lib/components/autocomplte/AutocompleteForm.svelte';
 </script>
 
 <main>
   <section>
-    <EditForm />
+    <AutocompleteForm />
+  </section>
+  <section>
+    <h1>hello</h1>
   </section>
 </main>
 
@@ -17,5 +20,8 @@
 
   section {
     margin: 16px 0;
+
+    max-width: 600px;
+    margin: 16px auto;
   }
 </style>

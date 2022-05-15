@@ -27,27 +27,11 @@
 <slot />
 
 <style lang="scss">
-  // @font-face {
-  //   font-family: 'Inter';
-  //   font-style: normal;
-  //   font-weight: 400;
-  //   font-display: swap;
-  //   // prettier-ignore
-  //   src: local('Inter-Regular'), url('../assets/interJD5f6rvu.woff2') format('woff2'), url('../assets/interJD5f6rvu.woff') format('woff');
-  // }
-  // @font-face {
-  //   font-family: 'Inter';
-  //   font-style: normal;
-  //   font-weight: 800;
-  //   font-display: swap;
-  //   // prettier-ignore
-  //   src: local('Inter-ExtraBold'), url('../assets/interIoAYgYqv.woff2') format('woff2'), url('../assets/interIoAYgYqv.woff') format('woff');
-  // }
-
   @mixin dark {
     // --bg-main: #050505;
     --bg-main: #121212;
     --bg-card: #1d1d1f;
+    --bg-v0: #3f3f3f;
     --bg-btn: hsl(223deg 7% 19%);
     --color-btn-bo: hsl(223deg 7% 19%);
     --color-text: #ddd;
@@ -59,6 +43,7 @@
   @mixin light {
     --bg-main: #f3f3f3;
     --bg-card: #fefefe;
+    --bg-v0: #efefef;
     --bg-btn: hsl(0deg 0% 100%);
     --color-btn-bo: hsl(210deg 14% 83%);
     --color-text: #222;

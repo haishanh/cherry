@@ -27,6 +27,7 @@ const noop: MigrateFn = () => {};
 
 const v01 = { version: 1, up: noop, down: noop };
 const v02 = { version: 2, up: noop, down: noop };
+const v03 = { version: 3, up: noop, down: noop };
 const migrations = [v01, v02];
 
 v01.up = (db: Database.Database) => {
@@ -123,6 +124,28 @@ v02.up = (db: Database.Database) => {
       userId integer,
       data text,
       createdAt integer);
+    `
+  ).run();
+};
+
+v03.up = (db: Database.Database) => {
+  db.prepare(
+    `
+    create table if not exists tag(
+      id integer PRIMARY KEY,
+      name text,
+      userId integer,
+      createdAt integer,
+      unique (userId, name)
+    );
+    `
+  ).run();
+  db.prepare(
+    `
+    create table if not exists bookmark_tag(
+      id integer PRIMARY KEY,
+      bookmarkId integer,
+      tagId integer);
     `
   ).run();
 };
