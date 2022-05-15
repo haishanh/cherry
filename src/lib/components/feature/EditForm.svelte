@@ -1,19 +1,32 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+
   import Button from '$lib/components/base/Button.svelte';
   import Field from '$lib/components/base/Field.svelte';
   import type { BookmarkFromDb } from '$lib/type';
   import { request } from '$lib/utils/http.util';
 
   export let bookmark: Pick<BookmarkFromDb, 'id' | 'url' | 'title' | 'desc'>;
+  // event updatestart, updatefailed
 
-  async function updateBookmark(opts: { id: string | number }) {
-    await request({ url: '/api/bookmarks/' + bookmark.id, method: 'PATCH', data: opts });
+  const dispatch = createEventDispatcher();
+
+  function updateBookmark(opts: { id: string | number }) {
+    return request({ url: '/api/bookmarks/' + bookmark.id, method: 'PATCH', data: opts });
   }
 
   async function onSubmit() {
-    const ret = await updateBookmark(bookmark);
-    // eslint-disable-next-line no-console
-    console.log(ret);
+    // make a copy
+    const b = { ...bookmark };
+    dispatch('updatestart', b);
+    try {
+      const ret = await updateBookmark(b);
+      console.log(ret.data);
+    } catch (err) {
+      dispatch('updatefailed', b);
+      console.log('Update bookmark failed');
+      console.log(err);
+    }
     // TODO
     // if success
     //   if has previous page: go back
@@ -24,7 +37,7 @@
 <form on:submit|preventDefault={onSubmit}>
   <Field name="Link" bind:value={bookmark.url} />
   <Field name="Title" bind:value={bookmark.title} />
-  <Field name="Description" bind:value={bookmark.desc} type="textarea" />
+  <Field name="Description" bind:value={bookmark.desc} type="textarea" placeholder="" />
   <div class="action">
     <Button type="submit">Save</Button>
   </div>

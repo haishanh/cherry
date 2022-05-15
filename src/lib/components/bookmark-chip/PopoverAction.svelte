@@ -6,6 +6,8 @@
 
   import Button from '$lib/components/base/Button.svelte';
 
+  import VisuallyHidden from '../base/VisuallyHidden.svelte';
+
   const dispatch = createEventDispatcher();
 
   const emit = (event: string) => () => dispatch(event);
@@ -21,13 +23,13 @@
 
 <div class="action" use:focus0>
   <Button kind="icon" title="View and Edit" on:click={emit('edit')}>
-    <span class="vh">View and Edit</span><Edit size={14} />
+    <VisuallyHidden>View and Edit</VisuallyHidden><Edit size={14} />
   </Button>
   <Button kind="icon" title="Delete" on:click={emit('delete')}>
-    <span class="vh">Delete</span><Trash size={14} />
+    <VisuallyHidden>Delete</VisuallyHidden><Trash size={14} />
   </Button>
   <Button kind="icon" title="Close" on:click={emit('close')}>
-    <span class="vh">Close</span><CloseIcon size={14} />
+    <VisuallyHidden>Close</VisuallyHidden><CloseIcon size={14} />
   </Button>
 </div>
 
@@ -36,15 +38,5 @@
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-  }
-
-  .vh {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
   }
 </style>

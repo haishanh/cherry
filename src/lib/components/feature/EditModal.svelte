@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BookmarkFromDb } from '$lib/type';
+
   import Modal from '../base/Modal.svelte';
   import EditForm from './EditForm.svelte';
 
@@ -11,10 +12,14 @@
     bookmark = data;
     modal.open();
   };
+
+  export const close = () => {
+    modal.close();
+  };
 </script>
 
 <Modal bind:this={modal}>
-  <EditForm {bookmark} />
+  <EditForm {bookmark} on:updatestart on:updatefailed />
 </Modal>
 
 <style lang="scss">

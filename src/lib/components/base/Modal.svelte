@@ -1,35 +1,51 @@
 <script lang="ts">
+  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
   import { fly } from 'svelte/transition';
-  /* import { quintOut } from "svelte/easing"; */
+  // import { quintOut } from "svelte/easing";
   import { fade } from 'svelte/transition';
+
+  import Button from '$lib/components/base/Button.svelte';
+  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
   let isOpen = false;
 
   export function open() {
     isOpen = true;
   }
-  function close() {
+  export function close() {
     isOpen = false;
   }
 
-  // setTimeout(() => {
-  //   open();
-  // }, 2000);
+  // function handleClickOverlay(event: MouseEvent) {
+  //   const overlay = ( event.currentTarget  as HTMLElement);
+  //   const target = (event.target as HTMLElement);
+  //   if (overlay.contains(target)) return;
+  // }
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      close();
-    }
-    console.log(e);
+  function focus0(node: HTMLDivElement) {
+    const btn = node.querySelector('button') as HTMLButtonElement;
+    requestAnimationFrame(() => {
+      btn && btn.focus({ preventScroll: true });
+    });
   }
+
+  // function handleKeydown(e: KeyboardEvent) {
+  //   if (e.key === 'Escape') {
+  //     close();
+  //   }
+  // }
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<!-- <svelte:window on:keydown={handleKeydown} /> -->
 {#if isOpen}
-  <div class="overlay" transition:fade={{ delay: 0, duration: 300 }}>
-    <div class="cnt" transition:fly={{ delay: 0, duration: 300, y: 100, opacity: 0 }}>
-      <slot />
+  <div class="overlay" transition:fade={{ delay: 0, duration: 300 }} on:click={close} />
+  <div class="cnt" transition:fly={{ delay: 0, duration: 300, y: 100, opacity: 0 }}>
+    <div class="action" use:focus0>
+      <Button kind="icon" title="Close" on:click={close}>
+        <VisuallyHidden>Close</VisuallyHidden><CloseIcon size={14} />
+      </Button>
     </div>
+    <slot />
   </div>
 {/if}
 
@@ -40,7 +56,7 @@
     background-color: rgba(0, 0, 0, 0.5);
   }
   .cnt {
-    position: absolute;
+    position: fixed;
     max-width: max(90vw, 800px);
     width: 700px;
     top: 15%;
@@ -49,5 +65,11 @@
     background-color: var(--bg-card);
     padding: 16px;
     border-radius: 10px;
+  }
+  .action {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px;
   }
 </style>

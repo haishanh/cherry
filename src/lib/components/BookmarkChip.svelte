@@ -156,6 +156,7 @@
 
   async function handleEdit() {
     if (!bookmark) return;
+    closePopup();
     dispatch('edit', bookmark);
   }
 </script>

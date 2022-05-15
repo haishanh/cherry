@@ -1,12 +1,13 @@
 <script lang="ts">
   import invariant from 'tiny-invariant';
 
-  import ToastList from './base/toast/ToastList.svelte';
-  import SearchForm from '$lib/components/SearchForm.svelte';
   import BookmarkChip from '$lib/components/BookmarkChip.svelte';
+  import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb } from '$lib/type';
-  import Header from './feature/Header.svelte';
+
+  import ToastList from './base/toast/ToastList.svelte';
   import EditModal from './feature/EditModal.svelte';
+  import Header from './feature/Header.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
   export let meta: { next?: string } = {};
@@ -42,6 +43,21 @@
   function handleEditBookmark(e: CustomEvent<BookmarkFromDb>) {
     const bookmark = e.detail;
     editModal.open(bookmark);
+  }
+
+  function handleBookmarkUpdateStart(e: CustomEvent<BookmarkFromDb>) {
+    const bookmark = e.detail;
+    const idx = bookmarks.findIndex((item) => item.id === bookmark.id);
+
+    if (idx < 0) return;
+
+    bookmarks.splice(idx, 1);
+    bookmarks.splice(0, 0, bookmark);
+    bookmarks = bookmarks;
+    editModal.close();
+  }
+
+  function handleBookmarkUpdateFailed(_e: CustomEvent<BookmarkFromDb>) {
     //
   }
 </script>
@@ -61,7 +77,11 @@
   </div>
 
   <ToastList />
-  <EditModal bind:this={editModal} />
+  <EditModal
+    bind:this={editModal}
+    on:updatestart={handleBookmarkUpdateStart}
+    on:updatefailed={handleBookmarkUpdateFailed}
+  />
 
   {#if meta && meta.next}
     <div class="pagination">
