@@ -57,9 +57,9 @@
   }
   .cnt {
     position: fixed;
-    max-width: max(90vw, 800px);
+    max-width: min(90vw, 800px);
     width: 700px;
-    top: 15%;
+    top: 10%;
     left: 50%;
     transform: translate(-50%);
     background-color: var(--bg-card);
