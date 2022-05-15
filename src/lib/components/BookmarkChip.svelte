@@ -214,6 +214,16 @@
     padding: 10px;
     border-radius: 300px;
     border: 1px solid transparent;
+    outline: none;
+    &:focus {
+      @media (prefers-color-scheme: dark) {
+        --lightness: 30%;
+      }
+      @media (prefers-color-scheme: light) {
+        --lightness: 50%;
+      }
+      border-color: hsl(0deg 0% var(--lightness));
+    }
     &.isOpen {
       @media (prefers-color-scheme: dark) {
         --lightness: 30%;

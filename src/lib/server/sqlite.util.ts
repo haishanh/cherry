@@ -115,11 +115,7 @@ v01.up = (db: Database.Database) => {
 };
 
 v02.up = (db: Database.Database) => {
-  db.prepare(
-    ` insert into migration (version)
-      values (@version)`
-  ).run({ version: v02.version });
-
+  db.prepare(`insert into migration (version) values (@version)`).run({ version: v02.version });
   db.prepare(
     `
     create table if not exists bookmark_stash(
