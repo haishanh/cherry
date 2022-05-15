@@ -14,6 +14,7 @@
     outline: none;
     border-radius: 7px;
     font-family: inherit;
+    font-size: inherit;
 
     border: 1px solid var(--color-input-bo);
     &:hover {
