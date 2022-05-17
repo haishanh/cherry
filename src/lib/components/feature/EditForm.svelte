@@ -45,6 +45,6 @@
 
 <style lang="scss">
   .action {
-    margin-top: 20px;
+    margin-top: 12px;
   }
 </style>

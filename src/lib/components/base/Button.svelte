@@ -35,7 +35,9 @@
       transform: scale(0.97);
     }
 
-    padding: 9px 13px;
+    padding: 10px 14px;
+    font-size: 16px;
+    font-weight: 800;
 
     &.minimal {
       border-color: transparent;
