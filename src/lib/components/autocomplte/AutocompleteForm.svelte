@@ -1,12 +1,21 @@
 <script lang="ts">
   import { makeId } from '$lib/utils/common.util';
+  import { tick } from 'svelte';
 
   import Tag from './Tag.svelte';
 
+  let inputElement: HTMLInputElement;
+
   let expanded = false;
 
-  type OptionItem = { id: number | string; name: string; note?: string };
-  const options: OptionItem[] = [
+  type Tag = { id: number | string; name: string; isNew?: boolean };
+  export let tags: Tag[] = [
+    { id: 100, name: 'Hello' },
+    { id: 101, name: 'how are you' },
+  ];
+
+  type OptionItem = { id: number | string; name: string; isNew?: boolean };
+  let options: OptionItem[] = [
     { id: 1, name: 'White' },
     { id: 2, name: 'Red' },
     { id: 3, name: 'Yellow' },
@@ -21,11 +30,9 @@
   let inputValue = '';
 
   let pseudoId = Date.now();
-  let pseudoOption = { id: pseudoId, name: '', note: 'New tag' };
+  let pseudoOption = { id: pseudoId, name: '', isNew: true };
 
   $: {
-    console.log('$1', JSON.stringify(filtered));
-    console.log('$1', hiIdx);
     const highlighted = filtered[hiIdx];
     if (inputValue) {
       const newTagName = inputValue.trim();
@@ -35,7 +42,7 @@
       });
       const last = filtered[filtered.length - 1];
       if (last) {
-        if (last.id !== pseudoId) {
+        if (last.id !== pseudoOption.id) {
           pseudoOption.name = newTagName;
           filtered.push(pseudoOption);
           filtered = filtered;
@@ -53,17 +60,13 @@
     }
 
     const idx = filtered.indexOf(highlighted);
-    console.log('--', idx);
     if (highlighted && idx >= 0) {
       hiIdx = idx;
     } else if (filtered.length > 0) {
       hiIdx = 0;
     }
-    // eslint-disable-next-line no-console
-    console.log('$2', hiIdx);
 
     ensureItemInView(hiIdx);
-    console.log('$2', JSON.stringify(filtered));
   }
 
   let idPrefix = makeId();
@@ -95,68 +98,86 @@
     expanded = true;
   }
 
-  function handleInputOnBlur() {
-    // expanded = false;
+  function handleClickItem(e: MouseEvent) {
+    e.preventDefault();
+    let dIdx = (e.currentTarget as HTMLElement).getAttribute('data-idx');
+    if (!dIdx) return;
+    const idx = parseInt(dIdx, 10);
+    confirmItem(idx);
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }
+
+  function confirmItem(inputIdx: number) {
+    let idx = inputIdx;
+    const selected = filtered[idx];
+
+    if (selected) {
+      tags.push({ ...selected });
+      options = options.filter((o) => o.id !== selected.id);
+      tags = tags;
+
+      if (idx === hiIdx) {
+        hiIdx = 0;
+        inputValue = '';
+      }
+      // user can create multiple new tags
+      // we need to give pseudoOption a new id after adding it to the tags
+      // to avoid dupicate keys in list
+      if (selected.isNew) pseudoOption.id = Date.now();
+
+      expanded = false;
+    }
   }
 
   function handleOnKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      expanded = false;
-      return;
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      // eslint-disable-next-line no-console
-      console.log(filtered.length, hiIdx);
-      if (filtered.length > hiIdx + 1) {
-        hiIdx = hiIdx + 1;
-      } else if (filtered.length === hiIdx + 1) {
-        hiIdx = 0;
-      }
-      console.log(filtered.length, hiIdx);
-      return;
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (hiIdx >= 0) {
-        if (hiIdx === 0) {
-          hiIdx = filtered.length - 1;
-        } else {
-          hiIdx = hiIdx - 1;
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        expanded = false;
+        return;
+      case 'ArrowDown':
+        e.preventDefault();
+        if (filtered.length > hiIdx + 1) {
+          hiIdx = hiIdx + 1;
+        } else if (filtered.length === hiIdx + 1) {
+          hiIdx = 0;
         }
-      }
-      return;
+        return;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (hiIdx >= 0) {
+          if (hiIdx === 0) {
+            hiIdx = filtered.length - 1;
+          } else {
+            hiIdx = hiIdx - 1;
+          }
+        }
+        return;
+      case 'Enter':
+        e.preventDefault();
+        confirmItem(hiIdx);
+        return;
+      default:
+        console.log(e.key);
     }
-    if (e.key === 'Enter') {
-      // TODO
-    }
-    // eslint-disable-next-line no-console
-    console.log(e.key);
   }
 </script>
 
 <div class="autocomplete-wrapper">
   <div class="autocomplete">
-    <Tag name="hello" />
-    <Tag name="how are you" color="1" />
-    <Tag name="how are you" color="2" />
-    <Tag name="how are you" color="1" />
-    <Tag name="how are you" color="2" />
-    <Tag name="how are you" color="2" />
-    <Tag name="how are you" />
-    <Tag name="how are you" color="2" />
-    <Tag name="how are you" />
-    <Tag name="how are you" color="1" />
-    <Tag name="how are you" />
+    {#each tags as tag (tag.id)}
+      <Tag name={tag.name} />
+    {/each}
     <input
+      bind:this={inputElement}
       autocomplete="off"
       autocapitalize="none"
       spellcheck="false"
       placeholder="Add tags..."
       bind:value={inputValue}
       on:focus={handleInputOnFocus}
-      on:blur={handleInputOnBlur}
       aria-autocomplete="list"
       aria-haspopup="listbox"
       aria-expanded={expanded}
@@ -167,10 +188,17 @@
   {#if expanded}
     <ul role="listbox" bind:this={listbox} aria-activedescendant="{idPrefix}-{hiIdx}">
       {#each filtered as item, idx (item.id)}
-        <li role="option" id="{idPrefix}-{item.id}" class:hi={idx === hiIdx} aria-selected={idx === hiIdx}>
+        <li
+          role="option"
+          id="{idPrefix}-{item.id}"
+          class:hi={idx === hiIdx}
+          aria-selected={idx === hiIdx}
+          data-idx={idx}
+          on:click={handleClickItem}
+        >
           <span>{item.name}</span>
-          {#if item.note}
-            <span>{item.note}</span>
+          {#if item.isNew}
+            <span>New tag</span>
           {/if}
         </li>
       {/each}
@@ -235,6 +263,7 @@
     border-radius: 7px;
     height: 30px;
     border: 1px solid transparent;
+    cursor: pointer;
     &:hover {
       background-color: var(--bg-v0);
       border-color: var(--color-input-bo-hover);
