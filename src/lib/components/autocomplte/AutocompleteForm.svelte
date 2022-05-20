@@ -1,6 +1,5 @@
 <script lang="ts">
   import { makeId } from '$lib/utils/common.util';
-  import { tick } from 'svelte';
 
   import Tag from './Tag.svelte';
 
@@ -8,8 +7,8 @@
 
   let expanded = false;
 
-  type Tag = { id: number | string; name: string; isNew?: boolean };
-  export let tags: Tag[] = [
+  type TagType = { id: number | string; name: string; isNew?: boolean };
+  export let tags: TagType[] = [
     { id: 100, name: 'Hello' },
     { id: 101, name: 'how are you' },
   ];
@@ -98,15 +97,24 @@
     expanded = true;
   }
 
+  function handleInputOnBlur(e: FocusEvent) {
+    let activeElement = e.relatedTarget as Node;
+    if (activeElement === listbox && inputElement) {
+      // not sure why tick().then() is not working
+      setTimeout(() => {
+        inputElement.focus();
+      }, 0);
+    } else {
+      expanded = false;
+    }
+  }
+
   function handleClickItem(e: MouseEvent) {
     e.preventDefault();
     let dIdx = (e.currentTarget as HTMLElement).getAttribute('data-idx');
     if (!dIdx) return;
     const idx = parseInt(dIdx, 10);
     confirmItem(idx);
-    if (inputElement) {
-      inputElement.focus();
-    }
   }
 
   function confirmItem(inputIdx: number) {
@@ -126,8 +134,6 @@
       // we need to give pseudoOption a new id after adding it to the tags
       // to avoid dupicate keys in list
       if (selected.isNew) pseudoOption.id = Date.now();
-
-      expanded = false;
     }
   }
 
@@ -178,6 +184,7 @@
       placeholder="Add tags..."
       bind:value={inputValue}
       on:focus={handleInputOnFocus}
+      on:blur={handleInputOnBlur}
       aria-autocomplete="list"
       aria-haspopup="listbox"
       aria-expanded={expanded}
@@ -186,7 +193,7 @@
   </div>
   <!-- listbox -->
   {#if expanded}
-    <ul role="listbox" bind:this={listbox} aria-activedescendant="{idPrefix}-{hiIdx}">
+    <ul tabindex="-1" role="listbox" bind:this={listbox} aria-activedescendant="{idPrefix}-{hiIdx}">
       {#each filtered as item, idx (item.id)}
         <li
           role="option"

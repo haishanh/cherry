@@ -1,12 +1,14 @@
 <script lang="ts">
   import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
+
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
   export let name: string;
-
   export let color: string | number = 0;
-
   export let hasClose = false;
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const noop = () => {};
 
   const colorMap = {
     '0': 'color:#14551B;background:#ADF29B;',
@@ -21,7 +23,7 @@
   <span>
     {name}
   </span>
-  <button on:click={() => {}}>
+  <button on:click={noop}>
     <VisuallyHidden>Remove this tag</VisuallyHidden><CloseIcon size={14} />
   </button>
 </span>
