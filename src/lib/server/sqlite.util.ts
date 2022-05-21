@@ -45,18 +45,10 @@ v01.up = (db: Database.Database) => {
       updatedAt integer);
     `
   ).run();
+  // sqlite> drop index bookmark_updatedAt_idx;
+  // sqlite> drop index bookmark_userId_idx;
 
-  db.prepare(
-    `
-    create index if not exists bookmark_updatedAt_idx on bookmark (updatedAt)
-    `
-  ).run();
-
-  db.prepare(
-    `
-    create index if not exists bookmark_userId_idx on bookmark (userId)
-    `
-  ).run();
+  db.prepare(`create index if not exists bookmark_idx_userId_updatedAt on bookmark (userId, updatedAt)`).run();
 
   db.prepare(
     `
@@ -243,8 +235,8 @@ function getAll(opts: BookmarkGetAllOpts) {
          , url
          , updatedAt
       from bookmark
-     where userId = @userId and updatedAt <= @updatedAt and id >= @id
-  order by updatedAt desc, id asc
+     where userId = @userId and (updatedAt, id) <= (@updatedAt, @id)
+  order by updatedAt desc, id desc
     limit ${PAGE_BOOKMARK_LIMIT}
     offset 1
     `
@@ -259,7 +251,7 @@ function getAll(opts: BookmarkGetAllOpts) {
          , updatedAt
       from bookmark
      where userId = @userId
-  order by updatedAt desc, id asc
+  order by updatedAt desc, id desc
     limit ${PAGE_BOOKMARK_LIMIT}
     `
     );
