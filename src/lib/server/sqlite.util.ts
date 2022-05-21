@@ -45,8 +45,6 @@ v01.up = (db: Database.Database) => {
       updatedAt integer);
     `
   ).run();
-  // sqlite> drop index bookmark_updatedAt_idx;
-  // sqlite> drop index bookmark_userId_idx;
 
   db.prepare(`create index if not exists bookmark_idx_userId_updatedAt on bookmark (userId, updatedAt)`).run();
 
