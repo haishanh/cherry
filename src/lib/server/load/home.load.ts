@@ -15,7 +15,9 @@ export const load: Load = async (input) => {
 
   if (res.ok) {
     const { data, meta } = await res.json();
-    console.log('home.load', meta);
+    console.log(
+      `home.load meta=${meta} data.length=${data.length} data[data.length-1].id = ${data[data.length - 1].id}`
+    );
 
     return {
       props: { bookmarks: data, meta },
