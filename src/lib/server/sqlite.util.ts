@@ -172,7 +172,7 @@ let db: Database.Database;
 export const lite = () => {
   if (db) return db;
 
-  db = new Database(DATABASE_PATH);
+  db = new Database(DATABASE_PATH, { verbose: console.log });
   if (!migrated) {
     db.pragma('journal_mode = WAL');
     migrate(db);

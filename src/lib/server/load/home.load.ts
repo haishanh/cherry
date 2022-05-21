@@ -4,10 +4,10 @@ export const load: Load = async (input) => {
   const fetch = input.fetch;
 
   const qs0 = input.url.searchParams;
-  const q0 = qs0.get('q');
+  const q = qs0.get('q');
 
   let res: Response;
-  if (q0) {
+  if (q) {
     res = await fetch(`/api/search?${qs0}`);
   } else {
     res = await fetch(`/api/bookmarks?${qs0}`);
@@ -15,9 +15,7 @@ export const load: Load = async (input) => {
 
   if (res.ok) {
     const { data, meta } = await res.json();
-    console.log(
-      `home.load meta=${meta} data.length=${data.length} data[data.length-1].id = ${data[data.length - 1].id}`
-    );
+    console.log(`home.load meta=${meta} data.length=${data.length}`);
 
     return {
       props: { bookmarks: data, meta },
