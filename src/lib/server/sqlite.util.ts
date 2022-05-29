@@ -221,10 +221,10 @@ function getAll(opts: BookmarkGetAllOpts) {
   let error: ApiError;
   let stmt: Database.Statement;
   const params: any = { userId: opts.userId };
-  if (opts.next) {
-    const next = opts.next;
-    params.updatedAt = next.updatedAt;
-    params.id = next.id;
+  if (opts.after) {
+    const after = opts.after;
+    params.updatedAt = after.updatedAt;
+    params.id = after.id;
     stmt = db.prepare(
       `
     select id

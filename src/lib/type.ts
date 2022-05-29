@@ -32,7 +32,7 @@ export type BookmarkRestoreDto = BookmarkDeleteDto;
 
 export type BookmarkGetAllOpts = {
   userId: number;
-  next?: { updatedAt: number; id: number };
+  after?: { updatedAt: number; id: number };
 };
 
 export type UserCreateDto = {

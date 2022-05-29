@@ -10,7 +10,7 @@
   import Header from './feature/Header.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
-  export let meta: { next?: string } = {};
+  export let meta: { after?: string } = {};
 
   let editModal: EditModal;
 
@@ -83,9 +83,9 @@
     on:updatefailed={handleBookmarkUpdateFailed}
   />
 
-  {#if meta && meta.next}
+  {#if meta && meta.after}
     <div class="pagination">
-      <a href={'/?next=' + meta.next}>Next</a>
+      <a href={'/?after=' + meta.after}>Next</a>
     </div>
   {/if}
 </div>

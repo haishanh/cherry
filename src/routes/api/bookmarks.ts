@@ -14,24 +14,24 @@ export const get: RequestHandler = async (event) => {
   const allOpts: BookmarkGetAllOpts = { userId };
 
   const url = event.url;
-  const nextStr = url.searchParams.get('next');
+  const nextStr = url.searchParams.get('after');
   if (nextStr) {
     const [u, i] = nextStr.split('.');
     const updatedAt = parseInt(u, 10);
     const id = parseInt(i, 10);
     assert(!isNaN(updatedAt));
     assert(!isNaN(id));
-    allOpts.next = { updatedAt, id };
+    allOpts.after = { updatedAt, id };
   }
 
   const { data, error } = dbUtil.bookmark.all(allOpts);
 
-  const meta: { next?: string } = {};
+  const meta: { after?: string } = {};
 
   if (data.length >= PAGE_BOOKMARK_LIMIT) {
     const last = data[data.length - 1];
     assert(last.updatedAt);
-    meta.next = last.updatedAt + '.' + last.id;
+    meta.after = last.updatedAt + '.' + last.id;
   }
 
   if (data) {
