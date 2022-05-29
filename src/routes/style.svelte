@@ -1,13 +1,30 @@
 <script lang="ts">
   import AutocompleteForm from '$lib/components/autocomplte/AutocompleteForm.svelte';
+  import type { TagType } from '$lib/components/autocomplte/type';
+
+  const allTags: TagType[] = [
+    { id: 1, name: 'White' },
+    { id: 2, name: 'Red' },
+    { id: 3, name: 'Yellow' },
+    { id: 4, name: 'Green' },
+    { id: 5, name: 'Blue' },
+    { id: 6, name: 'Black' },
+  ];
+
+  let tags: TagType[] = [];
+
+  function handleOnChange(e: CustomEvent<TagType[]>) {
+    tags = e.detail;
+    console.log(e.detail);
+  }
 </script>
 
 <main>
   <section>
-    <AutocompleteForm />
+    <pre>{JSON.stringify(tags, null, 2)}</pre>
   </section>
   <section>
-    <h1>hello</h1>
+    <AutocompleteForm options={allTags} on:change={handleOnChange} />
   </section>
 </main>
 

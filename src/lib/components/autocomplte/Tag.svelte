@@ -1,14 +1,20 @@
 <script lang="ts">
   import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
-
+  import { createEventDispatcher } from 'svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
   export let name: string;
   export let color: string | number = 0;
   export let hasClose = false;
 
+  export let tag: { name: string } = null;
+
+  const dispatch = createEventDispatcher();
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const noop = () => {};
+  const noop = () => {
+    dispatch('clickclose', tag);
+  };
 
   const colorMap = {
     '0': 'color:#14551B;background:#ADF29B;',

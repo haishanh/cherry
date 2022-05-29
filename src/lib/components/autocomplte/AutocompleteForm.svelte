@@ -1,27 +1,23 @@
 <script lang="ts">
   import { makeId } from '$lib/utils/common.util';
+  import { createEventDispatcher } from 'svelte';
+  import { TagState } from './type';
+  import type { TagType } from './type';
 
   import Tag from './Tag.svelte';
+
+  const dispatch = createEventDispatcher();
 
   let inputElement: HTMLInputElement;
 
   let expanded = false;
 
-  type TagType = { id: number | string; name: string; isNew?: boolean };
-  export let tags: TagType[] = [
+  let tags: TagType[] = [
     { id: 100, name: 'Hello' },
     { id: 101, name: 'how are you' },
   ];
 
-  type OptionItem = { id: number | string; name: string; isNew?: boolean };
-  let options: OptionItem[] = [
-    { id: 1, name: 'White' },
-    { id: 2, name: 'Red' },
-    { id: 3, name: 'Yellow' },
-    { id: 4, name: 'Green' },
-    { id: 5, name: 'Blue' },
-    { id: 6, name: 'Black' },
-  ];
+  export let options: TagType[] = [];
 
   let filtered = [...options];
   // highlighted idx
@@ -29,7 +25,7 @@
   let inputValue = '';
 
   let pseudoId = Date.now();
-  let pseudoOption = { id: pseudoId, name: '', isNew: true };
+  let pseudoOption = { id: pseudoId, name: '', state: TagState.New };
 
   $: {
     const highlighted = filtered[hiIdx];
@@ -122,6 +118,12 @@
     const selected = filtered[idx];
 
     if (selected) {
+      const item = tags.find((v) => v.name === selected.name);
+      if (item) {
+        inputValue = '';
+        return;
+      }
+
       tags.push({ ...selected });
       options = options.filter((o) => o.id !== selected.id);
       tags = tags;
@@ -133,7 +135,9 @@
       // user can create multiple new tags
       // we need to give pseudoOption a new id after adding it to the tags
       // to avoid dupicate keys in list
-      if (selected.isNew) pseudoOption.id = Date.now();
+      if (selected.state === TagState.New) pseudoOption.id = Date.now();
+
+      dispatch('change', [...tags]);
     }
   }
 
@@ -169,12 +173,17 @@
         console.log(e.key);
     }
   }
+
+  function handleClickCloseTag(e: CustomEvent<TagType>) {
+    // TODO
+    console.log(e.detail);
+  }
 </script>
 
 <div class="autocomplete-wrapper">
   <div class="autocomplete">
     {#each tags as tag (tag.id)}
-      <Tag name={tag.name} />
+      <Tag name={tag.name} {tag} on:clickclose={handleClickCloseTag} />
     {/each}
     <input
       bind:this={inputElement}
@@ -204,7 +213,7 @@
           on:click={handleClickItem}
         >
           <span>{item.name}</span>
-          {#if item.isNew}
+          {#if item.state === TagState.New}
             <span>New tag</span>
           {/if}
         </li>
