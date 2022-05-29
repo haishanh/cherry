@@ -350,14 +350,7 @@ function stashBookmark(opts: BookmarkStashDto) {
   const userId = opts.userId;
 
   const run = db.transaction(() => {
-    const stmt0 = db.prepare(
-      `
-    select *
-      from bookmark
-     where id = @id
-   and userId = @userId
-      `
-    );
+    const stmt0 = db.prepare('select * from bookmark where id = @id and userId = @userId');
     const row = stmt0.get({ id, userId });
     if (!row) {
       throw new ApiError(HttpStatus.NOT_FOUND);
@@ -372,13 +365,7 @@ function stashBookmark(opts: BookmarkStashDto) {
     );
     stmt1.run({ id, userId, data });
 
-    const stmtDelete = db.prepare(
-      `
-      delete from bookmark
-       where id = @id
-     and userId = @userId
-      `
-    );
+    const stmtDelete = db.prepare('delete from bookmark where id = @id and userId = @userId');
     return stmtDelete.run({ id, userId });
   });
 
@@ -408,14 +395,7 @@ function restoreBookmark(opts: BookmarkRestoreDto) {
   const userId = opts.userId;
 
   const run = db.transaction(() => {
-    const stmtRead = db.prepare(
-      `
-      select data
-        from bookmark_stash
-       where id = @id
-     and userId = @userId
-      `
-    );
+    const stmtRead = db.prepare('select data from bookmark_stash where id = @id and userId = @userId');
     const retRead = stmtRead.get({ id, userId });
     if (!retRead) {
       throw new ApiError(HttpStatus.NOT_FOUND);
@@ -424,19 +404,13 @@ function restoreBookmark(opts: BookmarkRestoreDto) {
 
     const stmtInsert = db.prepare(
       `
-    insert into bookmark (id, title, desc, url, userId, createdAt, updatedAt)
-    values (@id, @title, @desc, @url, @userId, @createdAt, @updatedAt)
-    `
+    insert into bookmark (title, desc, url, userId, createdAt, updatedAt)
+    values (@title, @desc, @url, @userId, @createdAt, @updatedAt)
+      `
     );
     stmtInsert.run(b);
 
-    const stmtDelete = db.prepare(
-      `
-      delete from bookmark_stash
-       where id = @id
-     and userId = @userId
-      `
-    );
+    const stmtDelete = db.prepare('delete from bookmark_stash where id = @id and userId = @userId');
     const retDelete = stmtDelete.run({ id, userId });
     return retDelete;
   });
