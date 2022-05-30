@@ -37,7 +37,8 @@ jobs:
       - run: echo "- Lint :white_check_mark:" >> $GITHUB_STEP_SUMMARY
       - name: Build
         run: pnpm build
-      - run: echo "- Build :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+      - run: echo "- :white_check_mark: Build" >> $GITHUB_STEP_SUMMARY
+      - run: sed -i 's/:white_check_mark: Build/:x: Build/' $GITHUB_STEP_SUMMARY
 
       - name: Send Notification
         uses: haishanh/actions-telegram-notification@v1
