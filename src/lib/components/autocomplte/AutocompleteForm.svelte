@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { makeId } from '$lib/utils/common.util';
-  import invariant from 'tiny-invariant';
   import { createEventDispatcher } from 'svelte';
-  import { TagState } from './type';
-  import type { TagType } from './type';
+  import invariant from 'tiny-invariant';
+
+  import { makeId } from '$lib/utils/common.util';
 
   import Tag from './Tag.svelte';
+  import type { TagType } from './type';
+  import { TagState } from './type';
 
   const dispatch = createEventDispatcher();
 

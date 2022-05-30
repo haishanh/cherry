@@ -11,9 +11,7 @@
     { id: 6, name: 'Black' },
   ];
 
-  let tags: TagType[] = [
-    { id: 100, name: 'Hello' },
-  ];
+  let tags: TagType[] = [{ id: 100, name: 'Hello' }];
 </script>
 
 <main>

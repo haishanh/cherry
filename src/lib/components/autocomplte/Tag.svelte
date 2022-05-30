@@ -1,6 +1,7 @@
 <script lang="ts">
   import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
   import { createEventDispatcher } from 'svelte';
+
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
   export let name: string;
