@@ -11,8 +11,7 @@
 
   const dispatch = createEventDispatcher();
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const noop = () => {
+  const handleClickClose = () => {
     dispatch('clickclose', tag);
   };
 
@@ -29,7 +28,7 @@
   <span>
     {name}
   </span>
-  <button on:click={noop}>
+  <button on:click={handleClickClose}>
     <VisuallyHidden>Remove this tag</VisuallyHidden><CloseIcon size={14} />
   </button>
 </span>

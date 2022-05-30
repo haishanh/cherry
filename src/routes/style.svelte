@@ -11,12 +11,9 @@
     { id: 6, name: 'Black' },
   ];
 
-  let tags: TagType[] = [];
-
-  function handleOnChange(e: CustomEvent<TagType[]>) {
-    tags = e.detail;
-    console.log(e.detail);
-  }
+  let tags: TagType[] = [
+    { id: 100, name: 'Hello' },
+  ];
 </script>
 
 <main>
@@ -24,7 +21,7 @@
     <pre>{JSON.stringify(tags, null, 2)}</pre>
   </section>
   <section>
-    <AutocompleteForm options={allTags} on:change={handleOnChange} />
+    <AutocompleteForm options={allTags} bind:tags />
   </section>
 </main>
 

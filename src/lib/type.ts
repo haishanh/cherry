@@ -40,3 +40,13 @@ export type UserCreateDto = {
   // password?: string;
   isAdmin?: number;
 };
+
+export type TagCreateDto = {
+  name: string;
+  userId: number;
+};
+
+export type BookmarkTagCreateInput = {
+  bookmarkId: number;
+  tagId: number;
+};

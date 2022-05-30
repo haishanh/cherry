@@ -11,6 +11,7 @@ import type {
   BookmarkRestoreDto,
   BookmarkStashDto,
   BookmarkUpdateDto,
+  TagCreateDto,
   UserCreateDto,
 } from '$lib/type';
 
@@ -28,11 +29,9 @@ const noop: MigrateFn = () => {};
 const v01 = { version: 1, up: noop, down: noop };
 const v02 = { version: 2, up: noop, down: noop };
 const v03 = { version: 3, up: noop, down: noop };
-const migrations = [v01, v02];
+const migrations = [v01, v02, v03];
 
 v01.up = (db: Database.Database) => {
-  db.prepare(`CREATE TABLE IF NOT EXISTS migration(version INTEGER)`).run();
-
   db.prepare(
     `
     create table if not exists bookmark(
@@ -98,15 +97,9 @@ v01.up = (db: Database.Database) => {
     end;
     `
   ).run();
-
-  db.prepare(
-    ` insert into migration (version)
-      values (@version)`
-  ).run({ version: v01.version });
 };
 
 v02.up = (db: Database.Database) => {
-  db.prepare(`insert into migration (version) values (@version)`).run({ version: v02.version });
   db.prepare(
     `
     create table if not exists bookmark_stash(
@@ -126,6 +119,7 @@ v03.up = (db: Database.Database) => {
       name text,
       userId integer,
       createdAt integer,
+      updatedAt integer,
       unique (userId, name)
     );
     `
@@ -133,9 +127,10 @@ v03.up = (db: Database.Database) => {
   db.prepare(
     `
     create table if not exists bookmark_tag(
-      id integer PRIMARY KEY,
       bookmarkId integer,
-      tagId integer);
+      tagId integer,
+      PRIMARY KEY(bookmarkId, tagId)
+    );
     `
   ).run();
 };
@@ -145,14 +140,28 @@ function migrate(db: Database.Database) {
   const run = db.transaction(() => {
     let version = 0;
     try {
-      const row = db.prepare(`select version from migration`).get();
+      const row = db.prepare(`select version from migration where rowid = 1`).get();
+      console.log(row);
       assert(typeof row.version === 'number');
       version = row.version;
     } catch (e) {
-      // ignore
+      if (e instanceof Database.SqliteError && e.code === 'SQLITE_ERROR') {
+        db.prepare(`CREATE TABLE IF NOT EXISTS migration(version INTEGER)`).run();
+        db.prepare('insert into migration (version) values (@version)').run({ version: 0 });
+      } else {
+        logger.error({ error: e });
+        throw e;
+      }
     }
+    let prevVersion = 0;
     for (const m of migrations) {
-      if (m.version > version) m.up(db);
+      // expect it is already sorted
+      assert(m.version > prevVersion);
+      prevVersion = m.version;
+      if (m.version > version) {
+        m.up(db);
+        db.prepare('update migration set version = @version where rowid = 1').run({ version: m.version });
+      }
     }
   });
   run();
@@ -188,6 +197,67 @@ export const user = {
   // get user by username
   get: getUser,
 };
+
+enum DataErrorCode {
+  TagAlreadyExits,
+}
+
+class DataError extends Error {
+  constructor(public code: DataErrorCode) {
+    super('' + code);
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+function createTag(db: BetterSqlite3.Database, opts: TagCreateDto) {
+  const stmt = db.prepare(
+    `
+    insert into tag (name, userId, createdAt, updatedAt)
+    values (@name, @userId, strftime('%s','now'), strftime('%s','now'))
+    `
+  );
+  try {
+    const ret = stmt.run(opts);
+    return { id: ret.lastInsertRowid as number };
+  } catch (e) {
+    if (e instanceof Database.SqliteError && e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      throw new DataError(DataErrorCode.TagAlreadyExits);
+    } else {
+      logger.error({ error: e });
+      throw e;
+    }
+  }
+}
+
+function createBookmarkTag(opts: BookmarkTagCreateInput) {
+  const stmt = db.prepare(
+    `
+    insert or ignore into bookmark_tag (bookmarkId, tagId)
+    values (@bookmarkId, @tagId)
+    `
+  );
+  try {
+    stmt.run(opts);
+  } catch (e) {
+    logger.error({ error: e });
+    throw e;
+  }
+}
+
+function deleteBookmarkTag(opts: BookmarkTagCreateInput) {
+  const stmt = db.prepare(
+    `
+    insert or ignore into bookmark_tag (bookmarkId, tagId)
+    values (@bookmarkId, @tagId)
+    `
+  );
+  try {
+    stmt.run(opts);
+  } catch (e) {
+    logger.error({ error: e });
+    throw e;
+  }
+}
 
 function searchBookmark(userId: number, opts: { text: string }) {
   const db = lite();

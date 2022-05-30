@@ -1,5 +1,6 @@
 <script lang="ts">
   import { makeId } from '$lib/utils/common.util';
+  import invariant from 'tiny-invariant';
   import { createEventDispatcher } from 'svelte';
   import { TagState } from './type';
   import type { TagType } from './type';
@@ -12,11 +13,7 @@
 
   let expanded = false;
 
-  let tags: TagType[] = [
-    { id: 100, name: 'Hello' },
-    { id: 101, name: 'how are you' },
-  ];
-
+  export let tags: TagType[] = [];
   export let options: TagType[] = [];
 
   let filtered = [...options];
@@ -119,12 +116,17 @@
 
     if (selected) {
       const item = tags.find((v) => v.name === selected.name);
-      if (item) {
+      if (item && item.state !== TagState.Deleted) {
         inputValue = '';
         return;
       }
 
-      tags.push({ ...selected });
+      if (item) {
+        delete item.state;
+      } else {
+        tags.push({ ...selected });
+      }
+
       options = options.filter((o) => o.id !== selected.id);
       tags = tags;
 
@@ -175,15 +177,32 @@
   }
 
   function handleClickCloseTag(e: CustomEvent<TagType>) {
-    // TODO
-    console.log(e.detail);
+    const tag = e.detail;
+    invariant(tag, 'handleClickCloseTag: something went wrong');
+    invariant(!tag.state || tag.state === TagState.New, `handleClickCloseTag: tag state [${tag.state}] not expected`);
+
+    if (!tag.state) {
+      // it means the tag is an existing one i.e. an option
+      // we should added back
+
+      options.push(tag);
+      options = options;
+
+      tag.state = TagState.Deleted;
+      tags = tags;
+    } else if (tag.state === TagState.New) {
+      tags = tags.filter((t) => t !== tag);
+    }
+    dispatch('change', [...tags]);
   }
 </script>
 
 <div class="autocomplete-wrapper">
   <div class="autocomplete">
     {#each tags as tag (tag.id)}
-      <Tag name={tag.name} {tag} on:clickclose={handleClickCloseTag} />
+      {#if tag.state !== TagState.Deleted}
+        <Tag name={tag.name} {tag} on:clickclose={handleClickCloseTag} />
+      {/if}
     {/each}
     <input
       bind:this={inputElement}
