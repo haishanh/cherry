@@ -1,15 +1,18 @@
 # FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:3.15-2.2.0.3 AS init
-FROM crazymax/alpine-s6:3.15-2.2.0.3 AS init
-RUN apk --update --no-cache add \
+FROM crazymax/alpine-s6:3.16-2.2.0.3 AS init
+
+# COPY --from=node:16.14.2-alpine /usr/local /usr/local
+COPY --from=node:18-alpine /usr/local /usr/local
+
+RUN apk upgrade && apk --update --no-cache add \
+  libstdc++ \
   libc6-compat \
   bash \
   ca-certificates \
   curl \
   nginx \
-  sqlite \
-  nodejs \
-  npm
-RUN npm i -g pnpm
+  sqlite && \
+  npm i -g pnpm
 
 FROM init as deps
 WORKDIR /app
@@ -25,21 +28,19 @@ COPY ./scripts ./scripts
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm i --prod
 
-# FROM --platform=$TARGETPLATFORM node:16-alpine AS builder
 FROM init AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json tsconfig.json svelte.config.js ./
+COPY package.json tsconfig.json svelte.config.js vite.config.js ./
 COPY ./static ./static
 COPY ./src ./src
 COPY --from=modules /app/src ./src
-
-RUN pnpm build
+RUN pnpm build && pnpm bundle:cli
 
 FROM crazymax/yasu:latest AS yasu
 FROM init AS base
 
-ENV PUID="1000" PGID="1000"
+ENV PUID="1001" PGID="1001" PORT="5173"
 
 COPY --from=yasu / /
 COPY docker/rootfs /
@@ -58,6 +59,7 @@ COPY --from=modules --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/.svelte-kit ./.svelte-kit
 COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
 COPY --from=builder --chown=nodejs:nodejs /app/build ./build
+COPY --from=builder /app/cherry /usr/local/bin/cherry
 
 EXPOSE 8000
 VOLUME [ "/data" ]

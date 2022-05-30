@@ -9,8 +9,9 @@ mkdir -p /data /var/run/nginx /var/log/nodejs
 # chmod g+w /var/run/docker.sock
 # chgrp -R docker /root/.docker
 
+# /data \
+
 chown -R nodejs. \
-  /data \
   /tpls \
   /var/log/nodejs \
   /var/lib/nginx \

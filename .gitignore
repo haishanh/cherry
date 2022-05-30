@@ -4,10 +4,12 @@ node_modules
 /.svelte-kit
 /package
 .vercel_build_output/
+.eslintcache
 .env
 .env.*
 !.env.example
 !.github
+!.eslintrc.cjs
 
 db/*
 *.db

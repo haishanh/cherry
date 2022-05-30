@@ -1,65 +1,70 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  export let dryrun = false;
 
-  let searchText = '';
+  import { onMount } from 'svelte';
+
+  import { afterNavigate, goto } from '$app/navigation';
+  import { log } from '$lib/client/logger.util';
+  import { fetchTags, tagList, tagMapById } from '$lib/client/tag.store';
+  import TagAutocomplete from '$lib/components/autocomplte/TagAutocomplete.svelte';
+  import type { TagType } from '$lib/type';
+
+  let tags: TagType[] = [];
+  let inputValue = '';
+
+  function updateState() {
+    const search = new URL(document.location.href).searchParams;
+    const qStr = search.get('q');
+    const tagStr = search.get('tag');
+    qStr ? (inputValue = qStr) : (inputValue = '');
+    if (tagStr && $tagMapById.size > 0) {
+      tags = tagStr
+        .split(',')
+        .map((s) => parseInt(s, 10))
+        .map((n) => $tagMapById.get(n))
+        .filter((x) => !!x);
+    } else {
+      tags = [];
+    }
+  }
+
+  onMount(() => {
+    fetchTags({ initial: true }).then(updateState);
+  });
+
+  afterNavigate(updateState);
 
   function onSubmit() {
-    const text = (searchText || '').trim();
-    const url = `/search?q=${encodeURIComponent(text)}`;
-    goto(url);
+    const q = (inputValue || '').trim();
+    const tag = tags.map((t) => t.id).join(',');
+    const o: { q?: string; tag?: string } = {};
+    if (q) o.q = q;
+    if (tag) o.tag = tag;
+    const qs = new URLSearchParams(o);
+    const url = `/?${qs}`;
+    if (!dryrun) {
+      goto(url);
+    } else {
+      log(url);
+    }
   }
 </script>
 
 <form on:submit|preventDefault={onSubmit}>
-  <input type="text" placeholder="Type in something to search" bind:value={searchText} />
+  <TagAutocomplete
+    options={$tagList}
+    bind:tags
+    canCreate={false}
+    search
+    bind:inputValue
+    placeholder="Search"
+    on:focus0
+    on:blur0
+  />
 </form>
 
 <style lang="scss">
   form {
-    padding: 0 25px 25px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  input {
-    @media (prefers-color-scheme: dark) {
-      --lightness: 7%;
-    }
-    @media (prefers-color-scheme: light) {
-      --lightness: 75%;
-    }
-    -webkit-appearance: none;
-    border-radius: 400px;
-    border: 1px solid hsl(0deg 0% var(--lightness));
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    color: var(--color-text);
-    font-size: inherit;
-    height: 40px;
-    outline: none;
     padding: 0 15px;
-    -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    width: 100%;
-  }
-
-  input:hover {
-    @media (prefers-color-scheme: dark) {
-      --lightness: 30%;
-    }
-    @media (prefers-color-scheme: light) {
-      --lightness: 50%;
-    }
-    border-color: hsl(0deg 0% var(--lightness));
-  }
-
-  input:focus {
-    @media (prefers-color-scheme: dark) {
-      --lightness: 70%;
-    }
-    @media (prefers-color-scheme: light) {
-      --lightness: 15%;
-    }
-    border-color: hsl(0deg 0% var(--lightness));
   }
 </style>

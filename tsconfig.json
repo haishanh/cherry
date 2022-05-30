@@ -2,6 +2,11 @@
   "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "$lib": ["src/lib"],
+      "$lib/*": ["src/lib/*"]
+    }
   }
 }

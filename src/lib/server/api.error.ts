@@ -1,23 +1,39 @@
-// util
-export function errorResponse(opts: { message?: string; code?: string; status?: HttpStatus }) {
-  const message = opts.message || '';
-  const code = opts.code || '';
-  const status = opts.status || HttpStatus.INTERNAL_SERVER_ERROR;
-  return {
-    status,
-    body: { message, code },
-  };
-}
+import { json } from '@sveltejs/kit';
 
 export class ApiError extends Error {
   constructor(public status: number, public code?: string, message?: string) {
     super(message);
     Error.captureStackTrace(this, this.constructor);
   }
+  toJSON() {
+    const { code, message } = this;
+    return {
+      ...(code ? { code } : null),
+      ...(message ? { message } : null),
+    };
+  }
 }
 
-export enum ApiErrorCode {}
-// MISSING_SEARCH_TEXT = 'MISSING_SEARCH_TEXT',
+export enum ApiErrorCode {
+  InvalidRequestBody = 'InvalidRequestBody',
+  InvalidPassword = 'InvalidPassword',
+}
+
+type ValidationErrorItem = { field: string; message: string };
+
+export class ValidationErrorBuilder {
+  private errors: ValidationErrorItem[] = [];
+
+  add(field: string, message: string) {
+    this.errors.push({ field, message });
+    return this;
+  }
+
+  response() {
+    const errors = this.errors;
+    return json({ errors }, { status: 400 });
+  }
+}
 
 export enum HttpStatus {
   // CONTINUE = 100,
@@ -28,7 +44,7 @@ export enum HttpStatus {
   // CREATED = 201,
   // ACCEPTED = 202,
   // NON_AUTHORITATIVE_INFORMATION = 203,
-  // NO_CONTENT = 204,
+  NO_CONTENT = 204,
   // RESET_CONTENT = 205,
   // PARTIAL_CONTENT = 206,
   // AMBIGUOUS = 300,
@@ -39,9 +55,9 @@ export enum HttpStatus {
   // TEMPORARY_REDIRECT = 307,
   // PERMANENT_REDIRECT = 308,
   BAD_REQUEST = 400,
-  // UNAUTHORIZED = 401,
+  UNAUTHORIZED = 401,
   // PAYMENT_REQUIRED = 402,
-  // FORBIDDEN = 403,
+  FORBIDDEN = 403,
   NOT_FOUND = 404,
   // METHOD_NOT_ALLOWED = 405,
   // NOT_ACCEPTABLE = 406,

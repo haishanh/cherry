@@ -1,6 +1,3 @@
-export enum TagState {
-  New = 'new',
-  Deleted = 'deleted',
-}
-
-export type TagType = { id: number | string; name: string; state?: TagState };
+// TODO remove this file
+// export type TagType = { id: number | string; name: string };
+export {};

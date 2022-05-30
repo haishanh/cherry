@@ -5,26 +5,45 @@
 
   let id = '' + makeId();
 
-  export let name = 'Field Name';
+  export let label = '';
+  export let name = '';
   export let value = '';
-  export let placeholder = 'placeholder';
+  export let placeholder = '';
   export let type: string | null = null;
+
+  export let error = '';
+
+  function handleInputOnInput(e: InputEvent) {
+    const target = e.target as HTMLInputElement;
+    value = target.value;
+    error = '';
+  }
 </script>
 
-<div>
-  <label for={id}>{name}</label>
+<div class="root">
+  <label for={id}>{label || name}</label>
   {#if type === 'textarea'}
     <TextArea {id} {placeholder} bind:value />
   {:else}
-    <TextInput {id} {placeholder} bind:value />
+    <TextInput {id} {type} {name} {error} {placeholder} {value} on:input={handleInputOnInput} />
+  {/if}
+  {#if error}
+    <div class="msg error">{error}</div>
   {/if}
 </div>
 
 <style lang="scss">
-  div {
-    margin: 5px 0;
-  }
   label {
     line-height: 1.8;
+  }
+  .msg {
+    font-size: 12px;
+    height: 13px;
+    margin-top: 2px;
+    line-height: 1;
+  }
+  .error {
+    // color: #e30000;
+    color: hsl(0deg 84% 61%);
   }
 </style>

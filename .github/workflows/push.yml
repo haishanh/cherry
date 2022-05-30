@@ -5,7 +5,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   install:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    # runs-on: self-hosted
     strategy:
       matrix:
         node-version: [16.x]
@@ -28,17 +29,18 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.1
         with:
-          version: 7.1.0
+          version: 7
           run_install: true
 
-      - run: echo "- Setup :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-      - name: Lint
-        run: pnpm lint
-      - run: echo "- Lint :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-      - name: Build
-        run: pnpm build
-      - run: echo "- :white_check_mark: Build" >> $GITHUB_STEP_SUMMARY
-      - run: sed -i 's/:white_check_mark: Build/:x: Build/' $GITHUB_STEP_SUMMARY
+      - run: pnpm lint
+      - run: pnpm check
+      - run: pnpm test
+      - run: pnpm build
+
+      - run: |
+          echo "- :white_check_mark: Lint" >> $GITHUB_STEP_SUMMARY
+          echo "- :white_check_mark: Test" >> $GITHUB_STEP_SUMMARY
+          echo "- :white_check_mark: Build" >> $GITHUB_STEP_SUMMARY
 
       - name: Send Notification
         uses: haishanh/actions-telegram-notification@v1

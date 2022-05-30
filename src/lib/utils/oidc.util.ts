@@ -1,7 +1,12 @@
 import { randomUUID } from 'crypto';
 import dbg from 'debug';
 
-import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URI } from '$lib/env';
+import {
+  GOOGLE_OAUTH_CLIENT_ID,
+  GOOGLE_OAUTH_CLIENT_SECRET,
+  GOOGLE_OAUTH_REDIRECT_URI,
+  GOOGLE_OAUTH_TOKEN_ENDPOINT,
+} from '$lib/env';
 
 const debug = dbg('cherry:util:oidc');
 
@@ -30,7 +35,8 @@ export async function exchangeToken({ code }) {
     client_secret: GOOGLE_OAUTH_CLIENT_SECRET,
     redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
   });
-  const url = `https://oauth2.googleapis.com/token`;
+
+  const url = GOOGLE_OAUTH_TOKEN_ENDPOINT;
 
   debug('exchanging token');
 

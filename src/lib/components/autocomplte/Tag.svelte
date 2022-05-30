@@ -4,9 +4,8 @@
 
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
-  export let name: string;
-  export let color: string | number = 0;
-  export let hasClose = false;
+  export let color: string | number = 1;
+  export let hasClose = true;
 
   export let tag: { name: string } = null;
 
@@ -14,42 +13,42 @@
 
   const handleClickClose = () => {
     dispatch('clickclose', tag);
+    return false;
   };
 
   const colorMap = {
     '0': 'color:#14551B;background:#ADF29B;',
-    '1': 'color:#65670F;background:#E6E97B;',
+    // color: var(--accent);
+    // background-color: hsla(94deg, 99%, 33%, 0.2);
+    '1': 'color:var(--accent);background-color:hsla(94deg, 99%, 33%, 0.2)',
     '2': 'color:#6C0E58;background:#FFAAD3;',
     '3': 'color:var(--color-text);background:hsl(0deg 0% 97%);border-color:hsl(0deg 0% 80%);',
-    '4': 'color: #b0cfff;background: #103062;border-color: #6bb3ff;',
   };
 </script>
 
 <span class="tag" class:hasClose style={colorMap[color]}>
-  <span>
-    {name}
-  </span>
-  <button on:click={handleClickClose}>
-    <VisuallyHidden>Remove this tag</VisuallyHidden><CloseIcon size={14} />
-  </button>
+  <span>{tag.name}</span>
+  {#if hasClose}
+    <button type="button" on:mousedown|preventDefault={handleClickClose}>
+      <VisuallyHidden>Remove this tag</VisuallyHidden><CloseIcon size={14} />
+    </button>
+  {/if}
 </span>
 
 <style lang="scss">
   .tag {
     background-color: #ccc;
     border-radius: 100px;
-    padding: 5px 8px;
+    padding: 4px 8px;
     font-size: 0.9em;
     border: 1px solid transparent;
-    font-weight: 800;
+    line-height: 1;
     display: inline-flex;
     align-items: center;
-    &.hasClose {
-      padding-left: 13px;
-    }
   }
   button {
-    margin-left: 2px;
+    margin-left: 1px;
+    margin-right: -5px;
     appearance: none;
     outline: none;
     user-select: none;

@@ -1,6 +1,5 @@
 <script lang="ts">
   import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
-  import { flip } from 'svelte/animate';
   import { fly } from 'svelte/transition';
 
   import { removeToast, toasts } from './store';
@@ -66,7 +65,6 @@
   {#each $toasts as item (item.id)}
     <div
       class="toast"
-      animate:flip
       transition:fly={{ y: 40 }}
       style="background-color: {bg[item.status]}"
       data-id={item.id}
@@ -91,9 +89,9 @@
     padding: 0;
     list-style: none;
     position: fixed;
-    bottom: env(safe-area-inset-bottom, 0px);
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: env(safe-area-inset-bottom, 15px);
+    left: 15px;
+    z-index: 100;
   }
   button {
     appearance: none;
@@ -108,8 +106,8 @@
     border-radius: 100px;
     padding: 6px 8px;
     font-weight: 800;
-    color: #ddd;
-    background-color: hsl(0deg 0% 0% / 6%);
+    color: #fff;
+    background-color: hsl(0deg 0% 0% / 10%);
     &:active {
       transform: scale(0.97);
     }
@@ -124,7 +122,7 @@
     margin: 14px 0;
     max-width: 90vw;
     min-width: min(85vw, 400px);
-    color: #ddd;
+    color: #fff;
 
     display: grid;
     grid-template-columns: 1fr auto auto;

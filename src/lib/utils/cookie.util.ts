@@ -9,3 +9,13 @@ export function parseCookie(cookie: string) {
   });
   return ret;
 }
+
+export function gen(key: string, value: string, opts: { maxAge?: number; secure?: boolean } = {}) {
+  const secure = opts.secure !== false;
+  let str = key + '=' + value;
+  if (secure) str += '; Secure';
+  str += '; Path=/; SameSite=Lax';
+  if (typeof opts.maxAge === 'number') str += '; Max-Age=' + opts.maxAge;
+  str += '; HttpOnly';
+  return str;
+}

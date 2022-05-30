@@ -1,0 +1,226 @@
+<script lang="ts">
+  import SearchIcon from '@hsjs/svelte-icons/feather/Search.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import invariant from 'tiny-invariant';
+
+  import type { NewTagType, TagType } from '$lib/type';
+
+  import Button from '../base/Button.svelte';
+  import VisuallyHidden from '../base/VisuallyHidden.svelte';
+  import { fuzzysearch } from './fuzzy';
+  import ListboxList from './ListboxList.svelte';
+  import ListboxOptionTag from './ListboxOptionTag.svelte';
+  import Tag from './Tag.svelte';
+
+  const dispatch = createEventDispatcher();
+
+  type AllTagType = TagType | NewTagType;
+
+  export let tags: AllTagType[] = [];
+  export let options: TagType[] = [];
+  export let canCreate = true;
+  export let search = false;
+  export let inputValue = '';
+  export let placeholder = 'Add tags...';
+  export let autoSelect = false;
+
+  const EVENT = {
+    focus0: 'focus0',
+    blur0: 'blur0',
+  };
+
+  let filtered: AllTagType[] = [...options];
+
+  function resetInput() {
+    inputValue = '';
+  }
+
+  let tagMap: Map<string, number>;
+
+  $: {
+    tagMap = new Map();
+    for (const t of tags) {
+      if (!t || !t.name) {
+        console.log('TagAutocomplete', JSON.stringify(tags));
+        continue;
+      }
+      tagMap.set(t.name, 1);
+    }
+  }
+
+  function handleConfirmSelection(e: CustomEvent<AllTagType>) {
+    const d = e.detail;
+    const tag: { name: string; id?: number } = { name: d.name };
+    if ('id' in d) tag.id = d.id;
+    tags.push(tag);
+    tags = tags;
+    resetInput();
+  }
+
+  $: {
+    const prefiltered = options.filter((o) => !tagMap.get(o.name));
+    if (inputValue) {
+      const newTagName = inputValue.trim();
+      let containsInputValue = false;
+      filtered = prefiltered.filter((o) => {
+        if (!o.name) return false;
+        const t = newTagName.toLowerCase();
+        const n = o.name.toLowerCase();
+        const match = fuzzysearch(t, n);
+        if (match && t.length === o.name.length) containsInputValue = true;
+        return match;
+      });
+      if (canCreate && !containsInputValue) {
+        const last = filtered[filtered.length - 1];
+        if (last) {
+          if ('id' in last) {
+            filtered.push({ name: newTagName });
+            filtered = filtered;
+          } else if (last.name !== newTagName) {
+            last.name = newTagName;
+            filtered = filtered;
+          }
+        } else {
+          filtered.push({ name: newTagName });
+          filtered = filtered;
+        }
+      }
+    } else {
+      filtered = prefiltered;
+    }
+  }
+
+  $: {
+    if (filtered.length === 0) close();
+  }
+
+  let expanded = false;
+  const open = () => (!expanded ? (expanded = true) : undefined);
+  const close = () => (expanded ? (expanded = false) : undefined);
+
+  function handleInputOnInput() {
+    open();
+  }
+
+  function handleInputOnFocus() {
+    dispatch(EVENT.focus0);
+    open();
+  }
+
+  function handleInputOnBlur(_e: FocusEvent) {
+    close();
+    // dispatch(EVENT.blur0);
+    // let activeElement = e.relatedTarget as HTMLDivElement;
+    // // TODO to improve this
+    // if (activeElement && activeElement.hasAttribute('data-cherry-listbox') && inputElement) {
+    //   // not sure why tick().then() is not working
+    //   setTimeout(() => inputElement.focus(), 0);
+    // } else {
+    //   close();
+    // }
+  }
+
+  function handleClickCloseTag(e: CustomEvent<TagType>) {
+    const tag = e.detail;
+    invariant(tag, 'handleClickCloseTag: something went wrong');
+    tags = tags.filter((t) => t !== tag);
+    dispatch('change', [...tags]);
+  }
+</script>
+
+<div class="autocomplete-wrapper">
+  <div class="autocomplete" class:round={search}>
+    {#each tags as tag (tag.name)}
+      <Tag {tag} on:clickclose={handleClickCloseTag} />
+    {/each}
+    <input
+      autocomplete="off"
+      autocapitalize="none"
+      spellcheck="false"
+      {placeholder}
+      bind:value={inputValue}
+      on:focus={handleInputOnFocus}
+      on:input={handleInputOnInput}
+      on:blur={handleInputOnBlur}
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+      aria-expanded={expanded}
+    />
+    {#if search}
+      <div class="search-wrapper">
+        <Button modifier={['minimal', 'circular']} type="submit">
+          <VisuallyHidden>Search</VisuallyHidden>
+          <span class="search-icon-wrapper"><SearchIcon size={16} /></span>
+        </Button>
+      </div>
+    {/if}
+  </div>
+  <!-- listbox -->
+  {#if expanded && filtered.length > 0}
+    <ListboxList {autoSelect} {filtered} on:confirm={handleConfirmSelection} let:item>
+      <ListboxOptionTag {item} />
+    </ListboxList>
+  {/if}
+</div>
+
+<style lang="scss">
+  .autocomplete-wrapper {
+    position: relative;
+  }
+  .autocomplete {
+    // height: 40px;
+    width: 100%;
+    margin: 1px 0;
+    padding: 4px 5px;
+    border-radius: 7px;
+    border: 1px solid var(--color-input-bo);
+    background-color: var(--color-input-bg);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    &:focus-within {
+      box-shadow: var(--focus-shadow);
+    }
+    &:hover {
+      border-color: var(--color-input-bo-hover);
+    }
+    &.round {
+      border-radius: 20px;
+    }
+  }
+
+  .search-wrapper button .search-icon-wrapper {
+    color: var(--color-input-bo);
+    display: inline-flex;
+  }
+
+  .search-wrapper button:hover .search-icon-wrapper {
+    color: var(--color-text);
+  }
+
+  .search-wrapper button:focus .search-icon-wrapper {
+    color: var(--color-text);
+  }
+
+  .autocomplete {
+    &:focus-within {
+      .search-icon-wrapper {
+        color: var(--color-input-bo-hover);
+      }
+    }
+  }
+
+  input {
+    flex: 1;
+    outline: none;
+    background: none;
+    border: none;
+    padding: 5px;
+    font-size: inherit;
+    font-family: inherit;
+    min-width: 100px;
+    height: 30px;
+  }
+</style>

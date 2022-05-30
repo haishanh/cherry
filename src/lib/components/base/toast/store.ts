@@ -8,12 +8,13 @@ export const toasts = writable<ToastItem[]>([]);
 
 const toastDefaultConfig = { duration: 6000, status: 'info' };
 
-export function add(opts: ToastItemInput) {
+export function addToast(opts: ToastItemInput) {
+  const id = makeId();
   toasts.update((curr) => {
-    const id = makeId();
     const item = { id, ...toastDefaultConfig, ...opts };
     return [...curr, item];
   });
+  return id;
 }
 
 export function removeToast(id: string | number) {

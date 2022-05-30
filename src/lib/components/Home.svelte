@@ -1,52 +1,52 @@
 <script lang="ts">
-  import invariant from 'tiny-invariant';
+  import { onMount } from 'svelte';
 
-  import BookmarkChip from '$lib/components/BookmarkChip.svelte';
+  import { fetchGroups } from '$lib/client/group.store';
+  import { fetchTags } from '$lib/client/tag.store';
+  import { addToast } from '$lib/components/base/toast/store';
+  import {
+    type Event0 as BEFEvent0,
+    Event0Type as BEFEvent0Type,
+  } from '$lib/components/bookmark/BookmarkEditForm.svelte';
+  import BookmarkEditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
+  import BookmarkList from '$lib/components/bookmark/BookmarkList.svelte';
+  import GroupSideBar from '$lib/components/home/GroupSideBar.svelte';
   import SearchForm from '$lib/components/SearchForm.svelte';
-  import type { BookmarkFromDb } from '$lib/type';
+  import type { BookmarkFromDb, PageMetaBookmarks } from '$lib/type';
+  import { RequestError } from '$lib/utils/http.util';
 
-  import ToastList from './base/toast/ToastList.svelte';
-  import EditModal from './feature/EditModal.svelte';
-  import Header from './feature/Header.svelte';
+  import Empty from './home/Empty.svelte';
+  import Pagination from './pagination/Pagination.svelte';
 
   export let bookmarks: BookmarkFromDb[] = [];
-  export let meta: { after?: string } = {};
+  // TODO merge this with meta?
+  export let totalPage: number;
+  export let meta: PageMetaBookmarks = {};
+  export let url: { pathname: string; search: string };
 
-  let editModal: EditModal;
+  let editModal: BookmarkEditModal;
 
-  // we only support restore last deleted
-  const removed: { bookmark?: BookmarkFromDb; idx?: number } = {};
+  onMount(() => {
+    fetchTags({ initial: true });
+    fetchGroups({ initial: true });
+  });
 
-  function handleRemoveBookmark(e: CustomEvent<BookmarkFromDb>) {
-    const bookmark = e.detail;
-    const idx = bookmarks.findIndex((item) => item === bookmark);
-
-    removed.bookmark = bookmark;
-    removed.idx = idx;
-
-    bookmarks.splice(idx, 1);
-    bookmarks = bookmarks;
+  function handleBookmarkEditModalEv0(e: BEFEvent0) {
+    const type = e.detail?.type;
+    switch (type) {
+      case BEFEvent0Type.UpdateCompleted:
+        handleBookmarkUpdateCompleted(e.detail?.payload);
+        break;
+      case BEFEvent0Type.CreateCompleted:
+        handleBookmarkCreateCompleted(e.detail?.payload);
+        break;
+      case BEFEvent0Type.UpdateFailed:
+        handleBookmarkUpdateFailed(e.detail?.payload);
+        break;
+    }
   }
 
-  function handleRestoreBookmark(e: CustomEvent<number>) {
-    if (!removed.bookmark) return;
-
-    invariant(typeof removed.bookmark.id === typeof e.detail, 'both should be number');
-
-    if (removed.bookmark.id !== e.detail) return;
-
-    bookmarks.splice(removed.idx, 0, removed.bookmark);
-    bookmarks = bookmarks;
-    removed.bookmark = undefined;
-  }
-
-  function handleEditBookmark(e: CustomEvent<BookmarkFromDb>) {
-    const bookmark = e.detail;
-    editModal.open(bookmark);
-  }
-
-  function handleBookmarkUpdateStart(e: CustomEvent<BookmarkFromDb>) {
-    const bookmark = e.detail;
+  function handleBookmarkUpdateCompleted(bookmark: BookmarkFromDb) {
     const idx = bookmarks.findIndex((item) => item.id === bookmark.id);
 
     if (idx < 0) return;
@@ -57,70 +57,97 @@
     editModal.close();
   }
 
-  function handleBookmarkUpdateFailed(_e: CustomEvent<BookmarkFromDb>) {
-    //
+  function handleBookmarkCreateCompleted(bookmark: BookmarkFromDb) {
+    bookmarks.unshift(bookmark);
+    bookmarks = bookmarks;
+    editModal.close();
+  }
+
+  function handleBookmarkUpdateFailed(e: { bookmark: BookmarkFromDb; error: any }) {
+    editModal.close();
+    const error = e.error;
+    if (error && error instanceof RequestError) {
+      const response = error.response;
+      if (response?.status === 409) {
+        addToast({ description: 'Bookmark already exists.', status: 'warning' });
+        return;
+      }
+    }
+    addToast({ description: 'Something went wrong.', status: 'error' });
+  }
+
+  // pagination
+
+  let q: URLSearchParams;
+  let pageCurrent: number;
+  let pageUriTemplate: string;
+  let pageUriNext: string;
+  let pageTotal: number;
+  let groupId: number | null;
+
+  $: {
+    q = new URLSearchParams(url.search);
+    pageCurrent = q.get('p') ? parseInt(q.get('p') || '', 10) : 1;
+    groupId = q.get('group') ? parseInt(q.get('group') || '', 10) : null;
+    q.delete('p');
+    q.delete('after');
+    q.set('____', '');
+    pageUriTemplate = `${url.pathname}?${q}`;
+    pageUriNext = pageUriTemplate.replace(
+      '____=',
+      meta.after ? `after=${meta.after}&p=${pageCurrent + 1}` : `p=${pageCurrent + 1}`
+    );
+    pageTotal = totalPage;
   }
 </script>
 
-<Header />
-<div class="main">
-  <SearchForm />
-  <div class="list">
-    {#each bookmarks as bookmark (bookmark.id)}
-      <BookmarkChip
-        {bookmark}
-        on:remove={handleRemoveBookmark}
-        on:restore={handleRestoreBookmark}
-        on:edit={handleEditBookmark}
-      />
-    {/each}
-  </div>
-
-  <ToastList />
-  <EditModal
-    bind:this={editModal}
-    on:updatestart={handleBookmarkUpdateStart}
-    on:updatefailed={handleBookmarkUpdateFailed}
-  />
-
-  {#if meta && meta.after}
-    <div class="pagination">
-      <a href={'/?after=' + meta.after}>Next</a>
+<div class="root">
+  <aside>
+    <GroupSideBar {groupId} pathname="/settings/about" />
+  </aside>
+  <div class="main">
+    <div class="action">
+      <div class="search">
+        <SearchForm />
+      </div>
     </div>
-  {/if}
+    {#if bookmarks.length > 0}
+      <BookmarkList {bookmarks} {editModal} />
+    {:else}
+      <Empty />
+    {/if}
+    <BookmarkEditModal bind:this={editModal} on:ev0={handleBookmarkEditModalEv0} />
+    <Pagination {pageUriTemplate} previous="" next={pageUriNext} current={pageCurrent} total={pageTotal} />
+  </div>
+  <div />
 </div>
 
 <style lang="scss">
-  .main {
-    max-width: 1000px;
+  .root {
     margin: 0 auto;
     padding: 0 15px 15px;
-  }
 
-  .list {
-    font-size: 0.9em;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .pagination {
-    padding: 25px 5px;
-    text-align: right;
-    a {
-      color: inherit;
-      border: 1px solid transparent;
-      padding: 10px 16px;
-      border-radius: 200px;
-      @media (prefers-color-scheme: dark) {
-        --lightness: 30%;
-      }
-      @media (prefers-color-scheme: light) {
-        --lightness: 50%;
-      }
-      &:hover {
-        border-color: hsl(0deg 0% var(--lightness));
-        background-color: var(--bg-card);
-      }
+    @media (min-width: 1200px) {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) 1000px minmax(100px, 1fr);
+      gap: 10px;
     }
+  }
+  aside {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .main {
+    max-width: 1000px;
+  }
+  .action {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .search {
+    max-width: 800px;
+    flex: 1;
   }
 </style>
