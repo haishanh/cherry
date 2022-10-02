@@ -45,7 +45,7 @@
     "@browser-logos/chrome": "2.0.0",
     "@browser-logos/firefox": "3.0.9",
     "@browser-logos/safari": "2.1.0",
-    "@fontsource/inter": "4.5.12",
+    "@fontsource/inter": "4.5.13",
     "@hsjs/svelte-icons": "0.0.1-rc.4",
     "@sveltejs/adapter-node": "1.0.0-next.96",
     "@sveltejs/kit": "1.0.0-next.507",

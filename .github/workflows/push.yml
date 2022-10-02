@@ -13,26 +13,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3.0.2
-
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-
-      - uses: pnpm/action-setup@v2.2.1
-        with:
-          version: 7
-          run_install: true
-
+      - run: pnpm i
       - run: pnpm lint
+      - run: pnpm sync
       - run: pnpm check
       - run: pnpm test
       - run: pnpm build
@@ -51,9 +43,9 @@ jobs:
   docker:
     needs: install
     runs-on: ubuntu-20.04
-    if: github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || startsWith(github.event.ref, 'refs/heads/v') || github.event.ref == 'refs/heads/main')
+    if: github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || startsWith(github.event.ref, 'refs/heads/v') || github.event.ref == 'refs/heads/main' || github.event.ref == 'refs/heads/p4')
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3
 
       - name: Cache Docker layers
         uses: actions/cache@v2.1.7
@@ -67,6 +59,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: cherry
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         id: buildx
@@ -105,8 +100,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           # platforms: linux/amd64,linux/arm/v7,linux/arm64
-          platforms: linux/amd64
           push: true
           tags: r.haishan.me/${{ steps.docker_meta.outputs.tags }}
           # tags: ${{ steps.docker_meta.outputs.tags }},ghcr.io/${{ steps.docker_meta.outputs.tags }}

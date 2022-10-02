@@ -4,7 +4,7 @@ specifiers:
   '@browser-logos/chrome': 2.0.0
   '@browser-logos/firefox': 3.0.9
   '@browser-logos/safari': 2.1.0
-  '@fontsource/inter': 4.5.12
+  '@fontsource/inter': 4.5.13
   '@hsjs/svelte-icons': 0.0.1-rc.4
   '@node-rs/argon2': 1.2.0
   '@node-rs/crc32': 1.5.1
@@ -64,7 +64,7 @@ devDependencies:
   '@browser-logos/chrome': 2.0.0
   '@browser-logos/firefox': 3.0.9
   '@browser-logos/safari': 2.1.0
-  '@fontsource/inter': 4.5.12
+  '@fontsource/inter': 4.5.13
   '@hsjs/svelte-icons': 0.0.1-rc.4
   '@sveltejs/adapter-node': 1.0.0-next.96
   '@sveltejs/kit': 1.0.0-next.507_svelte@3.50.1+vite@3.1.4
@@ -172,8 +172,8 @@ packages:
       - supports-color
     dev: true
 
-  /@fontsource/inter/4.5.12:
-    resolution: {integrity: sha512-bGKk4/8tube/nCk8hav0ZDBVbzJzc7m0Vt4xF5p15IN4YImwGdtKG38Oq5bU8xHNS+VfvbFFCepgQNj7Pr/Lvg==}
+  /@fontsource/inter/4.5.13:
+    resolution: {integrity: sha512-nABtF6jNZZHrotLRiGBByhG7NKJGJHgMbX5W8v6C/7nSdyiWtMRfZX7AMIECDLYGUOEArZDeVO/SbkgwKLrLJw==}
     dev: true
 
   /@hsjs/svelte-icons/0.0.1-rc.4:
