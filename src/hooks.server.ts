@@ -20,15 +20,13 @@ export const handle: Handle = async function handle({ event, resolve }) {
 
   if (isPublic(url)) return await resolve(event);
 
-  let token: string;
-
-  const authHeader = request.headers.get('authorization');
-  if (authHeader) token = authHeader.replace(/[bB]earer\s/, '');
+  const cookieHeader = request.headers.get('cookie');
+  const cookies = cookieUtil.parseCookie(cookieHeader);
+  let token = cookies.token;
 
   if (!token) {
-    const cookieHeader = request.headers.get('cookie');
-    const cookies = cookieUtil.parseCookie(cookieHeader);
-    token = cookies.token;
+    const authHeader = request.headers.get('authorization');
+    if (authHeader) token = authHeader.replace(/[bB]earer\s/, '');
   }
 
   if (token) {
