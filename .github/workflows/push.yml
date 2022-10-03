@@ -6,7 +6,6 @@ concurrency:
 jobs:
   install:
     runs-on: ubuntu-latest
-    # runs-on: self-hosted
     strategy:
       matrix:
         node-version: [16.x]
@@ -43,7 +42,7 @@ jobs:
   docker:
     needs: install
     runs-on: ubuntu-20.04
-    if: github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || startsWith(github.event.ref, 'refs/heads/v') || github.event.ref == 'refs/heads/main' || github.event.ref == 'refs/heads/p4')
+    if: github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || startsWith(github.event.ref, 'refs/heads/v') || github.event.ref == 'refs/heads/main')
     steps:
       - uses: actions/checkout@v3
 
@@ -101,7 +100,6 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
-          # platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
           tags: r.haishan.me/${{ steps.docker_meta.outputs.tags }}
           # tags: ${{ steps.docker_meta.outputs.tags }},ghcr.io/${{ steps.docker_meta.outputs.tags }}
