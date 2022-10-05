@@ -2,12 +2,17 @@
   import Cherry from '$lib/components/base/Cherry.svelte';
   /* global __VERSION__:false */
   const version = __VERSION__;
+  /* global __COMMIT_SHA__:false */
+  const sha = __COMMIT_SHA__;
 </script>
 
 <Cherry />
-
-<p>Cherry is a self-hostable bookmark app</p>
-<p>Cherry version: <code>{version}</code></p>
+<p>
+  Cherry version: <code>{version}</code>
+  {#if sha}
+    <span /><code>{sha}</code>
+  {/if}
+</p>
 
 <style>
   code {

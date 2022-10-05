@@ -1,13 +1,16 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 
 import * as pkg from './package.json';
 
-/** @type {import('vite').UserConfig} */
-const config = {
-  define: {
-    __VERSION__: JSON.stringify(pkg.version),
-  },
-  plugins: [sveltekit()],
-};
-
-export default config;
+export default defineConfig(async () => {
+  const hash = process.env.COMMIT_SHA || 'n/a';
+  /** @type {import('vite').UserConfig} */
+  return {
+    define: {
+      __VERSION__: JSON.stringify(pkg.version),
+      __COMMIT_SHA__: JSON.stringify(hash),
+    },
+    plugins: [sveltekit()],
+  };
+});

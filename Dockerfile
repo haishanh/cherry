@@ -1,3 +1,5 @@
+ARG COMMIT_SHA=""
+
 FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:3.16-2.2.0.3 AS init
 
 COPY --from=node:18-alpine /usr/local /usr/local
@@ -27,6 +29,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm i --prod
 
 FROM init AS builder
+ARG COMMIT_SHA
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json tsconfig.json svelte.config.js vite.config.js ./
