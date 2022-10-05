@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  
+
   import { tagList } from '$lib/client/tag.store';
   import Tag from '$lib/components/Tag.svelte';
   import NoTags from '$lib/components/tag/NoTags.svelte';
   import TagEditModal from '$lib/components/tag/TagEditModal.svelte';
   import type { TagFromDb } from '$lib/type';
-  
+
   import type { PageData } from './$types';
 
   export let data: PageData;
@@ -24,11 +24,22 @@
 
   type TagType = { id: number; name: string };
 
+  function initialOf(name: string | undefined) {
+    if (!name) return '-';
+    let len = name.length;
+    for (let i = 0; i < len; i++) {
+      const cp = name.codePointAt(i);
+      // [33, 126] -> printabel ascii chars (exclude "space", codepoint 32)
+      if (cp >= 33 && cp <= 126) return String.fromCodePoint(cp).toLowerCase();
+    }
+    return '-';
+  }
+
   function grouping(tagList: TagType[]) {
     const groupKeys: string[] = [];
     const groupLookup: Record<string, TagFromDb[]> = {};
     for (const t of tagList) {
-      const l = (t.name || ' ').substring(0, 1).toLowerCase();
+      const l = initialOf(t.name);
       if (!groupLookup[l]) {
         groupLookup[l] = [];
         groupKeys.push(l);

@@ -48,14 +48,16 @@
   <Field name="Name" type="text" placeholder="" bind:value={tag.name} />
   <div class="action">
     <Button type="submit">
-      <Save slot="icon" size={16} />
       <span>Save</span>
     </Button>
   </div>
 </form>
 
 <style lang="scss">
+  form h2 {
+    margin: 0px 0 8px;
+  }
   .action {
-    margin-top: 5px;
+    margin-top: 15px;
   }
 </style>
