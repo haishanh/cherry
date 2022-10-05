@@ -1,24 +1,26 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  
+  import { tagList } from '$lib/client/tag.store';
+  import Tag from '$lib/components/Tag.svelte';
+  import NoTags from '$lib/components/tag/NoTags.svelte';
   import TagEditModal from '$lib/components/tag/TagEditModal.svelte';
-
+  import type { TagFromDb } from '$lib/type';
+  
   import type { PageData } from './$types';
 
   export let data: PageData;
 
-  import { onMount } from 'svelte';
-
-  import { tagList } from '$lib/client/tag.store';
-  import Tag from '$lib/components/Tag.svelte';
-  import NoTags from '$lib/components/tag/NoTags.svelte';
-  import type { TagFromDb } from '$lib/type';
-
-  const tags = data.tags;
   let editModal: TagEditModal;
-  let grouped: { keys: string[]; lookup: Record<string, TagFromDb[]> } = grouping(tags);
+  let grouped: { keys: string[]; lookup: Record<string, TagFromDb[]> };
+  let loaded = false;
 
   onMount(() => {
-    tagList.set(tags);
+    tagList.set(data.tags);
+    loaded = true;
   });
+
+  $: if (loaded) grouped = grouping($tagList);
 
   type TagType = { id: number; name: string };
 
@@ -49,21 +51,23 @@
   <title>Tags | Cherry</title>
 </svelte:head>
 <div class="main">
-  {#if grouped.keys.length}
-    <ul class="group-list">
-      {#each grouped.keys as char (char)}
-        <li class="group">
-          <span class="group-initial">{char.toUpperCase()}</span>
-          <ul class="item-list">
-            {#each grouped.lookup[char] as tag (tag.id)}
-              <li><Tag {tag} {editModal} /></li>
-            {/each}
-          </ul>
-        </li>
-      {/each}
-    </ul>
-  {:else}
-    <NoTags />
+  {#if loaded}
+    {#if grouped?.keys?.length}
+      <ul class="group-list">
+        {#each grouped.keys as char (char)}
+          <li class="group">
+            <span class="group-initial">{char.toUpperCase()}</span>
+            <ul class="item-list">
+              {#each grouped.lookup[char] as tag (tag.id)}
+                <li><Tag {tag} {editModal} /></li>
+              {/each}
+            </ul>
+          </li>
+        {/each}
+      </ul>
+    {:else}
+      <NoTags />
+    {/if}
   {/if}
 </div>
 
