@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import * as pkg from './package.json';
 
 export default defineConfig(async () => {
-  const hash = process.env.COMMIT_SHA || 'n/a';
+  const hash = process.env.COMMIT_SHA || '';
   /** @type {import('vite').UserConfig} */
   return {
     define: {
