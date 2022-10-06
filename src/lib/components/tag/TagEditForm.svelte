@@ -3,7 +3,6 @@
     updatecompleted: 'updatecompleted',
   };
 
-  import Save from '@hsjs/svelte-icons/feather/Save.svelte';
   import { createEventDispatcher } from 'svelte';
 
   import { updateTagClientSide } from '$lib/client/tag.store';
