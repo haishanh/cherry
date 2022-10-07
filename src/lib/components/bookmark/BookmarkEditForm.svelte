@@ -137,7 +137,7 @@
       ...result.value,
       // checking $tagListLoaded here, since we need to make sure tags have been loaded
       // or we may accidentally remove/replace all tags of this bookmark
-      ...($tagListLoaded && tags && tags[0] ? { tags } : undefined),
+      ...($tagListLoaded ? { tags } : undefined),
       // group can be null here
       // the backend should delete the `groupId` column in this case
       ...($groupListLoaded ? { group } : undefined),
