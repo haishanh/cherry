@@ -7,6 +7,9 @@
 # install dependencies
 pnpm i
 
+# create a .env file
+cp env.example .env
+
 # run the app in dev mode
 pnpm dev
 ```
