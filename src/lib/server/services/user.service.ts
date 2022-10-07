@@ -24,6 +24,7 @@ export const user = {
   getUserByIdWithHydratedFeature: (input: { id: number }) => {
     const db = lite();
     const user = userDb.getUserById(db, input);
+    if (!user) throw new ApiError(HttpStatus.NOT_FOUND);
     const feature0 = user.feature;
     const ff: Record<string, boolean> = {};
     ff.strip_tracking_parameters = (feature0 & UserFeatureFlag.FF_STRIP_TRACKING_PARAMETERS) > 0;
