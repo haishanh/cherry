@@ -128,9 +128,10 @@ export function getBookmarkCountOfUser(db: Sqlite.Database, input: InputGetBookm
   const userId = user.userId;
 
   const count = db.prepare('select bookmarkCount bookmarkCountSyncedAt from user where id = ?').get([userId]);
-  // TODO handle user not found?
   // count could be undefined here
   // to produce, switch to a new db with a previous logged-in session
+  if (!count) throw new DataError(DataErrorCode.UserNotFound);
+
   const now = Math.trunc(Date.now() / 1000);
   if (now - count.bookmarkCountSyncedAt < 86400) {
     return { count: count.bookmarkCount };

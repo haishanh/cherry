@@ -101,7 +101,12 @@ export const bookmark = {
     if (('text' in input && input.text) || 'tagIds' in input || 'groupId' in input) {
       countRet = bookmarkDb.getBookmarks(db, { ...input, counting: true });
     } else {
-      countRet = bookmarkDb.getBookmarkCountOfUser(db, input);
+      try {
+        countRet = bookmarkDb.getBookmarkCountOfUser(db, input);
+      } catch (e) {
+        if (e instanceof DataError && e.code === DataErrorCode.UserNotFound) throw new ApiError(HttpStatus.NOT_FOUND);
+        throw e;
+      }
     }
     data.count = countRet.count || data.items.length;
     data.totalPage = Math.ceil(data.count / PAGE_BOOKMARK_LIMIT);

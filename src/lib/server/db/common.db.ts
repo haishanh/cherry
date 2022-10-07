@@ -77,6 +77,7 @@ export function hasColumn(db: Sqlite.Database, opts: { table: string; column: st
 export enum DataErrorCode {
   TagAlreadyExits,
   BookmarkNotFound,
+  UserNotFound,
 }
 
 export class DataError extends Error {
