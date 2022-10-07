@@ -10,6 +10,8 @@
   import GroupDeleteConfirmModal from '$lib/components/home/GroupDeleteConfirmModal.svelte';
   import GroupListModal from '$lib/components/home/GroupListModal.svelte';
   import { findFirstInList } from '$lib/utils/common.util';
+  import VisuallyHidden from '../base/VisuallyHidden.svelte';
+  import Tooltip from '../base/popover/Tooltip.svelte';
 
   onMount(() => {
     fetchGroups({ initial: true });
@@ -145,10 +147,13 @@
       </li>
     {/each}
     <li class="btn-wrap">
-      <Button modifier={['minimal']} style="padding:8px 10px" on:click={open}>
-        <Folder slot="icon" size={15} />
-        <span>More</span>
-      </Button>
+      <Tooltip>
+        <Button slot="trigger" modifier={['minimal']} style="padding:8px 10px" on:click={open}>
+          <Folder slot="icon" size={15} />
+          <VisuallyHidden>Show more groups</VisuallyHidden>
+        </Button>
+        <div class="tooltip-cnt" slot="content">Show more groups</div>
+      </Tooltip>
     </li>
   </ul>
 </div>
@@ -251,5 +256,8 @@
     @media (min-width: 1200px) {
       padding: 8px 10px;
     }
+  }
+  .tooltip-cnt {
+    font-size: 0.85em;
   }
 </style>
