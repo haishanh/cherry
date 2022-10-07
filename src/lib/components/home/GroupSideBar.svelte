@@ -10,8 +10,9 @@
   import GroupDeleteConfirmModal from '$lib/components/home/GroupDeleteConfirmModal.svelte';
   import GroupListModal from '$lib/components/home/GroupListModal.svelte';
   import { findFirstInList } from '$lib/utils/common.util';
-  import VisuallyHidden from '../base/VisuallyHidden.svelte';
+
   import Tooltip from '../base/popover/Tooltip.svelte';
+  import VisuallyHidden from '../base/VisuallyHidden.svelte';
 
   onMount(() => {
     fetchGroups({ initial: true });

@@ -22,6 +22,8 @@
     dispatch(EVENT.open);
   };
 
+  export const openEmpty = () => open({ url: '', title: '', desc: '' });
+
   export const close = () => {
     modal.close();
     dispatch(EVENT.close);

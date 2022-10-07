@@ -10,6 +10,7 @@
   } from '$lib/components/bookmark/BookmarkEditForm.svelte';
   import BookmarkEditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
   import BookmarkList from '$lib/components/bookmark/BookmarkList.svelte';
+  import BookmarkToolbar, { EVENT_TYPE as TOOLBAR_EVENT_TYPE } from '$lib/components/bookmark/BookmarkToolbar.svelte';
   import GroupSideBar from '$lib/components/home/GroupSideBar.svelte';
   import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb, PageMetaBookmarks } from '$lib/type';
@@ -76,6 +77,17 @@
     addToast({ description: 'Something went wrong.', status: 'error' });
   }
 
+  function handleToolbarEvent0(e: CustomEvent<{ type: TOOLBAR_EVENT_TYPE }>) {
+    const type = e.detail?.type;
+    switch (type) {
+      case TOOLBAR_EVENT_TYPE.ClickAddButton:
+        editModal.openEmpty();
+        break;
+      default:
+        console.log('handleToolbarEvent0 unhandled event type', type);
+    }
+  }
+
   // pagination
 
   let q: URLSearchParams;
@@ -114,6 +126,7 @@
     {#if bookmarks.length > 0}
       <BookmarkList {bookmarks} {editModal} />
     {:else}
+      <BookmarkToolbar tools={['add']} on:ev0={handleToolbarEvent0} />
       <Empty />
     {/if}
     <BookmarkEditModal bind:this={editModal} on:ev0={handleBookmarkEditModalEv0} />

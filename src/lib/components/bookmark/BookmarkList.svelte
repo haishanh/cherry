@@ -2,23 +2,18 @@
   export let bookmarks: BookmarkFromDb[] = [];
   export let editModal: EditModal;
 
-  import Edit from '@hsjs/svelte-icons/feather/Edit.svelte';
-  import Plus from '@hsjs/svelte-icons/feather/Plus.svelte';
   import { nanoid } from 'nanoid/async';
 
   import { afterNavigate, invalidate } from '$app/navigation';
   import { groupAddModal, groupSelectModal } from '$lib/client/modal.store';
-  import Button from '$lib/components/base/Button.svelte';
   import { addToast, removeToast } from '$lib/components/base/toast/store';
-  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
   import BookmarkChip from '$lib/components/bookmark/BookmarkChip.svelte';
   import type EditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
+  import BookmarkToolbar, { EVENT_TYPE as TOOLBAR_EVENT_TYPE } from '$lib/components/bookmark/BookmarkToolbar.svelte';
   import GroupListModal from '$lib/components/home/GroupListModal.svelte';
   import Dock from '$lib/components/selection-dock/Dock.svelte';
   import type { BookmarkFromDb } from '$lib/type';
   import * as httpUtil from '$lib/utils/http.util';
-
-  import Tooltip from '../base/popover/Tooltip.svelte';
 
   type Group = { id: number; name: string; count?: number };
 
@@ -233,7 +228,7 @@
     }
   }
   function openEmptyEditModal() {
-    editModal.open({ url: '', title: '', desc: '' });
+    editModal.openEmpty();
   }
   function handleClickArrangeBookmarksButton() {
     isArranging = !isArranging;
@@ -255,25 +250,24 @@
     const groupId = e.detail.group.id;
     await groupBookmarks(ids, groupId);
   }
+
+  function handleToolbarEvent0(e: CustomEvent<{ type: TOOLBAR_EVENT_TYPE }>) {
+    const type = e.detail?.type;
+    switch (type) {
+      case TOOLBAR_EVENT_TYPE.ClickAddButton:
+        openEmptyEditModal();
+        break;
+      case TOOLBAR_EVENT_TYPE.ClickArrangeButton:
+        handleClickArrangeBookmarksButton();
+        break;
+      default:
+        console.log('handleToolbarEvent0 unhandled event type', type);
+    }
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
-<div class="toolbar">
-  <Tooltip>
-    <Button slot="trigger" modifier={['icon']} on:click={handleClickArrangeBookmarksButton}>
-      <Edit size={16} />
-      <VisuallyHidden>Bulk Edit</VisuallyHidden>
-    </Button>
-    <div class="tooltip-cnt" slot="content">Bulk Edit</div>
-  </Tooltip>
-  <Tooltip>
-    <Button slot="trigger" modifier={['icon']} on:click={openEmptyEditModal}>
-      <Plus size={16} />
-      <VisuallyHidden>Add New Bookmark</VisuallyHidden>
-    </Button>
-    <div class="tooltip-cnt" slot="content">Add New Bookmark</div>
-  </Tooltip>
-</div>
+<BookmarkToolbar on:ev0={handleToolbarEvent0} />
 <div class="list">
   {#each bookmarks as bookmark, idx (bookmark.id)}
     {#if bookmark.url && (bookmark.url.startsWith('https://') || bookmark.url.startsWith('http://'))}
@@ -300,15 +294,6 @@
 />
 
 <style lang="scss">
-  .toolbar {
-    padding: 8px 0;
-    display: flex;
-    justify-content: flex-end;
-    gap: 5px;
-  }
-  .tooltip-cnt {
-    font-size: 0.85em;
-  }
   .list {
     font-size: 0.9em;
     display: flex;
