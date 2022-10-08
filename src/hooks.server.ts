@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
-import { COOKIE_KEY_TOKEN, JWT_SECRET } from '$lib/env';
+import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
 import { HttpStatus } from '$lib/server/api.error';
 import { logger } from '$lib/server/logger';
 import { isPublic } from '$lib/utils/access.util';
@@ -40,7 +40,10 @@ export const handle: Handle = async function handle({ event, resolve }) {
         status: HttpStatus.FORBIDDEN,
         headers: {
           // clean token cookie so user wont stuck
-          'set-cookie': cookieUtil.gen(COOKIE_KEY_TOKEN, 'deleted', { maxAge: 0, secure: !dev }),
+          'set-cookie': cookieUtil.gen(COOKIE_KEY_TOKEN, 'deleted', {
+            maxAge: 0,
+            insecure: USE_INSECURE_COOKIE || dev,
+          }),
         },
       });
       return res;
@@ -54,7 +57,10 @@ export const handle: Handle = async function handle({ event, resolve }) {
 
   if (response.status === 307) {
     const ONE_DAY_IN_SECOND = 24 * 3600;
-    const cookie = cookieUtil.gen('redirect', url.pathname, { maxAge: ONE_DAY_IN_SECOND, secure: !dev });
+    const cookie = cookieUtil.gen('redirect', url.pathname, {
+      maxAge: ONE_DAY_IN_SECOND,
+      insecure: USE_INSECURE_COOKIE || dev,
+    });
     response.headers.append('set-cookie', cookie);
   }
 

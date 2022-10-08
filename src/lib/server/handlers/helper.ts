@@ -2,7 +2,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { ZodError, ZodSchema } from 'zod';
 
 import { dev } from '$app/environment';
-import { COOKIE_KEY_TOKEN, JWT_SECRET } from '$lib/env';
+import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
 import { logger } from '$lib/server/logger';
 import { user as userSvc } from '$lib/server/services/user.service';
 import { isEmail } from '$lib/utils/common.util';
@@ -56,7 +56,10 @@ export async function signInUser(user: { id: number; username: string; feature: 
   const { token, maxAge } = await genPat(user);
   const headers = new Headers();
   // https://web.dev/first-party-cookie-recipes/
-  headers.append('set-cookie', cookieUtil.gen(COOKIE_KEY_TOKEN, token, { maxAge, secure: !dev }));
+  headers.append(
+    'set-cookie',
+    cookieUtil.gen(COOKIE_KEY_TOKEN, token, { maxAge, insecure: USE_INSECURE_COOKIE || dev })
+  );
   // remove oauthstate cookie
   // `oauthstate=deleted; Path=/; SameSite=Lax; Max-Age=0; HttpOnly`,
   if (redirect) headers.append('location', redirect);
