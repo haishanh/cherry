@@ -41,7 +41,7 @@ RUN pnpm build && pnpm bundle:cli
 FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/yasu:latest AS yasu
 FROM init AS base
 
-ENV PUID="1001" PGID="1001" PORT="5173"
+ENV PUID="1001" PGID="1001" PORT="5173" BODY_SIZE_LIMIT="52428800"
 
 COPY --from=yasu / /
 COPY docker/rootfs /
