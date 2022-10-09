@@ -1,11 +1,14 @@
-<script>
-  export let href;
+<script lang="ts">
+  type Modifier = 'v0';
+
+  export let href: string;
+  export let modifier: Modifier[] | null = null;
 </script>
 
-<a class="buttonish" {href}><slot /></a>
+<a class={modifier ? modifier.join(' ') : ''} {href}><slot /></a>
 
 <style lang="scss">
-  .buttonish {
+  a {
     --fg: var(--color-text);
     --bg: var(--bg-btn);
 
@@ -35,6 +38,11 @@
     &:hover {
       border-color: hsl(0deg 0% var(--bo-lightness-hover));
       background-color: var(--bg-hover);
+    }
+
+    &.v0 {
+      border-style: dashed;
+      border-width: 2px;
     }
   }
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import Lock from '@hsjs/svelte-icons/feather/Lock.svelte';
   import LogOut from '@hsjs/svelte-icons/feather/LogOut.svelte';
+  import { onMount } from 'svelte';
 
   import Button from '$lib/components/base/Button.svelte';
   import ButtonishLink from '$lib/components/base/ButtonishLink.svelte';
@@ -14,20 +15,45 @@
   const user = data.user;
 
   let changePasswordModal: ChangePasswordModal;
+  const handleClickChangePassword = () => changePasswordModal.open();
 
-  // <a {id} class="btn-like" href="/api/auth/signout"><LogOut size={20} /><span class="signout-text">Sign out</span></a>
+  let bookmarkletHref = 'javascript:void';
+
+  onMount(() => {
+    let u = new URL(window.location.href);
+    bookmarkletHref =
+      'javascript:' +
+      `(()=>{ var d=document;function create(d) { var e = d.createElement('div');var c=e.style;
+  c.position='fixed';c.padding='15px';c.bottom='15px';c.left='15px';c.fontSize='16px';c.transform='translateY(150%)';c.transition='transform 0.3s ease-out';c.color='#fff';c.borderRadius='8px';c.zIndex='2147483647';
+  c.background='rgb(49,129,206)';e.innerText='Picking...';d.body.appendChild(e);
+  setTimeout(() => c.transform = 'translateY(0)', 1);
+  return e;
+}
+var e = create(d);
+function dismiss(d,e,a,x){
+  e.innerText=a?'Cherry Picked!': x && x.message ? x.message:'Something went wrong!';
+  e.style.background=a?'rgb(56,161,105)':'rgb(228, 62, 62)';
+  setTimeout(() => {e.style.transform='translateY(150%)';setTimeout(()=>d.body.removeChild(e),600);}, 2000);
+}
+fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.href)+'&pat='+'${token}').then(res=> {if(res.ok){dismiss(d,e,1)}else{throw new Error(res.statusText)}}).catch((er)=>dismiss(d,e,0,er))})()`;
+  });
 </script>
 
 <section>
   <h3>Personal Access Token</h3>
   <CopyHide cnt={token} />
 </section>
+<section>
+  <h3>Bookmarklet</h3>
+  <ButtonishLink modifier={['v0']} href={bookmarkletHref}>+ 🍒Cherry</ButtonishLink>
+  <p>
+    Drag this link to your browser bookmarks bar. Simply click it in your bookmarks bar to save a web page to Cherry.
+  </p>
+</section>
 {#if user.passwordless !== true}
   <section>
     <h3>Password</h3>
-    <Button on:click={() => changePasswordModal.open()}
-      ><Lock slot="icon" size={18} /><span>Change password</span></Button
-    >
+    <Button on:click={handleClickChangePassword}><Lock slot="icon" size={18} /><span>Change password</span></Button>
   </section>
 {/if}
 <section class="signout">

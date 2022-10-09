@@ -13,6 +13,7 @@ import {
   type PageMetaBookmarks,
   SchemaCreateBookmark,
 } from '$lib/type';
+import { fetchMeta } from '$lib/utils/html.util';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -86,16 +87,4 @@ function parsePageCursor(s: string) {
   assert(!isNaN(updatedAt));
   assert(!isNaN(id));
   return { updatedAt, id };
-}
-
-async function fetchMeta(url: string) {
-  const mod = await import('html-metadata-parser');
-  // @ts-ignore
-  const parser = mod.default ? mod.default.parser : mod.parser;
-  const result = await parser(url);
-  return {
-    url,
-    title: result.og?.title || result.meta?.title || '',
-    desc: result.og?.description || result.meta?.description || '',
-  };
 }
