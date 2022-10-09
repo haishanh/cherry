@@ -18,7 +18,11 @@ export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
   const url = new URL(request.url);
 
-  if (isPublic(url)) return await resolve(event);
+  if (isPublic(url)) {
+    const response = await resolve(event);
+    response.headers.delete('link');
+    return response;
+  }
 
   let token: string;
   const authHeader = request.headers.get('authorization');
@@ -67,5 +71,12 @@ export const handle: Handle = async function handle({ event, resolve }) {
     response.headers.append('set-cookie', cookie);
   }
 
+  // get rid of the big link header
+  // this should not be necesary since we already got these links in HTML meta link tags
+  //
+  // big header causes Nginx 502
+  //
+  // also this https://github.com/sveltejs/kit/issues/6790#issuecomment-1254205734
+  response.headers.delete('link');
   return response;
 };
