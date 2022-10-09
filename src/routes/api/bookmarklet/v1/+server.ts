@@ -29,6 +29,10 @@ export const GET: RequestHandler = async (event) => {
     }
     const input = zalidate(SchemaCreateBookmark, toValidate);
     const data = bookmarkSvc.createBookmark(input as InputCreateBookmark);
-    return json(data);
+    return json(data, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   });
 };

@@ -35,7 +35,7 @@ function dismiss(d,e,a,x){
   e.style.background=a?'rgb(56,161,105)':'rgb(228, 62, 62)';
   setTimeout(() => {e.style.transform='translateY(150%)';setTimeout(()=>d.body.removeChild(e),600);}, 2000);
 }
-fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.href)+'&pat='+'${token}').then(res=> {if(res.ok){dismiss(d,e,1)}else{throw new Error(res.statusText)}}).catch((er)=>dismiss(d,e,0,er))})()`;
+fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.href)+'&pat='+'${token}',{credentials:'omit'}).then(res=> {if(res.ok){dismiss(d,e,1)}else{throw new Error(res.statusText)}}).catch((er)=>dismiss(d,e,0,er))})()`;
   });
 </script>
 
