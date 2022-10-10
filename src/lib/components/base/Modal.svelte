@@ -37,10 +37,8 @@
     dispatch('ev0', { type: EVENT_TYPE.Close });
   }
 
-  function handleClickOverlay(event: MouseEvent) {
-    const overlay = event.currentTarget as HTMLElement;
-    const target = event.target as HTMLElement;
-    if (overlay === target) close();
+  function handleClickOverlay(__event: MouseEvent) {
+    close();
   }
 
   function naivePreventScroll() {
@@ -110,8 +108,8 @@
       style="z-index:{zi}"
       class="overlay {verticalAlign}"
       transition:fade={{ delay: 0, duration: 300 }}
-      on:click={handleClickOverlay}
     >
+      <div class="inset0" on:click={handleClickOverlay} />
       <div class="cnt" use:focus0 transition:fly={{ delay: 0, duration: 300, y: 100 }}>
         <div class="focus-guard" data-leading-focus-guard tabindex="-1" />
         <div class="action" class:left={closeButtonPosition === 'left'} class:right={closeButtonPosition === 'right'}>
@@ -130,6 +128,10 @@
 </Portal>
 
 <style lang="scss">
+  .inset0 {
+    position: fixed;
+    inset: 0;
+  }
   .overlay {
     @media (prefers-color-scheme: dark) {
       --bg: hsl(0deg 0% 0% / 52%);
