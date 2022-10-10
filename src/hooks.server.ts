@@ -1,9 +1,17 @@
 import type { Handle } from '@sveltejs/kit';
 
 import { dev } from '$app/environment';
-import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
+import {
+  COOKIE_KEY_TOKEN,
+  ENABLE_HTTP_REMOTE_USER,
+  HTTP_REMOTE_USER_HEADER_NAME,
+  JWT_SECRET,
+  USE_INSECURE_COOKIE,
+} from '$lib/env';
 import { HttpStatus } from '$lib/server/api.error';
+import { genPat } from '$lib/server/handlers/helper';
 import { logger } from '$lib/server/logger';
+import { user as userSvc } from '$lib/server/services/user.service';
 import { isPublic } from '$lib/utils/access.util';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as jwtUtil from '$lib/utils/jwt.util';
@@ -13,6 +21,10 @@ import * as jwtUtil from '$lib/utils/jwt.util';
 //    if (error instanceof Error) {
 //    ...
 //   }
+
+// export const handleFetch: HandleFetch = ({ event, request, fetch }) => {
+//   return fetch(request);
+// }
 
 export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
@@ -38,9 +50,9 @@ export const handle: Handle = async function handle({ event, resolve }) {
   }
 
   if (token) {
-    let claims: any;
+    let claims: { userId: number; feature: number };
     try {
-      claims = await jwtUtil.validate(token, JWT_SECRET);
+      claims = (await jwtUtil.validate(token, JWT_SECRET)) as { userId: number; feature: number };
     } catch (e) {
       logger.info(e, 'hooks');
       const res = new Response(undefined, {
@@ -56,6 +68,16 @@ export const handle: Handle = async function handle({ event, resolve }) {
       return res;
     }
     event.locals.user = claims;
+  }
+
+  if (!event.locals.user && ENABLE_HTTP_REMOTE_USER && HTTP_REMOTE_USER_HEADER_NAME) {
+    const user = await handleRemoteUser({ event });
+    if (user) {
+      event.locals.user = { userId: user.id, feature: user.feature };
+      const { token, maxAge } = await genPat(user);
+      // this will make cookie available in load of `src/routes/+page.ts`
+      event.cookies.set(COOKIE_KEY_TOKEN, token, { maxAge });
+    }
   }
 
   const response = await resolve(event);
@@ -79,4 +101,26 @@ export const handle: Handle = async function handle({ event, resolve }) {
   // also this https://github.com/sveltejs/kit/issues/6790#issuecomment-1254205734
   response.headers.delete('link');
   return response;
+};
+
+type RequetEvent = Parameters<Handle>[0]['event'];
+
+const handleRemoteUser = async ({ event }: { event: RequetEvent }) => {
+  const headers = event.request.headers;
+  const username = headers.get(HTTP_REMOTE_USER_HEADER_NAME);
+  logger.info('username=%s', username);
+
+  // skip
+  if (!username) return;
+
+  let result = userSvc.getUserByUsername({ username });
+  if (!result) {
+    // create passwordless user
+    result = await userSvc.createUser({ username });
+  }
+  if (typeof result.id === 'number' && typeof result.feature === 'number') {
+    return result;
+  } else {
+    logger.warn('remote user header %s=%s present but read/create user failed', HTTP_REMOTE_USER_HEADER_NAME, username);
+  }
 };

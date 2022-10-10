@@ -1,9 +1,15 @@
 import 'dotenv/config';
 
+const env = process.env;
+
 export const DATABASE_PATH = (process.env.DATABASE_PATH as string) || '/data/cherry.sqlite';
 export const ENABLE_PUBLIC_REGISTRATION = process.env.ENABLE_PUBLIC_REGISTRATION === '1';
 export const JWT_SECRET = process.env.JWT_SECRET as string;
 export const USE_INSECURE_COOKIE = process.env.USE_INSECURE_COOKIE === '1';
+
+// remote user support
+export const ENABLE_HTTP_REMOTE_USER = env.ENABLE_HTTP_REMOTE_USER === '1';
+export const HTTP_REMOTE_USER_HEADER_NAME = (env.HTTP_REMOTE_USER_HEADER_NAME as string) || 'Remote-User';
 
 export const COOKIE_KEY_TOKEN = 'token';
 export const COOKIE_KEY_OAUTH_STATE = 'oauthstate';

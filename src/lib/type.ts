@@ -150,6 +150,10 @@ export type InputCreateUser = {
   password: string;
 };
 
+export type InputCreatePasswordlessUser = {
+  username: string;
+};
+
 export type InputAdminDeleteUser = {
   id: number;
   username: string;

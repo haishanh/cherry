@@ -1,5 +1,5 @@
 import * as userDb from '$lib/server/db/user.db';
-import type { InputChangePassword, InputCheckPassword, InputCreateUser } from '$lib/type';
+import type { InputChangePassword, InputCheckPassword, InputCreatePasswordlessUser, InputCreateUser } from '$lib/type';
 import * as passwordUtil from '$lib/utils/password.util';
 
 import { ApiError, ApiErrorCode, HttpStatus } from '../api.error';
@@ -30,7 +30,7 @@ export const user = {
     ff.strip_tracking_parameters = (feature0 & UserFeatureFlag.FF_STRIP_TRACKING_PARAMETERS) > 0;
     return { ...user, ff };
   },
-  createUser: async (input: InputCreateUser) => {
+  createUser: async (input: InputCreateUser | InputCreatePasswordlessUser) => {
     const db = lite();
     try {
       return await userDb.createUser(db, input);

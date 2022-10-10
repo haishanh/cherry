@@ -1,11 +1,18 @@
 import type Sqlite from 'better-sqlite3';
 
-import type { InputCreateUser } from '$lib/type';
+import type { InputCreatePasswordlessUser, InputCreateUser } from '$lib/type';
 import * as passwordUtil from '$lib/utils/password.util';
 
 import { DEFAULT_USER_FEATURE } from '../services/user.service';
 
-export function getUserByUsername(db: Sqlite.Database, input: { username: string }) {
+export function getUserByUsername(
+  db: Sqlite.Database,
+  input: { username: string }
+): {
+  id: number;
+  username: string;
+  feature: number;
+} {
   const stmt = db.prepare(`select id,username,feature from user where username = ?`);
   return stmt.get([input.username]);
 }
@@ -37,12 +44,20 @@ export function getUserPasswordById(db: Sqlite.Database, input: { id: number }) 
   return stmt.get([input.id]);
 }
 
-export async function createUser(db: Sqlite.Database, input: InputCreateUser) {
+export async function createUser(
+  db: Sqlite.Database,
+  input: InputCreateUser | InputCreatePasswordlessUser
+): Promise<{ id: number; username: string; feature: number }> {
   const stmt = db.prepare(`
     insert into user (username, password, feature, createdAt, updatedAt) 
     values (@username, @password, @feature, strftime('%s','now'), strftime('%s','now'))
   `);
-  const hashed = await passwordUtil.hash(input.password);
+  let hashed: string | null;
+  if ('password' in input) {
+    hashed = await passwordUtil.hash(input.password);
+  } else {
+    hashed = null;
+  }
   const username = input.username ?? '';
   const ret = stmt.run({ username, password: hashed, feature: DEFAULT_USER_FEATURE });
   return { id: ret.lastInsertRowid as number, username, feature: DEFAULT_USER_FEATURE };
