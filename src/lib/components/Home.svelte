@@ -52,8 +52,13 @@
 
     if (idx < 0) return;
 
-    bookmarks.splice(idx, 1);
-    bookmarks.splice(0, 0, bookmark);
+    // do no change the order of the list
+    bookmarks.splice(idx, 1, bookmark);
+
+    // or if we want to put newly udpated item to top, we can:
+    // bookmarks.splice(idx, 1);
+    // bookmarks.splice(0, 0, bookmark);
+
     bookmarks = bookmarks;
     editModal.close();
   }
@@ -124,7 +129,7 @@
       </div>
     </div>
     {#if bookmarks.length > 0}
-      <BookmarkList {bookmarks} {editModal} />
+      <BookmarkList bind:bookmarks {editModal} />
     {:else}
       <BookmarkToolbar tools={['add']} on:ev0={handleToolbarEvent0} />
       <Empty />
