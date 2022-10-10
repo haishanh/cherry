@@ -1,0 +1,44 @@
+---
+version: '3.3'
+
+services:
+  caddy:
+    image: caddy
+    container_name: auth_caddy
+    volumes:
+      - "caddy_data:/data"
+      - "caddy_config:/config"
+      - './Caddyfile:/etc/caddy/Caddyfile'
+      - './certs:/certs'
+    ports:
+      - '80:80'
+      - '443:443/tcp'
+      - '443:443/udp'
+
+  authelia:
+    image: authelia/authelia
+    container_name: auth_authelia
+    volumes:
+      - ./authelia:/config
+    expose:
+      - 9091
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      - TZ=Australia/Melbourne
+
+  cherry:
+    image: haishanh/cherry:test
+    container_name: auth_cherry
+    volumes:
+      - "./cherry:/data"
+    environment:
+      - JWT_SECRET=some-secret-string
+      # this flag is important for remote-user feature to work
+      - ENABLE_HTTP_REMOTE_USER=1
+      - HTTP_REMOTE_USER_HEADER_NAME=Remote-User
+
+volumes:
+  caddy_data:
+  caddy_config:

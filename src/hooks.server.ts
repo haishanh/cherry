@@ -108,7 +108,6 @@ type RequetEvent = Parameters<Handle>[0]['event'];
 const handleRemoteUser = async ({ event }: { event: RequetEvent }) => {
   const headers = event.request.headers;
   const username = headers.get(HTTP_REMOTE_USER_HEADER_NAME);
-  logger.info('username=%s', username);
 
   // skip
   if (!username) return;

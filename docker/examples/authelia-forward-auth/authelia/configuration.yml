@@ -1,0 +1,51 @@
+---
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+jwt_secret: a_very_important_secret
+default_redirection_url: https://public.example.com
+
+server:
+  host: 0.0.0.0
+  port: 9091
+
+log:
+  level: debug
+
+totp:
+  issuer: authelia.com
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: public.example.com
+      policy: bypass
+    - domain: cherry.example.com
+      policy: one_factor
+
+session:
+  name: authelia_session
+  secret: unsecure_session_secret
+  expiration: 3600  # 1 hour
+  inactivity: 300  # 5 minutes
+  domain: example.com  # Should match whatever your root protected domain is
+
+regulation:
+  max_retries: 3
+  find_time: 120
+  ban_time: 300
+
+storage:
+  encryption_key: you_must_generate_a_random_string_of_more_than_twenty_chars_and_configure_this
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt
+...

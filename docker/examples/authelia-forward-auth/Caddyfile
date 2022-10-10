@@ -1,0 +1,15 @@
+authelia.example.com {
+  tls /certs/authelia.example.com.pem /certs/authelia.example.com-key.pem
+	reverse_proxy authelia:9091
+}
+
+cherry.example.com {
+  tls /certs/cherry.example.com.pem /certs/cherry.example.com-key.pem
+
+	forward_auth authelia:9091 {
+		uri /api/verify?rd=https://authelia.example.com
+		copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+	}
+
+	reverse_proxy cherry:8000
+}
