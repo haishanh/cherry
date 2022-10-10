@@ -15,7 +15,8 @@ This demonstrates remote user (also called forward auth?) support in Cherry.
 mkcert -install
 
 cd certs
-mkcert authelia.example.com cherry.example.com
+mkcert authelia.example.com
+mkcert cherry.example.com
 ```
 
 3. Start containers
