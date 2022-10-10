@@ -1,8 +1,8 @@
-This demonstrate remote user (also called forward auth?) support in Cherry.
+This demonstrates remote user (also called forward auth?) support in Cherry.
 
 ## Setup
 
-1. Add these mapping to your `/etc/hosts`
+1. Add these mappings to your `/etc/hosts`
 
 ```
 127.0.0.1 cherry.example.com
