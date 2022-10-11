@@ -13,7 +13,7 @@ const TIMEOUT = 5000;
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36';
 
 const fetchInit = {
-  ...(process.env.NODE_ENV === 'development' && HTTP_PROXY !== ''
+  ...(process.env.NODE_ENV === 'development' && HTTP_PROXY?.startsWith('http')
     ? { dispatcher: new ProxyAgent(HTTP_PROXY) }
     : undefined),
 };
