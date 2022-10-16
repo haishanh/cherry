@@ -7,6 +7,7 @@ export const load: PageLoad = async (input) => {
     const config = await res.json();
     return {
       registration: config.registration,
+      googleOauthEnabled: config.googleOauthEnabled,
     };
   }
   return { registration: false };

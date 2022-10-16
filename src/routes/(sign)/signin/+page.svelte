@@ -5,8 +5,6 @@
   import type { PageData } from './$types';
 
   export let data: PageData;
-
-  const registration = data.registration;
 </script>
 
 <svelte:head>
@@ -14,12 +12,18 @@
 </svelte:head>
 <h1>Sign in</h1>
 <UserSignForm kind="signin" />
-<div class="divider"><span>OR</span></div>
-<section>
-  <ButtonishLink href="/api/auth/google">Sign in with Google</ButtonishLink>
-</section>
 
-{#if registration}
+{#if data.googleOauthEnabled || data.registration}
+  <div class="divider"><span>OR</span></div>
+{/if}
+
+{#if data.googleOauthEnabled}
+  <section>
+    <ButtonishLink href="/api/auth/google">Sign in with Google</ButtonishLink>
+  </section>
+{/if}
+
+{#if data.registration}
   <section class="signup">
     <a href="/signup">Sign up now</a>
   </section>
