@@ -7,7 +7,7 @@ export const Table = {
   BookmarkFts: { name: 'bookmark_fts' },
 } as const;
 type TableName = keyof typeof Table;
-export type TableItem = typeof Table[TableName];
+export type TableItem = (typeof Table)[TableName];
 
 // loose typed (but TableItem is strictly typed)
 export type ColumnItem = {

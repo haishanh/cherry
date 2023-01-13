@@ -9,7 +9,7 @@
     | 'p5'
     | 'warn';
 
-  export let type: string | null = null;
+  export let type: 'reset' | 'submit' | 'button' | null = null;
   export let modifier: Modifier[] | null = null;
   // native tooltip
   export let title: string | null = null;
