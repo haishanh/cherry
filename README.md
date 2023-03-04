@@ -12,4 +12,7 @@ cp env.example .env
 
 # run the app in dev mode
 pnpm dev
+
+# you may want to create an user
+pnpm cherry create-user "foo@example.com" "P@ssw0rd"
 ```

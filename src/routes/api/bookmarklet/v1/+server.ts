@@ -5,7 +5,7 @@ import { ApiError, HttpStatus } from '$lib/server/api.error';
 import { ensureUser, zalidate } from '$lib/server/handlers/helper';
 import { wrap } from '$lib/server/handlers/wrap';
 import { bookmark as bookmarkSvc } from '$lib/server/services/bookmark.service';
-import { type InputCreateBookmark, type User, SchemaCreateBookmark } from '$lib/type';
+import { type InputCreateBookmark, SchemaCreateBookmark, type User } from '$lib/type';
 import { fetchMeta } from '$lib/utils/html.util';
 
 export const GET: RequestHandler = async (event) => {

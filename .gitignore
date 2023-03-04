@@ -20,3 +20,5 @@ static/inter*.woff
 static/inter*.woff2
 src/assets/inter*.woff
 src/assets/inter*.woff2
+
+dist/
