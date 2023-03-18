@@ -96,10 +96,6 @@
 
   function handleKeydown(e: KeyboardEvent) {
     switch (e.key) {
-      case 'Escape':
-        e.preventDefault();
-        close();
-        return;
       case 'ArrowDown':
         e.preventDefault();
         highlightItemBelow();

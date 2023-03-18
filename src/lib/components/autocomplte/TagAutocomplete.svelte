@@ -3,6 +3,7 @@
   import { createEventDispatcher } from 'svelte';
   import invariant from 'tiny-invariant';
 
+  import ForwardSlash from '$lib/components/base/icons/ForwardSlash.svelte';
   import type { NewTagType, TagType } from '$lib/type';
 
   import Button from '../base/Button.svelte';
@@ -13,6 +14,7 @@
   import Tag from './Tag.svelte';
 
   const dispatch = createEventDispatcher();
+  let inputRef: HTMLInputElement;
 
   type AllTagType = TagType | NewTagType;
 
@@ -23,6 +25,10 @@
   export let inputValue = '';
   export let placeholder = 'Add tags...';
   export let autoSelect = false;
+  export let focusWithForwardSlashKey = false;
+  export function focus() {
+    inputRef && inputRef.focus();
+  }
 
   const EVENT = {
     focus0: 'focus0',
@@ -98,17 +104,20 @@
   const open = () => (!expanded ? (expanded = true) : undefined);
   const close = () => (expanded ? (expanded = false) : undefined);
 
+  let focused = false;
   function handleInputOnInput() {
     open();
   }
 
   function handleInputOnFocus() {
+    focused = true;
     dispatch(EVENT.focus0);
     open();
   }
 
   function handleInputOnBlur(_e: FocusEvent) {
     close();
+    focused = false;
     // dispatch(EVENT.blur0);
     // let activeElement = e.relatedTarget as HTMLDivElement;
     // // TODO to improve this
@@ -126,8 +135,20 @@
     tags = tags.filter((t) => t !== tag);
     dispatch('change', [...tags]);
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        inputRef && inputRef.blur();
+        // close();
+        return;
+      default:
+    }
+  }
 </script>
 
+<svelte:window on:keydown={handleKeydown} />
 <div class="autocomplete-wrapper">
   <div class="autocomplete" class:round={search}>
     {#each tags as tag (tag.name)}
@@ -137,6 +158,7 @@
       autocomplete="off"
       autocapitalize="none"
       spellcheck="false"
+      bind:this={inputRef}
       {placeholder}
       bind:value={inputValue}
       on:focus={handleInputOnFocus}
@@ -146,6 +168,11 @@
       aria-haspopup="listbox"
       aria-expanded={expanded}
     />
+
+    {#if focusWithForwardSlashKey && !focused}
+      <ForwardSlash />
+    {/if}
+
     {#if search}
       <div class="search-wrapper">
         <Button modifier={['minimal', 'circular']} type="submit">

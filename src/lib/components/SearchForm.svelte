@@ -11,6 +11,7 @@
 
   let tags: TagType[] = [];
   let inputValue = '';
+  let tagAutocomplete: TagAutocomplete;
 
   function updateState() {
     const search = new URL(document.location.href).searchParams;
@@ -48,14 +49,27 @@
       log(url);
     }
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    switch (e.key) {
+      case '/':
+        e.preventDefault();
+        tagAutocomplete && tagAutocomplete.focus();
+        return;
+      default:
+    }
+  }
 </script>
 
+<svelte:window on:keydown={handleKeydown} />
 <form on:submit|preventDefault={onSubmit}>
   <TagAutocomplete
+    bind:this={tagAutocomplete}
     options={$tagList}
     bind:tags
     canCreate={false}
     search
+    focusWithForwardSlashKey
     bind:inputValue
     placeholder="Search"
     on:focus0
