@@ -36,6 +36,7 @@
       class="popover"
       use:popover={{ anchor, vOffset, closeFn: close, onPosition: handlePopoverPositionChange }}
       {style}
+      role="tooltip"
       on:mouseenter={() => dispatch(EVENT.mouseenter0)}
       on:mouseleave={() => dispatch(EVENT.mouseleave0)}
     >

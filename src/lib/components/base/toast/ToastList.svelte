@@ -69,6 +69,7 @@
       style="background-color: {bg[item.status]}"
       data-id={item.id}
       use:armTimeout={item}
+      role="list"
       on:mouseenter={handleMouseEnter}
       on:mouseleave={handleMouseLeave}
     >

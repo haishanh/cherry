@@ -45,7 +45,7 @@ export function getBookmarks(
   input: InputFindBookmarksOfUser & {
     // is counting
     counting?: boolean;
-  }
+  },
 ) {
   const { user, groupId, tagIds, text, counting, after, page } = input;
   assert(user && user.userId);
@@ -180,7 +180,7 @@ export function stashBookmarks(db: Sqlite.Database, input: InputStashMultiBookma
   const stmt0 = db.prepare('select * from bookmark where id = @id and userId = @userId');
   const stmt1 = db.prepare(tagDb.BookmarkTagQuerySelectV0);
   const stmt2 = db.prepare(
-    `insert into bookmark_stash (key, userId, data, createdAt) values (?, ?, ?, strftime('%s','now'))`
+    `insert into bookmark_stash (key, userId, data, createdAt) values (?, ?, ?, strftime('%s','now'))`,
   );
   const stmt3 = db.prepare('delete from bookmark where id = @id and userId = @userId');
 
@@ -212,7 +212,7 @@ export function restoreBookmarks(db: Sqlite.Database, input: InputRestoreMultiBo
   const stmt0 = db.prepare('select data from bookmark_stash where key = ? and userId = ?');
   const stmt1 = db.prepare(
     `insert into bookmark (id, title, desc, url, userId, createdAt, updatedAt)
-     values (@id, @title, @desc, @url, @userId, @createdAt, @updatedAt) RETURNING id`
+     values (@id, @title, @desc, @url, @userId, @createdAt, @updatedAt) RETURNING id`,
   );
   const stmt2 = db.prepare('delete from bookmark_stash where key = ? and userId = ?');
 
@@ -269,7 +269,7 @@ export function getAllBookmarkTags(db: Sqlite.Database, opts: { bookmarkId: numb
 
 export function updateBookmarkTags(
   db: Sqlite.Database,
-  opts: { bookmarkId: number; userId: number; tags: NewTagType[]; isNewBookmark?: boolean }
+  opts: { bookmarkId: number; userId: number; tags: NewTagType[]; isNewBookmark?: boolean },
 ) {
   const { bookmarkId, userId, tags } = opts;
   const transact = db.transaction(() => {

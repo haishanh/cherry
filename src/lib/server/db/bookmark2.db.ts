@@ -36,7 +36,7 @@ export function getBookmarks(db: Sqlite.Database, input: InputFindBookmarksOfUse
           Bookmark.GroupId,
           Bookmark.UpdatedAt,
           Bookmark.CreatedAt,
-        ]
+        ],
   ).where(Eq(Bookmark.UserId, '@userId'));
 
   if (!counting) {

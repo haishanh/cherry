@@ -93,7 +93,7 @@ export function findIconRelLinks(html: string) {
     (elem) => elem.type === 'tag' && elem.name === 'head',
     dom.children,
     true,
-    1
+    1,
   );
 
   if (!head || !('children' in head)) return [];
@@ -105,7 +105,7 @@ export function findIconRelLinks(html: string) {
     },
     head.children,
     false,
-    100
+    100,
   ) as Element[];
 }
 
@@ -285,7 +285,7 @@ export class FaviconError extends Error {
 
 export async function buf(
   input: { type?: string; url: string },
-  site?: string
+  site?: string,
 ): Promise<{ buffer: Buffer; type?: string }> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), TIMEOUT);

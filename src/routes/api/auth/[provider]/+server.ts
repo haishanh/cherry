@@ -19,7 +19,7 @@ export const GET: RequestHandler = async ({ params }) => {
   const headers = new Headers();
   headers.append(
     'set-cookie',
-    cookieUtil.gen(COOKIE_KEY_OAUTH_STATE, state, { maxAge: ONE_DAY_IN_SECOND, insecure: USE_INSECURE_COOKIE || dev })
+    cookieUtil.gen(COOKIE_KEY_OAUTH_STATE, state, { maxAge: ONE_DAY_IN_SECOND, insecure: USE_INSECURE_COOKIE || dev }),
   );
   headers.append('location', authUrl);
 

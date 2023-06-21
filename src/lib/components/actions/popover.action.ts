@@ -55,7 +55,7 @@ export function popover(
     anchor: HTMLElement;
     closeFn: () => void;
     onPosition: (opts: { position: { top: number; left: number }; placement: string }) => void;
-  }
+  },
 ) {
   const { anchor, closeFn, onPosition, vOffset } = params;
 

@@ -7,7 +7,7 @@ import { DEFAULT_USER_FEATURE } from '../services/user.service';
 
 export function getUserByUsername(
   db: Sqlite.Database,
-  input: { username: string }
+  input: { username: string },
 ): {
   id: number;
   username: string;
@@ -28,7 +28,7 @@ export function deleteUserById(db: Sqlite.Database, input: { id: number }) {
 
 export function getUserById(
   db: Sqlite.Database,
-  input: { id: number }
+  input: { id: number },
 ): {
   id: number;
   username: string;
@@ -46,7 +46,7 @@ export function getUserPasswordById(db: Sqlite.Database, input: { id: number }) 
 
 export async function createUser(
   db: Sqlite.Database,
-  input: InputCreateUser | InputCreatePasswordlessUser
+  input: InputCreateUser | InputCreatePasswordlessUser,
 ): Promise<{ id: number; username: string; feature: number }> {
   const stmt = db.prepare(`
     insert into user (username, password, feature, createdAt, updatedAt) 

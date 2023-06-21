@@ -6,6 +6,9 @@ class Fetcher {
   req(uri: string, opts: { method: string; body: any }) {
     return fetch(this.base + uri, {
       method: opts.method,
+      headers: {
+        Origin: 'http://localhost:5173',
+      },
       ...(opts.body ? { body: JSON.stringify(opts.body) } : undefined),
     });
   }

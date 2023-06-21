@@ -2,7 +2,7 @@ export class RequestError {
   constructor(
     public readonly error: any | null,
     public readonly response: Response | null,
-    public readonly body: any = null
+    public readonly body: any = null,
   ) {}
 }
 

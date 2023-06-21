@@ -58,7 +58,7 @@ export async function signInUser(user: { id: number; username: string; feature: 
   // https://web.dev/first-party-cookie-recipes/
   headers.append(
     'set-cookie',
-    cookieUtil.gen(COOKIE_KEY_TOKEN, token, { maxAge, insecure: USE_INSECURE_COOKIE || dev })
+    cookieUtil.gen(COOKIE_KEY_TOKEN, token, { maxAge, insecure: USE_INSECURE_COOKIE || dev }),
   );
   // remove oauthstate cookie
   // `oauthstate=deleted; Path=/; SameSite=Lax; Max-Age=0; HttpOnly`,

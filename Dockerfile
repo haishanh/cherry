@@ -1,8 +1,9 @@
 ARG COMMIT_SHA=""
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:3.16-2.2.0.3 AS init
+# alpine 3.18, https://github.com/just-containers/s6-overlay 2.2.03
+FROM --platform=${TARGETPLATFORM:-linux/amd64} ghcr.io/crazy-max/alpine-s6:3.18-2.2.0.3 AS init
 
-COPY --from=node:18-alpine /usr/local /usr/local
+COPY --from=node:20-alpine /usr/local /usr/local
 
 RUN apk upgrade && apk --update --no-cache add \
   libstdc++ \
@@ -36,7 +37,9 @@ COPY package.json tsconfig.json svelte.config.js vite.config.js ./
 COPY ./static ./static
 COPY ./src ./src
 COPY --from=modules /app/src ./src
-RUN pnpm build && pnpm bundle:cli
+RUN pnpm sync && \
+    pnpm build && \
+    pnpm bundle:cli
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/yasu:latest AS yasu
 FROM init AS base
@@ -50,9 +53,6 @@ RUN adduser --system --uid ${PUID} -G nodejs -h /home/nodejs -s /bin/bash nodejs
 
 WORKDIR /app
 ENV NODE_ENV production
-
-# /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node
-# RUN yarn add better-sqlite3
 
 COPY --from=modules --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/.svelte-kit ./.svelte-kit

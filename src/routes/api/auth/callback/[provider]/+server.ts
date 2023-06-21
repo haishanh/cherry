@@ -45,6 +45,6 @@ export const GET: RequestHandler = async (event) => {
     },
     () => {
       return new Response(undefined, { status: 307, headers: { location: '/error/forbidden' } });
-    }
+    },
   );
 };

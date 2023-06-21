@@ -62,7 +62,7 @@ export const trigger = {
     const { name, ifNotExists, event, table, statements } = input;
 
     return `create trigger ${ifNotExists ? 'if not exists' : ''} ${name} ${event} on ${table} begin\n${statements.join(
-      ';\n'
+      ';\n',
     )};\nend`;
   },
 };

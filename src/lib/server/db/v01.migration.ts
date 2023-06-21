@@ -18,7 +18,7 @@ export const up = (db: Sqlite.Database) => {
         updatedAt: 'integer',
       },
       constraints: ['unique (url, userId)'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -27,7 +27,7 @@ export const up = (db: Sqlite.Database) => {
       ifNotExists: true,
       table: 'bookmark',
       columns: ['userId', 'updatedAt'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -43,11 +43,11 @@ export const up = (db: Sqlite.Database) => {
         bookmarkCount: 'integer default 0',
         bookmarkCountSyncedAt: 'integer default 0',
       },
-    })
+    }),
   ).run();
 
   db.prepare(
-    `create virtual table if not exists bookmark_fts USING fts5 (title,desc,url,content=bookmark,content_rowid=id,tokenize='porter unicode61 remove_diacritics 1')`
+    `create virtual table if not exists bookmark_fts USING fts5 (title,desc,url,content=bookmark,content_rowid=id,tokenize='porter unicode61 remove_diacritics 1')`,
   ).run();
 
   db.prepare(
@@ -63,7 +63,7 @@ export const up = (db: Sqlite.Database) => {
         count: 'integer default 0',
       },
       constraints: ['unique (userId, name)'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -72,7 +72,7 @@ export const up = (db: Sqlite.Database) => {
       ifNotExists: true,
       column: { bookmarkId: 'integer', tagId: 'integer' },
       constraints: ['PRIMARY KEY(bookmarkId, tagId)'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -81,7 +81,7 @@ export const up = (db: Sqlite.Database) => {
       ifNotExists: true,
       table: 'bookmark_tag',
       columns: ['bookmarkId'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -95,7 +95,7 @@ export const up = (db: Sqlite.Database) => {
         data: 'text',
         createdAt: 'integer',
       },
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -104,7 +104,7 @@ export const up = (db: Sqlite.Database) => {
       ifNotExists: true,
       table: 'bookmark_stash',
       columns: ['key', 'userId'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -117,7 +117,7 @@ export const up = (db: Sqlite.Database) => {
         `insert into bookmark_fts(rowid,title,desc,url) values (new.id,new.title,new.desc,new.url)`,
         `update user set bookmarkCount = bookmarkCount + 1 where id = new.userId`,
       ],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -131,7 +131,7 @@ export const up = (db: Sqlite.Database) => {
         `delete from bookmark_tag where bookmarkId = old.id`,
         `update user set bookmarkCount = bookmarkCount - 1 where id = old.userId`,
       ],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -144,7 +144,7 @@ export const up = (db: Sqlite.Database) => {
         `insert into bookmark_fts (bookmark_fts,rowid,title,desc,url) values ('delete',old.id,old.title,old.desc,old.url)`,
         `insert into bookmark_fts(rowid,title,desc,url) values (new.id,new.title,new.desc,new.url)`,
       ],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -154,7 +154,7 @@ export const up = (db: Sqlite.Database) => {
       event: 'after insert',
       table: 'bookmark_tag',
       statements: [`update tag set count = count + 1 where id = new.tagId`],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -164,7 +164,7 @@ export const up = (db: Sqlite.Database) => {
       event: 'after delete',
       table: 'bookmark_tag',
       statements: [`update tag set count = count - 1 where id = old.tagId`],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -174,7 +174,7 @@ export const up = (db: Sqlite.Database) => {
       event: 'after delete',
       table: 'tag',
       statements: [`delete from bookmark_tag where tagId = old.id`],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -190,7 +190,7 @@ export const up = (db: Sqlite.Database) => {
         count: 'integer default 0',
       },
       constraints: ['unique (userId, name)'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -199,7 +199,7 @@ export const up = (db: Sqlite.Database) => {
       ifNotExists: true,
       table: 'bookmark',
       columns: ['groupId'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -209,7 +209,7 @@ export const up = (db: Sqlite.Database) => {
       event: 'after insert',
       table: 'bookmark',
       statements: ['update cherry_group set count = count + 1 where id = new.groupId AND userId = new.userId'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -219,7 +219,7 @@ export const up = (db: Sqlite.Database) => {
       event: 'after delete',
       table: 'bookmark',
       statements: ['update cherry_group set count = count - 1 where id = old.groupId AND userId = old.userId'],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -232,7 +232,7 @@ export const up = (db: Sqlite.Database) => {
         'update cherry_group set count = count - 1 where id = old.groupId AND userId = old.userId',
         'update cherry_group set count = count + 1 where id = new.groupId AND userId = new.userId',
       ],
-    })
+    }),
   ).run();
 
   db.prepare(
@@ -242,6 +242,6 @@ export const up = (db: Sqlite.Database) => {
       event: 'after delete',
       table: 'cherry_group',
       statements: ['update bookmark set groupId = NULL where groupId = old.id AND userId = old.userId'],
-    })
+    }),
   ).run();
 };

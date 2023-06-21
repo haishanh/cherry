@@ -8,17 +8,6 @@
     "singleQuote": true,
     "plugins": [
       "prettier-plugin-svelte"
-    ],
-    "pluginSearchDirs": [
-      "."
-    ],
-    "overrides": [
-      {
-        "files": "*.svelte",
-        "options": {
-          "parser": "svelte"
-        }
-      }
     ]
   },
   "browserslist": [
@@ -39,59 +28,59 @@
     "cherry": "tsx src/cli/index.ts",
     "lint": "prettier --check src scripts && eslint --cache src",
     "lint:fix": "eslint --cache --fix src",
-    "prettier:fix": "prettier --plugin-search-dir=. --write src scripts",
+    "prettier:fix": "prettier --write src scripts",
     "fix": "pnpm lint:fix && pnpm prettier:fix"
   },
   "devDependencies": {
     "@browser-logos/chrome": "2.0.0",
-    "@browser-logos/firefox": "3.0.9",
+    "@browser-logos/firefox": "3.0.10",
     "@browser-logos/safari": "2.1.0",
-    "@fontsource/inter": "4.5.15",
+    "@fontsource/inter": "5.0.5",
     "@hsjs/svelte-icons": "0.0.1-rc.4",
-    "@sveltejs/adapter-node": "1.2.3",
-    "@sveltejs/kit": "1.12.0",
-    "@sveltejs/package": "2.0.2",
-    "@types/better-sqlite3": "7.6.3",
-    "@types/debug": "4.1.7",
-    "@types/estree": "1.0.0",
-    "@typescript-eslint/eslint-plugin": "5.55.0",
-    "@typescript-eslint/parser": "5.55.0",
+    "@sveltejs/adapter-node": "1.3.1",
+    "@sveltejs/kit": "1.22.3",
+    "@sveltejs/package": "2.2.0",
+    "@types/better-sqlite3": "7.6.4",
+    "@types/debug": "4.1.8",
+    "@types/estree": "1.0.1",
+    "@typescript-eslint/eslint-plugin": "6.2.0",
+    "@typescript-eslint/parser": "6.2.0",
     "autoprefixer": "10.4.14",
     "domhandler": "5.0.3",
-    "esbuild": "0.17.12",
+    "esbuild": "0.18.17",
     "esbuild-register": "3.4.2",
-    "eslint": "8.36.0",
-    "eslint-config-prettier": "8.7.0",
-    "eslint-plugin-prettier": "4.2.1",
+    "eslint": "8.46.0",
+    "eslint-config-prettier": "8.9.0",
+    "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-svelte3": "4.0.0",
-    "nanoid": "4.0.1",
-    "postcss": "8.4.21",
-    "prettier": "2.8.4",
-    "prettier-plugin-svelte": "2.9.0",
+    "nanoid": "4.0.2",
+    "postcss": "8.4.27",
+    "prettier": "3.0.0",
+    "prettier-plugin-svelte": "3.0.3",
     "sade": "1.8.1",
-    "sass": "1.59.3",
-    "svelte": "3.57.0",
-    "svelte-check": "3.1.4",
-    "svelte-file-dropzone": "1.0.0",
+    "sass": "1.64.1",
+    "svelte": "4.1.1",
+    "svelte-check": "3.4.6",
+    "svelte-file-dropzone": "2.0.2",
     "tiny-invariant": "1.3.1",
-    "tsconfig-paths": "4.1.2",
-    "tslib": "2.5.0",
-    "tsx": "3.12.5",
-    "typescript": "5.0.2",
-    "undici": "5.21.0",
+    "tsconfig-paths": "4.2.0",
+    "tslib": "2.6.1",
+    "tsx": "3.12.7",
+    "typescript": "5.1.6",
+    "undici": "5.22.1",
     "uvu": "0.5.6",
-    "vite": "4.2.0"
+    "vite": "4.4.7"
   },
   "type": "module",
   "dependencies": {
-    "@node-rs/argon2": "1.4.0",
-    "@node-rs/crc32": "1.6.1",
-    "better-sqlite3": "8.2.0",
+    "@node-rs/argon2": "1.5.2",
+    "@node-rs/crc32": "1.7.2",
+    "better-sqlite3": "8.5.0",
     "debug": "4.3.4",
-    "dotenv": "16.0.3",
+    "dotenv": "16.3.1",
     "html-metadata-parser": "2.0.4",
-    "htmlparser2": "8.0.1",
+    "htmlparser2": "9.0.0",
     "zod": "3.21.4"
   }
 }
