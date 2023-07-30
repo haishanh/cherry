@@ -38,7 +38,7 @@ function migrate(db: Sqlite.Database) {
   const run = db.transaction(() => {
     let version = 0;
     try {
-      const row = db.prepare(`select version from migration where rowid = 1`).get();
+      const row = db.prepare(`select version from migration where rowid = 1`).get() as { version: number };
       assert(typeof row.version === 'number');
       version = row.version;
     } catch (e) {
@@ -66,7 +66,7 @@ function migrate(db: Sqlite.Database) {
 
 export function hasColumn(db: Sqlite.Database, opts: { table: string; column: string; type?: string }) {
   const { table, column, type } = opts;
-  const ret: { cid: number; name: string; type: string }[] = db.pragma(`table_info(${table})`);
+  const ret = db.pragma(`table_info(${table})`) as { cid: number; name: string; type: string }[];
   const c = ret.find((item) => item.name === column);
   if (c && type) {
     return c.type.toLowerCase() === type.toLowerCase();

@@ -44,6 +44,7 @@
   let anchor: HTMLElement;
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <span bind:this={anchor} on:mouseenter={handleItemOnMouseEnter} on:mouseleave={handleItemOnMouseLeave}>
   <slot name="trigger" />
 </span>

@@ -5,43 +5,31 @@ import * as passwordUtil from '$lib/utils/password.util';
 
 import { DEFAULT_USER_FEATURE } from '../services/user.service';
 
-export function getUserByUsername(
-  db: Sqlite.Database,
-  input: { username: string },
-): {
-  id: number;
-  username: string;
-  feature: number;
-} {
+type UserRow = { id: number; username: string; feature: number };
+type UserPasswordRow = UserRow & { password: string };
+
+export function getUserByUsername(db: Sqlite.Database, input: { username: string }) {
   const stmt = db.prepare(`select id,username,feature from user where username = ?`);
-  return stmt.get([input.username]);
+  return stmt.get([input.username]) as UserRow;
 }
 
 export function getUserPaswordByUsername(db: Sqlite.Database, input: { username: string }) {
   const stmt = db.prepare(`select id,username,password,feature from user where username = ?`);
-  return stmt.get([input.username]);
+  return stmt.get([input.username]) as UserPasswordRow;
 }
 
 export function deleteUserById(db: Sqlite.Database, input: { id: number }) {
   return db.prepare('delete from user where id = ?').run([input.id]);
 }
 
-export function getUserById(
-  db: Sqlite.Database,
-  input: { id: number },
-): {
-  id: number;
-  username: string;
-  password: string;
-  feature: number;
-} {
+export function getUserById(db: Sqlite.Database, input: { id: number }) {
   const stmt = db.prepare(`select id,username,password,feature from user where id = ?`);
-  return stmt.get([input.id]);
+  return stmt.get([input.id]) as UserPasswordRow;
 }
 
 export function getUserPasswordById(db: Sqlite.Database, input: { id: number }) {
-  const stmt = db.prepare(`select id,username,password from user where id = ?`);
-  return stmt.get([input.id]);
+  const stmt = db.prepare(`select id,username,password,feature from user where id = ?`);
+  return stmt.get([input.id]) as UserPasswordRow;
 }
 
 export async function createUser(

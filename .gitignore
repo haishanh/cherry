@@ -14,6 +14,8 @@ node_modules
 /db
 *.db
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal
 
 # inter fonts
 static/inter*.woff

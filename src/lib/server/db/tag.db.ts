@@ -26,10 +26,10 @@ const TagQuerySelectV0 = 'select id, name, count from tag where userId = @userId
 const TagQueryInsertV0 = `insert into tag (name, userId, createdAt, updatedAt) values (@name, @userId, strftime('%s','now'), strftime('%s','now'))`;
 const TagQueryInsertV1 = `insert into tag (name, userId, createdAt, updatedAt) values (?, ?, strftime('%s','now'), strftime('%s','now'))`;
 
-export function hydrateBookmarks(db: Sqlite.Database, bookmarks: BookmarkFromDb[]) {
+export function hydrateBookmarks(db: Sqlite.Database, bookmarks: BookmarkFromDb[]): BookmarkFromDb[] {
   const stmt = db.prepare(BookmarkTagQuerySelectV0);
   const transact = db.transaction((bookmarkIds: number[]) => bookmarkIds.map((id) => stmt.all(id)));
-  const bookmarkTags = transact(bookmarks.map((b) => b.id));
+  const bookmarkTags = transact(bookmarks.map((b) => b.id)) as { bookmarkId: number; tagId: number }[][];
   bookmarks.forEach((bookmark, i) => (bookmark.tagIds = bookmarkTags[i].map((bt) => bt.tagId)));
   return bookmarks;
 }
@@ -47,7 +47,7 @@ export function createBookmarkTag(db: Sqlite.Database, opts: InputCreateBookmark
 
 export function getTagByName(db: Sqlite.Database, input: { name: string; userId: number }) {
   const stmt = db.prepare('select id, name from tag where userId = ? AND name = ?');
-  return stmt.get([input.userId, input.name]);
+  return stmt.get([input.userId, input.name]) as { id: number; name: string };
 }
 
 export function getAllTags(db: Sqlite.Database, opts: InputGetAllTags) {
@@ -61,7 +61,7 @@ export function batchGetTags(db: Sqlite.Database, opts: InputBatchGetTags) {
   const userId = opts.userId;
   const ids = opts.ids;
   db.transaction(() => {
-    tags = ids.map((id) => stmt1.get([id, userId]));
+    tags = ids.map((id) => stmt1.get([id, userId]) as TagFromDb);
   })();
   return tags;
 }

@@ -29,6 +29,7 @@
       --lightness: 75%;
     }
     -webkit-appearance: none;
+    appearance: none;
     border-radius: 400px;
     border: 1px solid hsl(0deg 0% var(--lightness));
     -webkit-box-sizing: border-box;

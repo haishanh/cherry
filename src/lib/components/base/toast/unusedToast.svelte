@@ -11,6 +11,7 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="toast" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
   <p>{toast.description}</p>
 </div>

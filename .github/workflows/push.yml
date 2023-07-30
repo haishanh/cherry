@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.4.0
         with:
-          version: 7
+          version: 8
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -111,7 +111,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
+          tags: ${{ steps.docker_meta.outputs.tags }},ghcr.io/${{ steps.docker_meta.outputs.tags }}
           build-args: |
             COMMIT_SHA=${{ env.sha_short }}
           labels: ${{ steps.docker_meta.outputs.labels }}

@@ -34,6 +34,7 @@
 <style lang="scss">
   .btn {
     -webkit-appearance: none;
+    appearance: none;
     color: var(--fg);
     outline: none;
     cursor: pointer;

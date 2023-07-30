@@ -15,7 +15,7 @@ const GroupQueryInsertV0 = `insert into cherry_group (name, userId, createdAt, u
 
 export function create(db: Sqlite.Database, input: InputCreateGroup) {
   const stmt = db.prepare(GroupQueryInsertV0);
-  return stmt.get(input);
+  return stmt.get(input) as { id: number };
 }
 
 export function batchUpsertGroup(db: Sqlite.Database, input: InputBatchUpsertGroup) {
@@ -64,7 +64,7 @@ export function all(db: Sqlite.Database, input: InputGetAllGroups) {
 
 export function getGroupByName(db: Sqlite.Database, input: { name: string; userId: number }) {
   const stmt = db.prepare('select id,name from cherry_group where userId = ? AND name = ?');
-  return stmt.get([input.userId, input.name]);
+  return stmt.get([input.userId, input.name]) as { id: number; name: string };
 }
 
 export function updateGroupById(db: Sqlite.Database, input: InputUpdateGroup) {

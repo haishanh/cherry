@@ -53,7 +53,7 @@
     "eslint-config-prettier": "8.9.0",
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-simple-import-sort": "10.0.0",
-    "eslint-plugin-svelte3": "4.0.0",
+    "eslint-plugin-svelte": "2.32.4",
     "nanoid": "4.0.2",
     "postcss": "8.4.27",
     "prettier": "3.0.0",

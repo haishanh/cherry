@@ -94,12 +94,12 @@ export const bookmark = {
   findBookmarks: (input: InputFindBookmarksOfUser) => {
     const data: { items: BookmarkFromDb[]; count?: number; totalPage?: number } = { items: [] };
     const db = lite();
-    const bookmarks = bookmarkDb.getBookmarks(db, input);
+    const bookmarks = bookmarkDb.getBookmarks(db, input) as BookmarkFromDb[];
     data.items = tagDb.hydrateBookmarks(db, bookmarks);
 
     let countRet: { count: number };
     if (('text' in input && input.text) || 'tagIds' in input || 'groupId' in input) {
-      countRet = bookmarkDb.getBookmarks(db, { ...input, counting: true });
+      countRet = bookmarkDb.getBookmarks(db, { ...input, counting: true }) as { count: number };
     } else {
       try {
         countRet = bookmarkDb.getBookmarkCountOfUser(db, input);
@@ -116,7 +116,7 @@ export const bookmark = {
   getRandomBookmarks: (input: InputGetRandomBookmarksOfUser) => {
     const data: { items: BookmarkFromDb[]; count?: number; totalPage?: number } = { items: [] };
     const db = lite();
-    const bookmarks = bookmarkDb.getRandomBookmarksOfUser(db, input);
+    const bookmarks = bookmarkDb.getRandomBookmarksOfUser(db, input) as BookmarkFromDb[];
     data.items = tagDb.hydrateBookmarks(db, bookmarks);
     data.count = input.take;
     data.totalPage = 1;
@@ -152,7 +152,7 @@ export const bookmark = {
     params.push(id, user.userId);
     let bookmark: BookmarkFromDb;
     try {
-      bookmark = stmt.get(params);
+      bookmark = stmt.get(params) as BookmarkFromDb;
       if (!bookmark) throw new ApiError(HttpStatus.NOT_FOUND);
     } catch (e) {
       logger.error({ error: e });
@@ -169,7 +169,7 @@ export const bookmark = {
   getBookmark: (opts: InputGetBookmark) => {
     const { id, user } = opts;
     const db = lite();
-    const bookmark: BookmarkFromDb = bookmarkDb.getBookmark(db, { id, userId: user.userId });
+    const bookmark = bookmarkDb.getBookmark(db, { id, userId: user.userId }) as BookmarkFromDb;
     if (!bookmark) throw new ApiError(HttpStatus.NOT_FOUND);
     const tagIds = bookmarkDb.getBookmarkTagIds(db, { bookmarkId: id });
     bookmark.tagIds = tagIds;

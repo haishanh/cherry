@@ -3,15 +3,12 @@ ARG COMMIT_SHA=""
 # alpine 3.18, https://github.com/just-containers/s6-overlay 2.2.03
 FROM --platform=${TARGETPLATFORM:-linux/amd64} ghcr.io/crazy-max/alpine-s6:3.18-2.2.0.3 AS init
 
-COPY --from=node:20-alpine /usr/local /usr/local
-
 RUN apk upgrade && apk --update --no-cache add \
-  libstdc++ \
-  libc6-compat \
   bash \
-  ca-certificates \
-  curl \
+  nodejs \
+  npm \
   nginx \
+  nginx-mod-http-brotli \
   sqlite && \
   npm i -g pnpm
 

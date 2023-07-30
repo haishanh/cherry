@@ -109,6 +109,7 @@
       class="overlay {verticalAlign}"
       transition:fade={{ delay: 0, duration: 300 }}
     >
+      <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
       <div class="inset0" on:click={handleClickOverlay} />
       <div class="cnt" use:focus0 transition:fly={{ delay: 0, duration: 300, y: 100 }}>
         <div class="focus-guard" data-leading-focus-guard tabindex="-1" />
@@ -121,6 +122,7 @@
         {#if $$slots.footer}
           <div class="footer"><slot name="footer" /></div>
         {/if}
+        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="focus-guard" data-tailing-focus-guard tabindex="0" />
       </div>
     </div>

@@ -57,12 +57,14 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <span class="root" on:mouseenter={handleItemOnMouseEnter} on:mouseleave={handleItemOnMouseLeave}>
   {#if itemAs === 'link'}
     <a class="link" href={'/?group=' + group.id}>
       <span>{group.name}</span><span class="count">{group.count}</span>
     </a>
   {:else}
+    <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
     <span class="link" on:click={handleClickLabel}>
       <span>{group.name}</span><span class="count">{group.count}</span>
     </span>

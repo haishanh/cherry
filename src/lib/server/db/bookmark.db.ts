@@ -102,9 +102,9 @@ export function getBookmarks(
   const ret = buildSelect({ tokens, params });
   const stmt = db.prepare(ret.query);
   if (counting) {
-    return stmt.get(ret.params);
+    return stmt.get(ret.params) as { count: number };
   } else {
-    return stmt.all(ret.params);
+    return stmt.all(ret.params) as BookmarkFromDb[];
   }
 }
 
@@ -127,7 +127,10 @@ export function getBookmarkCountOfUser(db: Sqlite.Database, input: InputGetBookm
   assert(user && user.userId);
   const userId = user.userId;
 
-  const count = db.prepare('select bookmarkCount bookmarkCountSyncedAt from user where id = ?').get([userId]);
+  const count = db.prepare('select bookmarkCount bookmarkCountSyncedAt from user where id = ?').get([userId]) as {
+    bookmarkCount: number;
+    bookmarkCountSyncedAt: number;
+  };
   // count could be undefined here
   // to produce, switch to a new db with a previous logged-in session
   if (!count) throw new DataError(DataErrorCode.UserNotFound);
@@ -136,7 +139,9 @@ export function getBookmarkCountOfUser(db: Sqlite.Database, input: InputGetBookm
   if (now - count.bookmarkCountSyncedAt < 86400) {
     return { count: count.bookmarkCount };
   }
-  const curr = db.prepare('select count(id) as count from bookmark where userId = ?').get([userId]);
+  const curr = db.prepare('select count(id) as count from bookmark where userId = ?').get([userId]) as {
+    count: number;
+  };
   db.prepare(`update user set bookmarkCount = ?, bookmarkCountSyncedAt = strftime('%s','now') where id = ?`).run([
     curr.count,
     userId,
@@ -218,13 +223,13 @@ export function restoreBookmarks(db: Sqlite.Database, input: InputRestoreMultiBo
 
   const run = db.transaction(() => {
     // XXX probably should consider pagination here to vaoid pulling too much data
-    const ret0 = stmt0.all([key, userId]);
+    const ret0 = stmt0.all([key, userId]) as { data: string }[];
     if (!ret0) throw new DataError(DataErrorCode.BookmarkNotFound);
     ret0.forEach((batch) => {
       const list: { bookmark: BookmarkFromDb; bookmark_tag: BookmarkTagFromDb[] }[] = JSON.parse(batch.data);
       list.forEach((item) => {
         const { bookmark, bookmark_tag } = item;
-        const ret1 = stmt1.get(bookmark);
+        const ret1 = stmt1.get(bookmark) as { id: number };
         const bookmarkId = ret1.id;
         bookmark_tag.forEach((bt: InputCreateBookmarkTag) => {
           tagDb.createBookmarkTag(db, { ...bt, bookmarkId });
@@ -251,19 +256,19 @@ export function deleteBookmark(db: Sqlite.Database, input: InputDeleteBookmark) 
 
 export function getBookmarkWithUrl(db: Sqlite.Database, input: InputGetBookmarkWithUrl) {
   const stmt = db.prepare(`select ${BOOKMARK_PROPS0} from bookmark where url = ? and userId = ?`);
-  return stmt.get([input.url, input.userId]);
+  return stmt.get([input.url, input.userId]) as BookmarkFromDb;
 }
 
-export function getBookmarkTagIds(db: Sqlite.Database, opts: { bookmarkId: number }): number[] {
+export function getBookmarkTagIds(db: Sqlite.Database, opts: { bookmarkId: number }) {
   const stmt0 = db.prepare('select tagId from bookmark_tag where bookmarkId = ?');
-  return stmt0.pluck().all(opts.bookmarkId);
+  return stmt0.pluck().all(opts.bookmarkId) as number[];
 }
 
 export function getAllBookmarkTags(db: Sqlite.Database, opts: { bookmarkId: number }) {
   const stmt0 = db.prepare('select bookmarkId,tagId from bookmark_tag where bookmarkId = ?');
-  const bindings = stmt0.all(opts.bookmarkId);
+  const bindings = stmt0.all(opts.bookmarkId) as { bookmarkId: number; tagId: number }[];
   const stmt1 = db.prepare('select id,name from tag where id = ?');
-  const tags = bindings.map((b) => stmt1.get(b.tagId));
+  const tags = bindings.map((b) => stmt1.get(b.tagId)) as { id: number; name: string }[];
   return { bindings, tags };
 }
 
@@ -278,7 +283,7 @@ export function updateBookmarkTags(
     const bookmarkTagBindings = ret.bindings;
     const existingBookmarkTags = ret.tags;
 
-    const present = new Map<string, { bookmarkId: number; tagId: string }>();
+    const present = new Map<string, { bookmarkId: number; tagId: number }>();
     for (let i = 0; i < existingBookmarkTags.length; i++) {
       const tag = existingBookmarkTags[i];
       const binding = bookmarkTagBindings[i];
@@ -308,7 +313,7 @@ export function updateBookmarkTags(
       } catch (e) {
         if (e instanceof DataError && e.code === DataErrorCode.TagAlreadyExits) {
           const str = `select id from tag where userId = @userId and name = @name`;
-          const ret = db.prepare(str).get({ userId, name: tag.name });
+          const ret = db.prepare(str).get({ userId, name: tag.name }) as { id: number };
           tagId = ret.id;
         } else {
           throw e;
@@ -357,7 +362,7 @@ export function createBookmark(db: Sqlite.Database, input: InputCreateBookmark) 
   const params = [input.title, input.desc, url, userId, group && group.id ? group.id : null];
   let bookmark: BookmarkFromDb;
   try {
-    bookmark = stmt.get(params);
+    bookmark = stmt.get(params) as BookmarkFromDb;
   } catch (e) {
     if (isConflict(e)) {
       bookmark = getBookmarkWithUrl(db, { userId, url });
