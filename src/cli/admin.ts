@@ -1,14 +1,10 @@
-import { fetch, Headers, Response } from 'undici';
-
 class Fetcher {
   headers = new Headers({ 'content-type': 'application/json' });
   constructor(private base = 'http://localhost:5173') {}
   req(uri: string, opts: { method: string; body: any }) {
     return fetch(this.base + uri, {
       method: opts.method,
-      headers: {
-        Origin: 'http://localhost:5173',
-      },
+      headers: this.headers,
       ...(opts.body ? { body: JSON.stringify(opts.body) } : undefined),
     });
   }
@@ -28,6 +24,9 @@ async function report(res: Response) {
   } else {
     console.log('ERROR');
     console.log('status', res.status);
+    for (const entry of res.headers) {
+      console.log(`${entry[0]}: ${entry[1]}`);
+    }
     console.log(await res.json());
     process.exit(1);
   }

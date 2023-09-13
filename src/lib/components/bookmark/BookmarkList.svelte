@@ -2,7 +2,7 @@
   export let bookmarks: BookmarkFromDb[] = [];
   export let editModal: EditModal;
 
-  import { nanoid } from 'nanoid/async';
+  import { nanoid } from 'nanoid';
 
   import { afterNavigate, invalidate } from '$app/navigation';
   import { groupAddModal, groupSelectModal } from '$lib/client/modal.store';
@@ -96,7 +96,7 @@
   }
 
   async function deleteBookmarksServer(ids: BookmarkId[]) {
-    const key = await nanoid();
+    const key = nanoid();
     await httpUtil.request({ method: 'POST', url: `/api/bookmarks/operations/stash`, data: { key, ids } });
     return { key };
   }
