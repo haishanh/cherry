@@ -22,6 +22,14 @@ export async function requestBody(event: Event) {
   }
 }
 
+export function notFound() {
+  throw new Response(undefined, { status: HttpStatus.NOT_FOUND });
+}
+
+export function forbidden() {
+  throw new Response(undefined, { status: HttpStatus.FORBIDDEN });
+}
+
 export function ensureUser(event: Event): { userId: number; feature: number } {
   const user = event.locals?.user;
   if (!user || !user.userId) throw new Response(undefined, { status: HttpStatus.UNAUTHORIZED });

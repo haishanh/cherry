@@ -5,6 +5,7 @@ export const Table = {
   User: { name: 'user' },
   BookmarkTag: { name: 'bookmark_tag' },
   BookmarkFts: { name: 'bookmark_fts' },
+  Job: { name: 'job' },
 } as const;
 type TableName = keyof typeof Table;
 export type TableItem = (typeof Table)[TableName];
@@ -18,6 +19,9 @@ export type ColumnItem = {
 const bookmark_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Bookmark });
 const bookmark_tag_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.BookmarkTag });
 const bookmark_fts_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.BookmarkFts });
+const tag_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Tag });
+const group_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Group });
+const job_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Job });
 
 export const Column = {
   Bookmark: {
@@ -39,5 +43,29 @@ export const Column = {
   BookmarkTag: {
     BookmarkId: bookmark_tag_column('bookmarkId'),
     TagId: bookmark_tag_column('tagId'),
+  },
+  Tag: {
+    Id: tag_column('id'),
+    UserId: tag_column('userId'),
+    Name: tag_column('name'),
+    Count: tag_column('count'),
+  },
+  Group: {
+    Id: group_column('id'),
+    UserId: group_column('userId'),
+    Name: group_column('name'),
+    Count: group_column('count'),
+  },
+  Job: {
+    Id: job_column('id'),
+    UserId: job_column('userId'),
+    Op: job_column('op'),
+    Status: job_column('status'),
+    Exp: job_column('exp'),
+    Input: job_column('input'),
+    Output: job_column('output'),
+    Error: job_column('error'),
+    CreatedAt: job_column('createdAt'),
+    FinishedAt: job_column('finishedAt'),
   },
 } as const;

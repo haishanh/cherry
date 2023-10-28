@@ -1,5 +1,6 @@
 import { PAGE_BOOKMARK_LIMIT } from '$lib/env';
 import * as bookmarkDb from '$lib/server/db/bookmark.db';
+import * as bookmarkDb2 from '$lib/server/db/bookmark2.db';
 import * as tagDb from '$lib/server/db/tag.db';
 import type {
   BookmarkFromDb,
@@ -91,10 +92,17 @@ export const bookmark = {
     return bookmarkDb.batchUpsertBookmark(db, input);
   },
 
+  getBookmarks: (input: InputFindBookmarksOfUser) => {
+    const db = lite();
+    const bookmarks = bookmarkDb2.getBookmarks(db, input) as BookmarkFromDb[];
+    return tagDb.hydrateBookmarks(db, bookmarks);
+  },
+
   findBookmarks: (input: InputFindBookmarksOfUser) => {
     const data: { items: BookmarkFromDb[]; count?: number; totalPage?: number } = { items: [] };
     const db = lite();
     const bookmarks = bookmarkDb.getBookmarks(db, input) as BookmarkFromDb[];
+    // const b2 = bookmarkDb2.getBookmarks(db, input) as BookmarkFromDb[];
     data.items = tagDb.hydrateBookmarks(db, bookmarks);
 
     let countRet: { count: number };
@@ -186,3 +194,5 @@ export const bookmark = {
     return bookmarkDb.getBookmarkWithUrl(db, input);
   },
 };
+
+export type BookmarkService = typeof bookmark;

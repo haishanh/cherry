@@ -1,4 +1,5 @@
 <script lang="ts">
+  import DownloadCloud from '@hsjs/svelte-icons/feather/DownloadCloud.svelte';
   import Info from '@hsjs/svelte-icons/feather/Info.svelte';
   import Settings from '@hsjs/svelte-icons/feather/Settings.svelte';
   import UploadCloud from '@hsjs/svelte-icons/feather/UploadCloud.svelte';
@@ -16,6 +17,7 @@
     { href: '/settings/account', component: User, label: 'Account' },
     { href: '/settings/settings', component: Settings, label: 'Settings' },
     { href: '/settings/import', component: UploadCloud, label: 'Import' },
+    { href: '/settings/export', component: DownloadCloud, label: 'Export' },
     { href: '/settings/about', component: Info, label: 'About' },
   ];
 </script>

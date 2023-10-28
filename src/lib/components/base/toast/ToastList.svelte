@@ -5,9 +5,6 @@
   import { removeToast, toasts } from './store';
   import type { ToastItem } from './type';
 
-  // steal from chakara ui
-  const bg = { info: '#3181ce', success: '#38a169', error: '#e43e3e', warning: '#dd6a1f' };
-
   const timeoutMap = new WeakMap<ToastItem, ReturnType<typeof setTimeout>>();
 
   function findToastById(id: string | number) {
@@ -61,12 +58,12 @@
   }
 </script>
 
+<!-- style="background-color: {bg[item.status]}" -->
 <div class="list">
   {#each $toasts as item (item.id)}
     <div
-      class="toast"
+      class="toast {item.status}"
       transition:fly={{ y: 40 }}
-      style="background-color: {bg[item.status]}"
       data-id={item.id}
       use:armTimeout={item}
       role="list"
@@ -95,6 +92,17 @@
     z-index: 100;
   }
   button {
+    @media (prefers-color-scheme: dark) {
+      --bg: hsl(0deg 0% 100% / 7%);
+      --bg-hover: hsl(0deg 0% 100% / 17%);
+      --bo-hover: hsl(0deg 0% 100% / 27%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bg: hsl(0deg 0% 0% / 5%);
+      --bg-hover: hsl(0deg 0% 0% / 15%);
+      --bo-hover: hsl(0deg 0% 0% / 25%);
+    }
+
     appearance: none;
     outline: none;
     user-select: none;
@@ -107,24 +115,26 @@
     border-radius: 100px;
     padding: 6px 8px;
     font-weight: 800;
-    color: #fff;
-    background-color: hsl(0deg 0% 0% / 10%);
+    color: inherit;
+    background-color: var(--bg);
     &:active {
       transform: scale(0.97);
     }
     &:hover {
-      background-color: hsl(0deg 0% 0% / 12%);
-      border-color: hsl(0deg 0% 0% / 13%);
+      background-color: var(--bg-hover);
+      border-color: var(--bo-hover);
     }
   }
+
   .toast {
     padding: 10px 10px;
     border-radius: 8px;
     margin: 14px 0;
     max-width: 90vw;
     min-width: min(85vw, 400px);
-    color: #fff;
-
+    color: var(--text);
+    border: 1px solid var(--border);
+    background-color: var(--bg);
     display: grid;
     grid-template-columns: 1fr auto auto;
     gap: 3px;
@@ -138,11 +148,58 @@
       padding: 6px;
       margin-left: 10px;
       background-color: transparent;
-      &:hover {
-        background-color: hsl(0deg 0% 0% / 0.1);
+    }
+  }
+  // steal from https://github.com/emilkowalski/sonner/blob/main/src/styles.css
+  @media (prefers-color-scheme: light) {
+    .toast {
+      &.info {
+        --bg: hsl(208, 100%, 97%);
+        --border: hsl(221, 91%, 91%);
+        --text: hsl(210, 92%, 45%);
+      }
+      &.success {
+        --bg: hsl(143, 85%, 96%);
+        --border: hsl(145, 92%, 91%);
+        --text: hsl(140, 100%, 27%);
+      }
+      &.error {
+        --bg: hsl(359, 100%, 97%);
+        --border: hsl(359, 100%, 94%);
+        --text: hsl(360, 100%, 45%);
+      }
+      &.warning {
+        --bg: hsl(49, 100%, 97%);
+        --border: hsl(49, 91%, 91%);
+        --text: hsl(31, 92%, 45%);
       }
     }
   }
+  @media (prefers-color-scheme: dark) {
+    .toast {
+      &.info {
+        --bg: hsl(215, 100%, 6%);
+        --border: hsl(223, 100%, 12%);
+        --text: hsl(216, 87%, 65%);
+      }
+      &.success {
+        --bg: hsl(150, 100%, 6%);
+        --border: hsl(147, 100%, 12%);
+        --text: hsl(150, 86%, 65%);
+      }
+      &.error {
+        --bg: hsl(358, 76%, 10%);
+        --border: hsl(357, 89%, 16%);
+        --text: hsl(358, 100%, 81%);
+      }
+      &.warning {
+        --bg: hsl(64, 100%, 6%);
+        --border: hsl(60, 100%, 12%);
+        --text: hsl(46, 87%, 65%);
+      }
+    }
+  }
+
   .vh {
     clip: rect(0 0 0 0);
     clip-path: inset(50%);

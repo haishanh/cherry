@@ -34,10 +34,8 @@ export type InputBatchUpsertBookmark = {
   items: InputBatchUpsertBookmarkItem[];
 };
 
-export type User = {
-  userId: number;
-  feature: number;
-};
+export type UserCore = { userId: number };
+export type User = UserCore & { feature: number };
 
 export type InputCreateBookmark = {
   url: string;
@@ -133,13 +131,14 @@ export type GetBookmarksOpts = {
 };
 
 export type InputGetBookmarkCountOfUser = {
-  user: User;
+  user: UserCore;
 };
 
 export type InputFindBookmarksOfUser = {
-  user: User;
+  user: UserCore;
   text?: string;
   page?: number;
+  limit?: number;
   after?: { updatedAt: number; id: number };
   groupId?: number;
   tagIds?: number[];
@@ -264,6 +263,62 @@ export const SchemaCreateGroup = z.object({
   name: z.string(),
 });
 
+export enum JobOperation {
+  Export = 'export',
+}
+
+export enum JobStatus {
+  Pending = 'PENDING',
+  InProgress = 'IN_PROGRESS',
+  Finished = 'FINISHED',
+}
+
+export type JobExportOutput = {
+  filename: string;
+  tagCount: number;
+  groupCount: number;
+  bookmarkCount: number;
+};
+
+export type JobFromDb = {
+  id: number;
+  userId: number;
+  status: JobStatus;
+  op: string;
+  exp: number;
+  input: string;
+  output: string;
+  error: string;
+  createdAt: number;
+  finishedAt: number;
+};
+
+export type InputCreateJob = {
+  user: User;
+  op: string;
+  exp: number;
+  input: unknown;
+};
+
+export type InputAllJob = {
+  userId?: number;
+  op?: string;
+  limit?: number;
+};
+
+export type InputUpdateJobOutput = {
+  id: number;
+  output: unknown;
+};
+
+export type InputUpdateJobError = {
+  id: number;
+  error: string;
+};
+
+export type InputDeleteManyJobs = {
+  ids: number[];
+};
 ///// backend api
 
 export type PageMetaBookmarks = { after?: string };

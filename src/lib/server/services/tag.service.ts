@@ -42,3 +42,5 @@ export const tag = {
     return tagDb.batchUpsertTag(db, input);
   },
 };
+
+export type TagService = typeof tag;

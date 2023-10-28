@@ -10,6 +10,8 @@ import type {
 } from '$lib/type';
 
 import { logger } from '../logger';
+import { Eq, OrderByDir, select_from } from './builder2';
+import { Column, Table } from './identifier';
 
 const GroupQueryInsertV0 = `insert into cherry_group (name, userId, createdAt, updatedAt) values (@name, @userId, strftime('%s','now'), strftime('%s','now')) returning *`;
 
@@ -58,8 +60,17 @@ export function upsert(db: Sqlite.Database, input: InputCreateGroup): { id: numb
 }
 
 export function all(db: Sqlite.Database, input: InputGetAllGroups) {
-  const stmt = db.prepare(['select id, name, count from cherry_group', 'where userId = ? order by id desc'].join(' '));
-  return stmt.all([input.userId]);
+  const cols = Column.Group;
+  const ret = select_from(Table.Group, [cols.Id, cols.Name, cols.Count])
+    .where(Eq(cols.UserId, input.userId))
+    .orderBy(cols.Id, OrderByDir.Descending)
+    .build();
+  const stmt = db.prepare(ret.source);
+  return stmt.all(ret.params) as Array<{
+    id: number;
+    name: string;
+    count: number;
+  }>;
 }
 
 export function getGroupByName(db: Sqlite.Database, input: { name: string; userId: number }) {

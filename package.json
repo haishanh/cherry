@@ -77,6 +77,8 @@
     "@node-rs/argon2": "1.5.2",
     "@node-rs/crc32": "1.7.2",
     "better-sqlite3": "9.0.0",
+    "csv-stringify": "6.4.4",
+    "date-fns": "2.30.0",
     "debug": "4.3.4",
     "dotenv": "16.3.1",
     "html-metadata-parser": "2.0.4",

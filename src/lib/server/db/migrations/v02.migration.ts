@@ -1,6 +1,6 @@
 import type Sqlite from 'better-sqlite3';
 
-import { hasColumn } from './common.db';
+import { hasColumn } from '../common.db';
 
 export const up = (db: Sqlite.Database) => {
   if (!hasColumn(db, { table: 'user', column: 'feature' })) {

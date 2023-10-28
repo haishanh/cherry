@@ -50,3 +50,5 @@ export const group = {
     return groupDb.batchUpsertGroup(db, input);
   },
 };
+
+export type GroupService = typeof group;

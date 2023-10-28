@@ -64,3 +64,5 @@ export function findFirstInList<T>(list: T[], predicate: (item: T) => boolean) {
     if (predicate(list[i])) return list[i];
   }
 }
+
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

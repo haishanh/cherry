@@ -15,12 +15,14 @@ import type {
   TagFromDb,
 } from '$lib/type';
 
+import { Eq, OrderByDir, select_from } from './builder2';
 import { DataError, DataErrorCode } from './common.db';
+import { Column, Table } from './identifier';
 import { BookmarkTagQueryDeleteV0, BookmarkTagQueryInsertV0 } from './querystring';
 
 export const BookmarkTagQuerySelectV0 = 'select bookmarkId,tagId from bookmark_tag where bookmarkId = ?';
 
-const TagQuerySelectV0 = 'select id, name, count from tag where userId = @userId order by id desc';
+// const TagQuerySelectV0 = 'select id, name, count from tag where userId = @userId order by id desc';
 // const TagQuerySelectV1 = 'select id, name from tag where id = ?';
 // const TagQuerySelectV2 = 'select id from tag where userId = @userId and name = @name';
 const TagQueryInsertV0 = `insert into tag (name, userId, createdAt, updatedAt) values (@name, @userId, strftime('%s','now'), strftime('%s','now'))`;
@@ -51,8 +53,17 @@ export function getTagByName(db: Sqlite.Database, input: { name: string; userId:
 }
 
 export function getAllTags(db: Sqlite.Database, opts: InputGetAllTags) {
-  const stmt = db.prepare(TagQuerySelectV0);
-  return stmt.all({ userId: opts.userId });
+  const cols = Column.Tag;
+  const ret = select_from(Table.Tag, [cols.Id, cols.Name, cols.Count])
+    .where(Eq(cols.UserId, opts.userId))
+    .orderBy(cols.Id, OrderByDir.Descending)
+    .build();
+  const stmt = db.prepare(ret.source);
+  return stmt.all(ret.params) as Array<{
+    id: number;
+    name: string;
+    count: number;
+  }>;
 }
 
 export function batchGetTags(db: Sqlite.Database, opts: InputBatchGetTags) {

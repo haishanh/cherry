@@ -13,7 +13,8 @@
 
   let isLoading = false;
   let deferShowLoadingTimeout: ReturnType<typeof setTimeout>;
-  beforeNavigate(() => {
+  beforeNavigate((navigation) => {
+    if (navigation.to?.url.pathname.startsWith('/api/downloads/')) return;
     deferShowLoadingTimeout && clearTimeout(deferShowLoadingTimeout);
     deferShowLoadingTimeout = setTimeout(() => {
       isLoading = true;

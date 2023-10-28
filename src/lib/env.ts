@@ -3,6 +3,8 @@ import 'dotenv/config';
 const env = process.env;
 
 export const DATABASE_PATH = (process.env.DATABASE_PATH as string) || '/data/cherry.sqlite';
+// Directory to save files, like temporary exported files
+export const DATA_DIR = (process.env.DATA_DIR as string) || '/data';
 export const ENABLE_PUBLIC_REGISTRATION = process.env.ENABLE_PUBLIC_REGISTRATION === '1';
 export const JWT_SECRET = process.env.JWT_SECRET as string;
 export const USE_INSECURE_COOKIE = process.env.USE_INSECURE_COOKIE === '1';

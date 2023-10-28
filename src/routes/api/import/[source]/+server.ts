@@ -175,6 +175,11 @@ function doImportCsv(opts: { cnt: string; userId: number }) {
         const idx = header.indexOf(col);
         if (idx >= 0) columnToIdx[col] = idx;
       }
+      // compat with 'group' (treat it as alias of folder)
+      if (typeof columnToIdx['folder'] !== 'number') {
+        const idx = header.indexOf('group');
+        if (idx > 0) columnToIdx['folder'] = idx;
+      }
       return;
     }
 
