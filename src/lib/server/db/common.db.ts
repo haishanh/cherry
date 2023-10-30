@@ -6,14 +6,14 @@ import { logger } from '$lib/server/logger';
 
 import { up as v01Up } from './migrations/v01.migration';
 import { up as v02Up } from './migrations/v02.migration';
-import { up as v03Up } from './migrations/v03.migration';
+import { up as v04Up } from './migrations/v04.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
 
 const migrations = [
   { version: 1, up: v01Up },
   { version: 2, up: v02Up },
-  { version: 3, up: v03Up },
+  { version: 4, up: v04Up },
 ];
 
 export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = false) => {
