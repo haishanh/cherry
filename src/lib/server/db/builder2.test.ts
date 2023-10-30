@@ -139,10 +139,8 @@ const test_delete_from = suite('DeleteFrom');
 
 test_delete_from('basic', () => {
   const cols = Column.Bookmark;
-  const { source, params } = delete_from(Table.Bookmark)
-    .where(Eq(cols.Id, 10))
-    .build();
-  assert.equal(source, "delete from bookmark WHERE id = ?");
+  const { source, params } = delete_from(Table.Bookmark).where(Eq(cols.Id, 10)).build();
+  assert.equal(source, 'delete from bookmark WHERE id = ?');
   assert.equal(params, [10]);
 });
 

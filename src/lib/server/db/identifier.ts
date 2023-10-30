@@ -5,6 +5,7 @@ export const Table = {
   User: { name: 'user' },
   BookmarkTag: { name: 'bookmark_tag' },
   BookmarkFts: { name: 'bookmark_fts' },
+  BookmarkStash: { name: 'bookmark_stash' },
   Job: { name: 'job' },
 } as const;
 type TableName = keyof typeof Table;
@@ -19,6 +20,7 @@ export type ColumnItem = {
 const bookmark_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Bookmark });
 const bookmark_tag_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.BookmarkTag });
 const bookmark_fts_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.BookmarkFts });
+const bookmark_stash_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.BookmarkStash });
 const tag_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Tag });
 const group_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Group });
 const job_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Job });
@@ -43,6 +45,13 @@ export const Column = {
   BookmarkTag: {
     BookmarkId: bookmark_tag_column('bookmarkId'),
     TagId: bookmark_tag_column('tagId'),
+  },
+  BookmarkStash: {
+    Id: bookmark_stash_column('id'),
+    Key: bookmark_stash_column('key'),
+    UserId: bookmark_stash_column('userId'),
+    Data: bookmark_stash_column('data'),
+    CreatedAt: bookmark_stash_column('createdAt'),
   },
   Tag: {
     Id: tag_column('id'),

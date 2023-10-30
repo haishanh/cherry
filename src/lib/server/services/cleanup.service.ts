@@ -1,16 +1,23 @@
-import type { JobService } from "./job.service";
+import { logger } from '../logger';
+import type { BookmarkStashService } from './bookmarkStash.service';
+import type { JobService } from './job.service';
 
-export class Cleanup {
-  constructor(private jobSrv: JobService) {}
+export class CleanupService {
+  constructor(
+    private jobSrv: JobService,
+    private bookmarkStashSrv: BookmarkStashService,
+  ) {}
 
   async run() {
     try {
       await this.jobSrv.cleanup();
     } catch (e) {
-      // ignore
-      // TODO logo
+      logger.error('Failed to cleanup jobs error %s', e);
     }
-
-    // TODO cleanup bookmark stash
+    try {
+      this.bookmarkStashSrv.cleanup();
+    } catch (e) {
+      logger.error('Failed to cleanup bookmark stashed error %s', e);
+    }
   }
 }

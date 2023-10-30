@@ -33,20 +33,22 @@ export const POST: RequestHandler = async (event) => {
     });
 
     // run the job in the background
-    getExportService().run(user.userId).then(
-      (result) => {
-        jobSrv.updateOutput({
-          id: job.id,
-          output: result,
-        });
-      },
-      (err) => {
-        jobSrv.updateError({
-          id: job.id,
-          error: err.message as string,
-        });
-      },
-    );
+    getExportService()
+      .run(user.userId)
+      .then(
+        (result) => {
+          jobSrv.updateOutput({
+            id: job.id,
+            output: result,
+          });
+        },
+        (err) => {
+          jobSrv.updateError({
+            id: job.id,
+            error: err.message as string,
+          });
+        },
+      );
 
     return json(job);
   });

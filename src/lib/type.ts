@@ -293,6 +293,11 @@ export type JobFromDb = {
   finishedAt: number;
 };
 
+export type BookmarkStashFromDb = {
+  id: number;
+  createdAt: number;
+};
+
 export type InputCreateJob = {
   user: User;
   op: string;
@@ -318,6 +323,11 @@ export type InputUpdateJobError = {
 
 export type InputDeleteManyJobs = {
   ids: number[];
+};
+
+export type InputAllBookmarkStash = {
+  // userId?: number;
+  limit?: number;
 };
 ///// backend api
 

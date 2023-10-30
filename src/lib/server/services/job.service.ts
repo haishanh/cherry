@@ -3,13 +3,14 @@ import type { Database } from 'better-sqlite3';
 // import { DataError, DataErrorCode, lite } from '$lib/server/db/common.db';
 import type * as jobDb from '$lib/server/db/job.db';
 import {
-  JobOperation,
   type InputAllJob,
   type InputCreateJob,
   type InputUpdateJobError,
   type InputUpdateJobOutput,
   type JobExportOutput,
+  JobOperation,
 } from '$lib/type';
+
 import type { ExportService } from './export.service';
 
 export class JobService {
@@ -54,7 +55,7 @@ export class JobService {
         }
         return '';
       })
-      .filter((x) => !!x)
+      .filter((filename) => !!filename)
       .map((filename) => {
         return this.exportSrv.removeExportFile(filename);
       });

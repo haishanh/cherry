@@ -3,11 +3,11 @@ import type { Database } from 'better-sqlite3';
 import {
   type InputAllJob,
   type InputCreateJob,
+  type InputDeleteManyJobs,
   type InputUpdateJobError,
   type InputUpdateJobOutput,
   type JobFromDb,
   JobStatus,
-  type InputDeleteManyJobs,
 } from '$lib/type';
 
 import { delete_from, Eq, insert_into, OrderByDir, select_from, update_table, ValueToken } from './builder2';

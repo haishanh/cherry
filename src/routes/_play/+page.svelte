@@ -1,5 +1,5 @@
 <script lang="ts">
-  let pages = ['Button', 'Pagination', 'TagAutocomplete', 'Toast', 'SearchForm', 'Form', 'Import', 'Modal'];
+  let pages = ['Button', 'Pagination', 'TagAutocomplete', 'Toast', 'SearchForm', 'Form', 'Import', 'Modal', 'Color'];
 </script>
 
 <svelte:head>
