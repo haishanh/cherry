@@ -4,7 +4,11 @@
 // for information about these interfaces
 declare namespace App {
   interface Locals {
-    user?: { userId: number; feature: number };
+    user?: {
+      userId: number;
+      id: number;
+      feature: number;
+    };
   }
 
   interface Error {

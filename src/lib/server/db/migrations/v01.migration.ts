@@ -2,6 +2,8 @@ import type Sqlite from 'better-sqlite3';
 
 import { index, table, trigger } from '../builder';
 
+export const version = 1;
+
 export const up = (db: Sqlite.Database) => {
   db.prepare(
     table.create({

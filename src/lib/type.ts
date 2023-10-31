@@ -36,6 +36,25 @@ export type InputBatchUpsertBookmark = {
 
 export type UserCore = { userId: number };
 export type User = UserCore & { feature: number };
+export type UserFromDb = {
+  id: number;
+  username: string;
+  password: string;
+  feature: number;
+  attr: number;
+};
+export type UserFromDbHydrated = Omit<UserFromDb, 'attr'> & {
+  ff: {
+    strip_tracking_parameters: boolean;
+  };
+  attr: {
+    admin: boolean;
+  };
+};
+
+export type UserMe = Omit<UserFromDbHydrated, 'password'> & {
+  passwordless: boolean;
+};
 
 export type InputCreateBookmark = {
   url: string;
@@ -146,11 +165,11 @@ export type InputFindBookmarksOfUser = {
 
 export type InputCreateUser = {
   username: string;
-  password: string;
-};
-
-export type InputCreatePasswordlessUser = {
-  username: string;
+  password?: string;
+  options: {
+    // indicates creating admin user
+    admin?: boolean;
+  };
 };
 
 export type InputAdminDeleteUser = {

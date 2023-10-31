@@ -24,19 +24,12 @@ import { breakupList } from '$lib/utils/common.util';
 
 import { logger } from '../logger';
 import { buildSelect } from './builder';
+import { Eq, insert_into, select_from, ValueToken } from './builder2';
 import { DataError, DataErrorCode, isConflict } from './common.db';
+import { Column, Table } from './identifier';
 import { BookmarkTagQueryDeleteV0 } from './querystring';
 import * as tagDb from './tag.db';
 
-const BookmarkQuerySelectV0 = `select id,title,desc,url,groupId,updatedAt,createdAt from bookmark where id = @id and userId = @userId`;
-const BookmarkQueryInsertV0 = [
-  `insert into bookmark (title,desc,url,userId,groupId,createdAt,updatedAt)`,
-  `values (?, ?, ?, ?, ?, strftime('%s','now'), strftime('%s','now')) returning *`,
-].join(' ');
-const BookmarkQueryInsertV1 = [
-  `insert into bookmark (title,desc,url,userId,groupId,createdAt,updatedAt)`,
-  `values (?, ?, ?, ?, ?, ?, strftime('%s','now'))`,
-].join(' ');
 const BOOKMARK_PROPS0 = 'id,title,desc,url,groupId,updatedAt,createdAt';
 const BOOKMARK_PROPS1 = 'b.id,b.title,b.desc,b.url,b.groupId,b.updatedAt,b.createdAt';
 
@@ -326,7 +319,17 @@ export function updateBookmarkTags(
 }
 
 export function batchUpsertBookmark(db: Sqlite.Database, input: InputBatchUpsertBookmark) {
-  const stmt = db.prepare(BookmarkQueryInsertV1);
+  const cols = Column.Bookmark;
+  const { source } = insert_into(Table.Bookmark)
+    .column(cols.Title, '?')
+    .column(cols.Desc, '?')
+    .column(cols.Url, '?')
+    .column(cols.UserId, '?')
+    .column(cols.GroupId, '?')
+    .column(cols.CreatedAt, '?')
+    .column(cols.UpdatedAt, '?')
+    .build();
+  const stmt = db.prepare(source);
   const { userId, items } = input;
   const result: Array<number | InputBatchUpsertBookmarkItem> = [];
   const now = Math.trunc(Date.now() / 1000);
@@ -336,7 +339,15 @@ export function batchUpsertBookmark(db: Sqlite.Database, input: InputBatchUpsert
         result.push(item);
         continue;
       }
-      const params = [item.title || '', item.desc || '', item.url, userId, item.groupId || null, item.createdAt || now];
+      const params = [
+        item.title || '',
+        item.desc || '',
+        item.url,
+        userId,
+        item.groupId || null,
+        item.createdAt || now,
+        now,
+      ];
       try {
         const ret = stmt.run(params);
         result.push(ret.lastInsertRowid as number);
@@ -357,11 +368,20 @@ export function batchUpsertBookmark(db: Sqlite.Database, input: InputBatchUpsert
 export function createBookmark(db: Sqlite.Database, input: InputCreateBookmark) {
   const { tags, group, user, url } = input;
   const userId = user.userId;
-  const stmt = db.prepare(BookmarkQueryInsertV0);
+  const cols = Column.Bookmark;
+  const { source, params } = insert_into(Table.Bookmark)
+    .column(cols.Title, input.title)
+    .column(cols.Desc, input.desc)
+    .column(cols.Url, url)
+    .column(cols.UserId, userId)
+    .column(cols.GroupId, group && group.id ? group.id : null)
+    .column(cols.CreatedAt, ValueToken.Now)
+    .column(cols.UpdatedAt, ValueToken.Now)
+    .build();
   let isNewBookmark = true;
-  const params = [input.title, input.desc, url, userId, group && group.id ? group.id : null];
   let bookmark: BookmarkFromDb;
   try {
+    const stmt = db.prepare(source);
     bookmark = stmt.get(params) as BookmarkFromDb;
   } catch (e) {
     if (isConflict(e)) {
@@ -379,6 +399,19 @@ export function createBookmark(db: Sqlite.Database, input: InputCreateBookmark) 
 
 export function getBookmark(db: Sqlite.Database, input: { id: number; userId: number }) {
   const { id, userId } = input;
-  const stmt = db.prepare(BookmarkQuerySelectV0);
-  return stmt.get({ id, userId });
+  const cols = Column.Bookmark;
+  const { source, params } = select_from(Table.Bookmark, [
+    cols.Id,
+    cols.Title,
+    cols.Desc,
+    cols.Url,
+    cols.GroupId,
+    cols.UpdatedAt,
+    cols.CreatedAt,
+  ])
+    .where(Eq(cols.Id, id))
+    .where(Eq(cols.UserId, userId))
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.get(params);
 }

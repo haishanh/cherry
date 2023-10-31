@@ -8,8 +8,7 @@ import { deleteDangleBookmarkTag } from '$lib/server/admin/delete-dangle-bookmar
 import { ApiError } from '$lib/server/api.error';
 import { createUser, requestBody } from '$lib/server/handlers/helper';
 import { wrap } from '$lib/server/handlers/wrap';
-import { adminSvc } from '$lib/server/services/admin.service';
-import { user as userSvc } from '$lib/server/services/user.service';
+import { getAdminService,getUserService } from '$lib/server/services/registry';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -21,17 +20,27 @@ export const POST: RequestHandler = async (event) => {
         const body = await requestBody(event);
         return await createUser(body);
       }
+      case 'set-admin': {
+        const body = await requestBody(event);
+        return await cmdSetAdmin(body, true);
+      }
+      case 'unset-admin': {
+        const body = await requestBody(event);
+        return await cmdSetAdmin(body, false);
+      }
       case 'delete-user': {
         const body = await requestBody(event);
         const { username, id } = body;
-        await adminSvc.deleteUser({ username, id });
-        await adminSvc.deleteUserResource({ id });
+        const adminSrv = getAdminService();
+        await adminSrv.deleteUser({ username, id });
+        await adminSrv.deleteUserResource({ id });
         return new Response(undefined, { status: 204 });
       }
       case 'delete-user-resource': {
         const body = await requestBody(event);
         const { id } = body;
-        await adminSvc.deleteUserResource({ id });
+        const adminSrv = getAdminService();
+        await adminSrv.deleteUserResource({ id });
         return new Response(undefined, { status: 204 });
       }
       case 'migration': {
@@ -57,10 +66,20 @@ const cmdUpdateUserPassword: RequestHandler = async (event) => {
   const { username, newPassword } = body;
   assert(username, new ApiError(400, undefined, 'Missing username'));
   assert(newPassword, new ApiError(400, undefined, 'Missing password'));
+  const userSvc = getUserService();
   const user = userSvc.getUserByUsername({ username });
   // TODO 404
   const userId = user.id;
   userSvc.updateUserPassword({ userId, newPassword });
+  return new Response(undefined, { status: 204 });
+};
+
+const cmdSetAdmin = async (body: { username: string }, onoff: boolean) => {
+  const { username } = body;
+  assert(username, new ApiError(400, undefined, 'Missing username'));
+  const userSvc = getUserService();
+  const user = userSvc.getUserByUsername({ username });
+  userSvc.updateUserAdmin(user, onoff);
   return new Response(undefined, { status: 204 });
 };
 

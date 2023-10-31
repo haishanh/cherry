@@ -32,9 +32,21 @@ async function report(res: Response) {
   }
 }
 
-export async function create_user(username: string, password: string) {
+export async function create_user(username: string, password: string, options: { admin: boolean }) {
   const f0 = new Fetcher('http://localhost:5173/api/_internal');
-  const res = await f0.post('/create-user', { username, password });
+  const res = await f0.post('/create-user', { username, password, options });
+  await report(res);
+}
+
+export async function set_admin(username: string) {
+  const f0 = new Fetcher('http://localhost:5173/api/_internal');
+  const res = await f0.post('/set-admin', { username });
+  await report(res);
+}
+
+export async function unset_admin(username: string) {
+  const f0 = new Fetcher('http://localhost:5173/api/_internal');
+  const res = await f0.post('/unset-admin', { username });
   await report(res);
 }
 

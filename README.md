@@ -15,4 +15,5 @@ pnpm dev
 
 # you may want to create an user
 pnpm cherry create-user "foo@example.com" "P@ssw0rd"
+pnpm cherry set-admin "foo@example.com"
 ```

@@ -11,10 +11,16 @@ import {
 import { HttpStatus } from '$lib/server/api.error';
 import { genPat } from '$lib/server/handlers/helper';
 import { logger } from '$lib/server/logger';
-import { user as userSvc } from '$lib/server/services/user.service';
+import { getUserService } from '$lib/server/services/registry';
 import { isPublic } from '$lib/utils/access.util';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as jwtUtil from '$lib/utils/jwt.util';
+
+type JwtClaim = {
+  userId: number;
+  id: number;
+  feature: number;
+};
 
 // import type { HandleServerError } from '@sveltejs/kit';
 // export const handleError: HandleServerError = ({ error }) => {
@@ -29,6 +35,19 @@ import * as jwtUtil from '$lib/utils/jwt.util';
 export const handle: Handle = async function handle({ event, resolve }) {
   const request = event.request;
   const url = new URL(request.url);
+
+  // if (request.method === 'OPTIONS') {
+  //   const response = new Response(undefined, {
+  //     status: 204,
+  //     headers: {
+  //       // 'Origin' header of the firefox extension is like 'moz-extension://{uuid}'
+  //       'Access-Control-Allow-Origin': '*',
+  //       'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //       'Access-Control-Allow-Headers': '*',
+  //     },
+  //   });
+  //   return response;
+  // }
 
   if (isPublic(url)) {
     const response = await resolve(event);
@@ -50,9 +69,9 @@ export const handle: Handle = async function handle({ event, resolve }) {
   }
 
   if (token) {
-    let claims: { userId: number; feature: number };
+    let claims: JwtClaim;
     try {
-      claims = (await jwtUtil.validate(token, JWT_SECRET)) as { userId: number; feature: number };
+      claims = (await jwtUtil.validate(token, JWT_SECRET)) as JwtClaim;
     } catch (e) {
       logger.info(e, 'hooks');
       const res = new Response(undefined, {
@@ -73,10 +92,10 @@ export const handle: Handle = async function handle({ event, resolve }) {
   if (!event.locals.user && ENABLE_HTTP_REMOTE_USER && HTTP_REMOTE_USER_HEADER_NAME) {
     const user = await handleRemoteUser({ event });
     if (user) {
-      event.locals.user = { userId: user.id, feature: user.feature };
+      event.locals.user = { userId: user.id, id: user.id, feature: user.feature };
       const { token, maxAge } = await genPat(user);
       // this will make cookie available in load of `src/routes/+page.ts`
-      event.cookies.set(COOKIE_KEY_TOKEN, token, { maxAge });
+      event.cookies.set(COOKIE_KEY_TOKEN, token, { maxAge, path: '/' });
     }
   }
 
@@ -112,10 +131,11 @@ const handleRemoteUser = async ({ event }: { event: RequetEvent }) => {
   // skip
   if (!username) return;
 
+  const userSvc = getUserService();
   let result = userSvc.getUserByUsername({ username });
   if (!result) {
     // create passwordless user
-    result = await userSvc.createUser({ username });
+    result = await userSvc.createUser({ username, options: {} });
   }
   if (typeof result.id === 'number' && typeof result.feature === 'number') {
     return result;

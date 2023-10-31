@@ -4,16 +4,18 @@ import Sqlite from 'better-sqlite3';
 import { DATABASE_PATH } from '$lib/env';
 import { logger } from '$lib/server/logger';
 
-import { up as v01Up } from './migrations/v01.migration';
-import { up as v02Up } from './migrations/v02.migration';
-import { up as v04Up } from './migrations/v04.migration';
+import * as v1 from './migrations/v01.migration';
+import * as v2 from './migrations/v02.migration';
+import * as v4 from './migrations/v04.migration';
+import * as v5 from './migrations/v05.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
 
 const migrations = [
-  { version: 1, up: v01Up },
-  { version: 2, up: v02Up },
-  { version: 4, up: v04Up },
+  { version: 1, mod: v1 },
+  { version: 2, mod: v2 },
+  { version: 4, mod: v4 },
+  { version: 5, mod: v5 },
 ];
 
 export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = false) => {
@@ -54,11 +56,16 @@ function migrate(db: Sqlite.Database) {
     }
     let prevVersion = 0;
     for (const m of migrations) {
+      assert(m.mod);
+      // ensure the version in the module is what we expected
+      // actually we only need this information in one place
+      // but have it specified both inside and outside the module can reduce fault due to carelessness
+      assert(m.version === m.mod.version);
       // expect it is already sorted
       assert(m.version > prevVersion);
       prevVersion = m.version;
       if (m.version > version) {
-        m.up(db);
+        m.mod.up(db);
         db.prepare('update migration set version = @version where rowid = 1').run({ version: m.version });
       }
     }

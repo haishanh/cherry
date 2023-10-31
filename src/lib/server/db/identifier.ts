@@ -24,6 +24,7 @@ const bookmark_stash_column: (name: string) => ColumnItem = (name) => ({ name, t
 const tag_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Tag });
 const group_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Group });
 const job_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.Job });
+const user_column: (name: string) => ColumnItem = (name) => ({ name, table: Table.User });
 
 export const Column = {
   Bookmark: {
@@ -76,5 +77,14 @@ export const Column = {
     Error: job_column('error'),
     CreatedAt: job_column('createdAt'),
     FinishedAt: job_column('finishedAt'),
+  },
+  User: {
+    Id: user_column('id'),
+    Username: user_column('username'),
+    Password: user_column('password'),
+    Feature: user_column('feature'),
+    Attr: user_column('attr'),
+    CreatedAt: user_column('createdAt'),
+    UpdatedAt: user_column('updatedAt'),
   },
 } as const;

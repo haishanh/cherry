@@ -18,11 +18,13 @@
   {:else}
     <p>Sorry</p>
   {/if}
-  <details>
-    <summary>Details for nerds</summary>
-    <p>Wanna file a bug?</p>
-    <pre>{error?.stack}</pre>
-  </details>
+  {#if error?.stack}
+    <details>
+      <summary>Details for nerds</summary>
+      <p>Wanna file a bug?</p>
+      <pre>{error?.stack}</pre>
+    </details>
+  {/if}
 </main>
 
 <style lang="scss">

@@ -1,7 +1,8 @@
 export type ToastItemInput = {
   description: string;
-  // 'info', 'success', 'warning', 'error'
+  // 'normal',  'info', 'success', 'warning', 'error'
   status?: string;
+  icon?: string;
   duration?: number;
   action?: {
     label: string;
@@ -10,6 +11,6 @@ export type ToastItemInput = {
 };
 
 export type ToastItem = ToastItemInput & {
-  id: number;
+  id: string;
   duration?: number;
 };

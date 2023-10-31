@@ -9,7 +9,7 @@
   <title>Settings | Cherry</title>
 </svelte:head>
 <div class="root">
-  <SideBar pathname={data.pathname} />
+  <SideBar pathname={data.pathname} user={data.user} />
   <main><slot /></main>
 </div>
 

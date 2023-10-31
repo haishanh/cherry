@@ -35,3 +35,11 @@ const THREEDAY_SECOND_STR = '259200';
 export const FAVICON_CACHE_MAX_AGE_FOUND = process.env.CACHE_MAX_AGE_FOUND || ONEMONTH_SECOND_STR;
 export const FAVICON_CACHE_MAX_AGE_MISS = process.env.CACHE_MAX_AGE_FOUND || THREEDAY_SECOND_STR;
 export const HTTP_PROXY = (process.env.HTTP_PROXY || process.env.http_proxy) as string;
+
+// backup
+export const BACKUP_S3_ENDPOINT = process.env.BACKUP_S3_ENDPOINT as string;
+export const BACKUP_S3_REGION = process.env.BACKUP_S3_REGION as string;
+export const BACKUP_S3_BUCKET = process.env.BACKUP_S3_BUCKET as string;
+export const BACKUP_S3_ACCESS_KEY_ID = process.env.BACKUP_S3_ACCESS_KEY_ID as string;
+export const BACKUP_S3_SECRET_ACCESS_KEY = process.env.BACKUP_S3_SECRET_ACCESS_KEY as string;
+export const BACKUP_S3_PREFIX = (process.env.BACKUP_S3_PREFIX as string) || 'cherry-backup/';

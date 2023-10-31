@@ -18,7 +18,7 @@ import * as userDb from './user.db';
   });
 
   test('getUserByUsername', async (ctx) => {
-    const user = await userDb.createUser(ctx.db, { username: 'u1', password: '123 ' });
+    const user = await userDb.createUser(ctx.db, { username: 'u1', password: '123 ', attr: 0 });
     const ret = userDb.getUserByUsername(ctx.db, { username: user.username });
     assert.equal(ret.username, 'u1');
   });

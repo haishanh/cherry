@@ -1,63 +1,101 @@
 import type Sqlite from 'better-sqlite3';
+import type { Database } from 'better-sqlite3';
 
-import type { InputCreatePasswordlessUser, InputCreateUser } from '$lib/type';
+import type { UserFromDb } from '$lib/type';
 import * as passwordUtil from '$lib/utils/password.util';
 
 import { DEFAULT_USER_FEATURE } from '../services/user.service';
-
-type UserRow = { id: number; username: string; feature: number };
-type UserPasswordRow = UserRow & { password: string };
+import { delete_from, Eq, insert_into, select_from, update_table, ValueToken } from './builder2';
+import { Column, Table } from './identifier';
 
 export function getUserByUsername(db: Sqlite.Database, input: { username: string }) {
-  const stmt = db.prepare(`select id,username,feature from user where username = ?`);
-  return stmt.get([input.username]) as UserRow;
+  const cols = Column.User;
+  const { source, params } = select_from(Table.User, [cols.Id, cols.Username, cols.Feature, cols.Attr])
+    .where(Eq(cols.Username, input.username))
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.get(params) as Omit<UserFromDb, 'password'>;
 }
 
 export function getUserPaswordByUsername(db: Sqlite.Database, input: { username: string }) {
-  const stmt = db.prepare(`select id,username,password,feature from user where username = ?`);
-  return stmt.get([input.username]) as UserPasswordRow;
+  const cols = Column.User;
+  const { source, params } = select_from(Table.User, [cols.Id, cols.Username, cols.Password, cols.Feature, cols.Attr])
+    .where(Eq(cols.Username, input.username))
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.get(params) as UserFromDb;
 }
 
 export function deleteUserById(db: Sqlite.Database, input: { id: number }) {
-  return db.prepare('delete from user where id = ?').run([input.id]);
+  const cols = Column.User;
+  const { source, params } = delete_from(Table.User).where(Eq(cols.Id, input.id)).build();
+  return db.prepare(source).run(params);
 }
 
 export function getUserById(db: Sqlite.Database, input: { id: number }) {
-  const stmt = db.prepare(`select id,username,password,feature from user where id = ?`);
-  return stmt.get([input.id]) as UserPasswordRow;
-}
-
-export function getUserPasswordById(db: Sqlite.Database, input: { id: number }) {
-  const stmt = db.prepare(`select id,username,password,feature from user where id = ?`);
-  return stmt.get([input.id]) as UserPasswordRow;
+  const cols = Column.User;
+  const { source, params } = select_from(Table.User, [cols.Id, cols.Username, cols.Password, cols.Feature, cols.Attr])
+    .where(Eq(cols.Id, input.id))
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.get(params) as UserFromDb;
 }
 
 export async function createUser(
   db: Sqlite.Database,
-  input: InputCreateUser | InputCreatePasswordlessUser,
-): Promise<{ id: number; username: string; feature: number }> {
-  const stmt = db.prepare(`
-    insert into user (username, password, feature, createdAt, updatedAt) 
-    values (@username, @password, @feature, strftime('%s','now'), strftime('%s','now'))
-  `);
+  input: { username: string; password?: string; attr: number },
+): Promise<{ id: number; username: string; feature: number; attr: number }> {
+  const username = input.username ?? '';
+  const { password, attr } = input;
   let hashed: string | null;
-  if ('password' in input) {
-    hashed = await passwordUtil.hash(input.password);
+  if (typeof password === 'string' && password !== '') {
+    hashed = await passwordUtil.hash(password);
   } else {
     hashed = null;
   }
-  const username = input.username ?? '';
-  const ret = stmt.run({ username, password: hashed, feature: DEFAULT_USER_FEATURE });
-  return { id: ret.lastInsertRowid as number, username, feature: DEFAULT_USER_FEATURE };
+  const cols = Column.User;
+  const { source, params } = insert_into(Table.User)
+    .column(cols.Username, username)
+    .column(cols.Password, hashed)
+    .column(cols.Feature, DEFAULT_USER_FEATURE)
+    .column(cols.Attr, attr)
+    .column(cols.CreatedAt, ValueToken.Now)
+    .column(cols.UpdatedAt, ValueToken.Now)
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.get(params) as UserFromDb;
 }
 
 export async function updateUserPassword(db: Sqlite.Database, input: { userId: number; newPassword: string }) {
-  const stmt = db.prepare('update user set password = ? where id = ?');
   const hashed = await passwordUtil.hash(input.newPassword);
-  return stmt.run([hashed, input.userId]);
+  const cols = Column.User;
+  const { source, params } = update_table(Table.User)
+    .where(Eq(cols.Id, input.userId))
+    .column(cols.Password, hashed)
+    .column(cols.UpdatedAt, ValueToken.Now)
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.run(params);
 }
 
-export async function updateUserFeature(db: Sqlite.Database, input: { userId: number; feature: number }) {
-  const stmt = db.prepare('update user set feature = ? where id = ?');
-  return stmt.run([input.feature, input.userId]);
+export function updateUserFeature(db: Sqlite.Database, input: { userId: number; feature: number }) {
+  const cols = Column.User;
+  const { source, params } = update_table(Table.User)
+    .where(Eq(cols.Id, input.userId))
+    .column(cols.Feature, input.feature)
+    .column(cols.UpdatedAt, ValueToken.Now)
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.run(params);
+}
+
+export function updateUserAttr(db: Database, input: { id: number; attr: number }) {
+  const cols = Column.User;
+  const { source, params } = update_table(Table.User)
+    .where(Eq(cols.Id, input.id))
+    .column(cols.Attr, input.attr)
+    .column(cols.UpdatedAt, ValueToken.Now)
+    .build();
+  const stmt = db.prepare(source);
+  return stmt.run(params);
 }

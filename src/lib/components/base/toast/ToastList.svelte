@@ -2,14 +2,51 @@
   import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
   import { fly } from 'svelte/transition';
 
+  import Spinner from '$lib/components/feedback/Spinner.svelte';
+
   import { removeToast, toasts } from './store';
   import type { ToastItem } from './type';
 
-  const timeoutMap = new WeakMap<ToastItem, ReturnType<typeof setTimeout>>();
+  type ToastId = string;
+
+  const timeoutMap = new Map<ToastId, ReturnType<typeof setTimeout>>();
+  const timeoutDurationMap = new Map<ToastId, number | undefined>();
+
+  function clearTimeoutOfToast(toastId: ToastId) {
+    const tid = timeoutMap.get(toastId);
+    if (tid) {
+      clearTimeout(tid);
+      timeoutMap.delete(toastId);
+    }
+  }
+
+  function setTimeoutOfToast(toastId: ToastId, duration: number) {
+    if (typeof duration === 'number' && duration !== 0) {
+      clearTimeoutOfToast(toastId);
+      const tid = setTimeout(() => {
+        removeToast(toastId);
+      }, duration);
+      // debugger
+      // console.log('set', toastId, tid);
+      timeoutMap.set(toastId, tid);
+    }
+    timeoutDurationMap.set(toastId, duration);
+  }
 
   function findToastById(id: string | number) {
     for (const item of $toasts) {
-      if ('' + item.id === '' + id) return item;
+      if (item.id === id) return item;
+    }
+  }
+
+  $: {
+    for (const item of $toasts) {
+      const dur = timeoutDurationMap.get(item.id);
+      // if duration changed -> reset timeout
+      if (dur !== item.duration) {
+        clearTimeoutOfToast(item.id);
+        setTimeoutOfToast(item.id, item.duration);
+      }
     }
   }
 
@@ -18,16 +55,11 @@
   }
 
   function armTimeout(_node: HTMLDivElement, item: ToastItem) {
-    if (item.duration) {
-      const tid = setTimeout(() => {
-        removeToast(item.id);
-      }, item.duration);
-      timeoutMap.set(item, tid);
-    }
+    setTimeoutOfToast(item.id, item.duration);
     return {
       destroy() {
-        const tid = timeoutMap.get(item);
-        if (tid) clearTimeout(tid);
+        clearTimeoutOfToast(item.id);
+        timeoutDurationMap.delete(item.id);
       },
     };
   }
@@ -36,10 +68,7 @@
     const element = e.currentTarget as HTMLDivElement;
     const id = element.getAttribute('data-id');
     if (id) {
-      const item = findToastById(id);
-      const tid = timeoutMap.get(item);
-      console.log('reset timer for ', item, id);
-      if (tid) clearTimeout(tid);
+      clearTimeoutOfToast(id);
     }
   }
 
@@ -48,12 +77,7 @@
     const id = element.getAttribute('data-id');
     if (id) {
       const item = findToastById(id);
-      if (item && item.duration) {
-        const tid = setTimeout(() => {
-          removeToast(item.id);
-        }, item.duration);
-        timeoutMap.set(item, tid);
-      }
+      setTimeoutOfToast(id, item.duration);
     }
   }
 </script>
@@ -65,11 +89,16 @@
       class="toast {item.status}"
       transition:fly={{ y: 40 }}
       data-id={item.id}
-      use:armTimeout={item}
       role="list"
+      use:armTimeout={item}
       on:mouseenter={handleMouseEnter}
       on:mouseleave={handleMouseLeave}
     >
+      {#if item.icon && item.icon === 'loading'}
+        <Spinner size={18} />
+      {:else}
+        <span />
+      {/if}
       <p>{item.description}</p>
       {#if item.action}
         <button on:click={item.action.fn}>{item.action.label}</button>
@@ -137,7 +166,7 @@
     background-color: var(--bg);
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: auto 1fr auto auto;
     gap: 3px;
     align-items: center;
 
@@ -154,6 +183,11 @@
   // steal from https://github.com/emilkowalski/sonner/blob/main/src/styles.css
   @media (prefers-color-scheme: light) {
     .toast {
+      &.normal {
+        --bg: #fff;
+        --border: hsl(0, 0%, 93%);
+        --text: hsl(0, 0%, 9%);
+      }
       &.info {
         --bg: hsl(208, 100%, 97%);
         --border: hsl(221, 91%, 91%);
@@ -178,6 +212,11 @@
   }
   @media (prefers-color-scheme: dark) {
     .toast {
+      &.normal {
+        --bg: #000;
+        --border: hsl(0, 0%, 20%);
+        --text: hsl(0, 0%, 99%);
+      }
       &.info {
         --bg: hsl(215, 100%, 6%);
         --border: hsl(223, 100%, 12%);

@@ -5,7 +5,7 @@ import { COOKIE_KEY_OAUTH_STATE } from '$lib/env';
 import { signInUser } from '$lib/server/handlers/helper';
 import { wrap } from '$lib/server/handlers/wrap';
 import { logger } from '$lib/server/logger';
-import { user as userSvc } from '$lib/server/services/user.service';
+import { getUserService } from '$lib/server/services/registry';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as oidcUtil from '$lib/utils/oidc.util';
 
@@ -34,6 +34,7 @@ export const GET: RequestHandler = async (event) => {
       assert(json.id_token);
 
       const username = await oidcUtil.extractEmail(json.id_token);
+      const userSvc = getUserService();
       const user = userSvc.getUserByUsername({ username });
       logger.debug('user from db %o', user);
       const userId = user?.id;

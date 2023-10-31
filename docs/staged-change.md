@@ -1,0 +1,3 @@
+- `cherry create-user <email> <password>` now supports a flag `--admin`
+- `cherry set-admin "foo@example.com"`
+- `cherry unset-admin "foo@example.com"`

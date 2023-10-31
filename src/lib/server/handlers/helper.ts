@@ -4,12 +4,12 @@ import { ZodError, ZodSchema } from 'zod';
 import { dev } from '$app/environment';
 import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
 import { logger } from '$lib/server/logger';
-import { user as userSvc } from '$lib/server/services/user.service';
 import { isEmail } from '$lib/utils/common.util';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as jwtUtil from '$lib/utils/jwt.util';
 
 import { ApiError, ApiErrorCode, HttpStatus, ValidationErrorBuilder } from '../api.error';
+import { getUserService } from '../services/registry';
 
 type Event = Parameters<RequestHandler>[0];
 
@@ -30,10 +30,24 @@ export function forbidden() {
   throw new Response(undefined, { status: HttpStatus.FORBIDDEN });
 }
 
+export function unauthorized() {
+  throw new Response(undefined, { status: HttpStatus.UNAUTHORIZED });
+}
+
 export function ensureUser(event: Event): { userId: number; feature: number } {
   const user = event.locals?.user;
-  if (!user || !user.userId) throw new Response(undefined, { status: HttpStatus.UNAUTHORIZED });
+  if (!user || !user.userId) unauthorized();
   return user;
+}
+
+export function ensureAdminUser(event: Event) {
+  const user = event.locals?.user;
+  const id = user?.id || user?.userId;
+  if (!id) unauthorized();
+  const userSrv = getUserService();
+  const maybeAdminUser = userSrv.getUserByIdWithHydratedFeature({ id });
+  if (maybeAdminUser.attr.admin !== true) unauthorized();
+  return maybeAdminUser;
 }
 
 export function ensureInt(provideId: any) {
@@ -43,13 +57,13 @@ export function ensureInt(provideId: any) {
   return id;
 }
 
-export async function createUser(input: { username: string; password: string }) {
-  const { username, password } = input;
+export async function createUser(input: { username: string; password: string; options: { admin: boolean } }) {
+  const { username, password, options } = input;
   const v = new ValidationErrorBuilder();
   if (!username) return v.add('username', 'Invalid username').response();
   if (!isEmail(username)) return v.add('username', 'Username must be an email').response();
   if (!password) return v.add('password', 'Invalid password').response();
-  const user = await userSvc.createUser({ username, password });
+  const user = await getUserService().createUser({ username, password, options });
   return signInUser(user);
 }
 
