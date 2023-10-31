@@ -135,6 +135,7 @@
     color: var(--text);
     border: 1px solid var(--border);
     background-color: var(--bg);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     display: grid;
     grid-template-columns: 1fr auto auto;
     gap: 3px;

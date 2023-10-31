@@ -1,5 +1,5 @@
 <script lang="ts">
-  //
+  import Chip from '$lib/components/base/Chip.svelte';
 </script>
 
 <main>
@@ -10,6 +10,7 @@
     <span class="chip warning">warning</span>
     <span class="chip info">info</span>
     <span class="chip error">error</span>
+    <Chip modifier="error">error chip</Chip>
   </section>
   <section></section>
 </main>
@@ -92,18 +93,22 @@
 
   .chip.success {
     color: var(--text);
+    border: 1px solid var(--border);
     background-color: var(--bg);
   }
   .chip.warning {
     color: var(--text);
+    border: 1px solid var(--border);
     background-color: var(--bg);
   }
   .chip.error {
     color: var(--text);
+    border: 1px solid var(--border);
     background-color: var(--bg);
   }
   .chip.info {
     color: var(--text);
+    border: 1px solid var(--border);
     background-color: var(--bg);
   }
 </style>
