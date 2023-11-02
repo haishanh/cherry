@@ -29,7 +29,7 @@
         status: 'success',
         description: 'Export job started',
       });
-      invalidate('jobSrv.all');
+      invalidate((url) => url.pathname === '/api/jobs');
     });
   }
 </script>

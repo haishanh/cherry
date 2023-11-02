@@ -53,3 +53,19 @@ export const POST: RequestHandler = async (event) => {
     return json(job);
   });
 };
+
+export const GET: RequestHandler = async (event) => {
+  return wrap(event, async (event) => {
+    const user = ensureUser(event);
+    const searchParams = event.url.searchParams;
+    const op = searchParams.get('op');
+    if (op !== JobOperation.Export) {
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    }
+    const limit0 = parseInt(searchParams.get('limit') || '10', 10);
+    const limit = isNaN(limit0) ? 10 : limit0;
+    const jobSrv = getJobService();
+    const jobs = jobSrv.all({ userId: user.userId, op, limit });
+    return json({ items: jobs });
+  });
+};
