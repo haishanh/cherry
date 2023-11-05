@@ -3,6 +3,9 @@ ARG COMMIT_SHA=""
 # alpine 3.18, https://github.com/just-containers/s6-overlay 2.2.03
 FROM --platform=${TARGETPLATFORM:-linux/amd64} ghcr.io/crazy-max/alpine-s6:3.18-2.2.0.3 AS init
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN apk upgrade && apk --update --no-cache add \
   bash \
   nodejs \
@@ -10,21 +13,23 @@ RUN apk upgrade && apk --update --no-cache add \
   nginx \
   nginx-mod-http-brotli \
   sqlite && \
-  npm i -g pnpm
+  npm i -g pnpm && \
+  node --version && \
+  pnpm --version
 
 FROM init as deps
 WORKDIR /app
 RUN mkdir -p src/assets
 COPY ./scripts ./scripts
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm i
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM init as modules
 WORKDIR /app
 RUN mkdir -p src/assets
 COPY ./scripts ./scripts
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm i --prod
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 FROM init AS builder
 ARG COMMIT_SHA
