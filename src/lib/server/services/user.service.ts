@@ -26,6 +26,14 @@ const USER_ATTRIBUTE = {
 
 export const DEFAULT_USER_ATTRIBUTE = 0;
 
+export enum UserServiceErrorCode {
+  UserNotFound,
+}
+
+export class UserServiceError {
+  constructor(public readonly code: UserServiceErrorCode) {}
+}
+
 export class UserService {
   constructor(private db: Database) {}
 
@@ -39,7 +47,7 @@ export class UserService {
 
   getUserByIdWithHydratedFeature(input: { id: number }) {
     const user = userDb.getUserById(this.db, input);
-    if (!user) throw new ApiError(HttpStatus.NOT_FOUND);
+    if (!user) throw new UserServiceError(UserServiceErrorCode.UserNotFound);
     const feature0 = user.feature;
     const ff: Record<string, boolean> = {};
     ff.strip_tracking_parameters = (feature0 & UserFeatureFlag.FF_STRIP_TRACKING_PARAMETERS) > 0;
