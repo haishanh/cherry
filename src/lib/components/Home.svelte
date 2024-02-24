@@ -112,7 +112,7 @@
     pageUriTemplate = `${url.pathname}?${q}`;
     pageUriNext = pageUriTemplate.replace(
       '____=',
-      meta.after ? `after=${meta.after}&p=${pageCurrent + 1}` : `p=${pageCurrent + 1}`
+      meta.after ? `after=${meta.after}&p=${pageCurrent + 1}` : `p=${pageCurrent + 1}`,
     );
     pageTotal = totalPage;
   }

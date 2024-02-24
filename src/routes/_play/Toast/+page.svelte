@@ -18,7 +18,7 @@
   const fakeFetch = async () => {
     await sleep(3000);
     throw new Error('Error');
-  }
+  };
 
   function testPromise() {
     promiseToast(fakeFetch(), {

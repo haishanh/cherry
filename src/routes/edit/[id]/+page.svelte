@@ -20,7 +20,7 @@
   });
 
   function handleBookmarkEditFormEv0(
-    e: CustomEvent<{ type: BookmarkEditFormEvent.UpdateCompleted | BookmarkEditFormEvent.UpdateFailed }>
+    e: CustomEvent<{ type: BookmarkEditFormEvent.UpdateCompleted | BookmarkEditFormEvent.UpdateFailed }>,
   ) {
     const type = e.detail?.type;
     switch (type) {

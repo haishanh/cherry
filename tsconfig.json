@@ -3,10 +3,5 @@
   "compilerOptions": {
     "noEmit": true,
     "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "$lib": ["src/lib"],
-      "$lib/*": ["src/lib/*"]
-    }
   }
 }

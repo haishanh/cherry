@@ -14,6 +14,6 @@ cp env.example .env
 pnpm dev
 
 # you may want to create an user
-pnpm cherry create-user "foo@example.com" "P@ssw0rd"
+pnpm cherry create-user "foo@example.com" "P@ssw0rd" --admin
 pnpm cherry set-admin "foo@example.com"
 ```

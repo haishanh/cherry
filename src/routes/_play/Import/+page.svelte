@@ -1,6 +1,6 @@
 <script>
   import Inbox from '@hsjs/svelte-icons/feather/Inbox.svelte';
-  import Dropzone from 'svelte-file-dropzone/Dropzone.svelte';
+  import Dropzone from 'svelte-file-dropzone';
 
   // import { request } from '$lib/utils/http.util';
 

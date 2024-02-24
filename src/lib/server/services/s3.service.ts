@@ -1,8 +1,4 @@
-import {
-  PutObjectCommand,
-  type PutObjectCommandInput,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { PutObjectCommand, type PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 
 export class S3Service {
   private s3: S3Client;
@@ -26,7 +22,7 @@ export class S3Service {
     this.bucket = opts.s3Bucket;
   }
 
-  async putObject(input: Omit<PutObjectCommandInput, "Bucket">) {
+  async putObject(input: Omit<PutObjectCommandInput, 'Bucket'>) {
     // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/s3-example-creating-buckets.html#s3-example-creating-buckets-upload-file
     const Bucket = this.bucket;
     return await this.s3.send(new PutObjectCommand({ Bucket, ...input }));

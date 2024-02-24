@@ -4,9 +4,9 @@ export async function fetchMeta(url: string) {
     mod.parser && typeof mod.parser === 'function'
       ? mod.parser
       : mod.default && typeof mod.default === 'function'
-      ? mod.default
-      : // @ts-ignore
-        mod.default?.parser;
+        ? mod.default
+        : // @ts-ignore
+          mod.default?.parser;
   const result = await parser(url);
   return {
     url,

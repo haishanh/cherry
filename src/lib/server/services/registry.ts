@@ -1,4 +1,10 @@
-import { BACKUP_S3_ACCESS_KEY_ID, BACKUP_S3_BUCKET, BACKUP_S3_ENDPOINT, BACKUP_S3_REGION, BACKUP_S3_SECRET_ACCESS_KEY } from '$lib/env';
+import {
+  BACKUP_S3_ACCESS_KEY_ID,
+  BACKUP_S3_BUCKET,
+  BACKUP_S3_ENDPOINT,
+  BACKUP_S3_REGION,
+  BACKUP_S3_SECRET_ACCESS_KEY,
+} from '$lib/env';
 import * as bookmarkStashDb from '$lib/server/db/bookmarkStash.db';
 import * as jobDb from '$lib/server/db/job.db';
 
@@ -31,13 +37,14 @@ export function getUserService() {
 
 let s3Srv: S3Service;
 export function getS3Service() {
-  if (!s3Srv) s3Srv = new S3Service({
-    s3Endpoint: BACKUP_S3_ENDPOINT,
-    s3Region: BACKUP_S3_REGION,
-    s3Bucket: BACKUP_S3_BUCKET,
-    s3AccessKeyId: BACKUP_S3_ACCESS_KEY_ID,
-    s3SecretAccessKey: BACKUP_S3_SECRET_ACCESS_KEY,
-  });
+  if (!s3Srv)
+    s3Srv = new S3Service({
+      s3Endpoint: BACKUP_S3_ENDPOINT,
+      s3Region: BACKUP_S3_REGION,
+      s3Bucket: BACKUP_S3_BUCKET,
+      s3AccessKeyId: BACKUP_S3_ACCESS_KEY_ID,
+      s3SecretAccessKey: BACKUP_S3_SECRET_ACCESS_KEY,
+    });
   return s3Srv;
 }
 

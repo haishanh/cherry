@@ -27,7 +27,7 @@ export class AdminService {
     // it's just a friction to prevent admin from deleting the user they are not intending to
     const { id, username } = input;
     const user = userDb.getUserById(this.db, { id });
-    if (user?.username !== username) throw new ApiError(400);
+    if (user?.username !== username) throw new ApiError(400, '', 'Username and Id mismatch');
     logger.info('deleting user id=%s username=%s', id, username);
     // proceed to delete
     userDb.deleteUserById(this.db, { id });

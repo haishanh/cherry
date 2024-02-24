@@ -1,7 +1,7 @@
 <script lang="ts">
   import ArrowUpCircle from '@hsjs/svelte-icons/feather/ArrowUpCircle.svelte';
   import Inbox from '@hsjs/svelte-icons/feather/Inbox.svelte';
-  import Dropzone from 'svelte-file-dropzone/Dropzone.svelte';
+  import Dropzone from 'svelte-file-dropzone';
 
   import Button from '$lib/components/base/Button.svelte';
   import Spinner from '$lib/components/feedback/Spinner.svelte';
@@ -37,7 +37,6 @@
 
 <div class="wrap">
   <Dropzone
-    inputElement={null}
     containerClasses="dzone {dragenter ? 'dragenter' : ''}"
     multiple={false}
     {accept}

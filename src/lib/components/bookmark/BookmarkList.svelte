@@ -121,14 +121,14 @@
       });
     };
 
-    let toastId: number;
+    let toastId: string;
 
     const undo = () => {
       return restore().then(
         () => {
           if (typeof toastId === 'number') removeToast(toastId);
         },
-        (e) => console.log(e)
+        (e) => console.log(e),
       );
     };
 

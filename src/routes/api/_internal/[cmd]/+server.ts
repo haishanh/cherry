@@ -8,7 +8,7 @@ import { deleteDangleBookmarkTag } from '$lib/server/admin/delete-dangle-bookmar
 import { ApiError } from '$lib/server/api.error';
 import { createUser, requestBody } from '$lib/server/handlers/helper';
 import { wrap } from '$lib/server/handlers/wrap';
-import { getAdminService,getUserService } from '$lib/server/services/registry';
+import { getAdminService, getUserService } from '$lib/server/services/registry';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
