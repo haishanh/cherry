@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import assert from 'assert';
 import Sqlite from 'better-sqlite3';
 
@@ -8,6 +10,7 @@ import * as v1 from './migrations/v01.migration';
 import * as v2 from './migrations/v02.migration';
 import * as v4 from './migrations/v04.migration';
 import * as v5 from './migrations/v05.migration';
+import * as v6 from './migrations/v06.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
 
@@ -16,6 +19,7 @@ const migrations = [
   { version: 2, mod: v2 },
   { version: 4, mod: v4 },
   { version: 5, mod: v5 },
+  { version: 6, mod: v6 },
 ];
 
 export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = false) => {
@@ -23,6 +27,9 @@ export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = f
   const db = new Sqlite(filepath, {
     ...(verbose ? { verbose: console.log } : undefined),
   });
+
+  db.loadExtension(path.join('db', 'libsimple'));
+
   DATABASE_STATE[filepath] = { db };
   if (shouldMigrate && !DATABASE_STATE[filepath].migrated) {
     db.pragma('journal_mode = WAL');
@@ -67,6 +74,7 @@ function migrate(db: Sqlite.Database) {
       if (m.version > version) {
         m.mod.up(db);
         db.prepare('update migration set version = @version where rowid = 1').run({ version: m.version });
+        logger.warn('database migrated to version %s', m.version);
       }
     }
   });
