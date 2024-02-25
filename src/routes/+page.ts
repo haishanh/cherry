@@ -13,6 +13,7 @@ export const load: Load = async (input) => {
     return {
       bookmarks: data.items,
       totalPage: data.totalPage,
+      maybeHasMore: data.maybeHasMore,
       meta,
       url: { pathname: url.pathname, search: qs.toString() },
     };

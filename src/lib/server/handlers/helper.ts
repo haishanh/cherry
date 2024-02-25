@@ -57,8 +57,9 @@ export function ensureInt(provideId: any) {
   return id;
 }
 
-export async function createUser(input: { username: string; password: string; options: { admin: boolean } }) {
-  const { username, password, options } = input;
+export async function createUser(input: { username: string; password: string; options?: { admin: boolean } }) {
+  const { username, password } = input;
+  const options = input?.options || { admin: false };
   const v = new ValidationErrorBuilder();
   if (!username) return v.add('username', 'Invalid username').response();
   if (!isEmail(username)) return v.add('username', 'Username must be an email').response();

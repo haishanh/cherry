@@ -4,25 +4,25 @@
 
 <main>
   <section>
-    <Pagination previous="/p" next="/n" current={8} total={30} />
+    <Pagination previous="/p" next="/n" current={8} total={30} maybeHasMore={true} />
   </section>
   <section>
-    <Pagination previous="/p" next="/n" current={1} total={5} />
+    <Pagination previous="/p" next="/n" current={1} total={5} maybeHasMore />
   </section>
   <section>
-    <Pagination previous="/p" next="/n" current={4} total={5} />
+    <Pagination previous="/p" next="/n" current={4} total={5} maybeHasMore />
   </section>
   <section>
-    <Pagination previous="/p" next="/n" current={8} total={30} />
+    <Pagination previous="/p" next="/n" current={8} total={30} maybeHasMore />
   </section>
   <section>
-    <Pagination previous="/p" next="/n" current={27} total={30} />
+    <Pagination previous="/p" next="/n" current={27} total={30} maybeHasMore />
   </section>
   <section>
-    <Pagination previous="/p" next="/n" current={30} total={30} />
+    <Pagination previous="/p" next="/n" current={30} total={30} maybeHasMore />
   </section>
   <section>
-    <Pagination previous="/p" next="/n" current={1} total={2} />
+    <Pagination previous="/p" next="/n" current={1} total={2} maybeHasMore />
   </section>
 </main>
 

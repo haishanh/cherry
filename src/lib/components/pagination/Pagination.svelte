@@ -8,6 +8,7 @@
   export let next = '';
   export let previous = '';
   export let pageUriTemplate = '';
+  export let maybeHasMore: boolean;
 
   type PaginationItem = { page: number; link: string } | { gap: boolean };
 
@@ -25,8 +26,9 @@
   //          ^
   // 1 .. 95 96 97 98 99 100
   function makeNavItems(total: number, current: number) {
-    const maxNumberOfItems = 7;
     let items = [];
+    if (total <= 0 || typeof total !== 'number') return items;
+    const maxNumberOfItems = 7;
     if (total <= maxNumberOfItems) {
       for (let i = 1; i <= total; i++) {
         items.push({ page: i });
@@ -52,7 +54,7 @@
   }
 </script>
 
-{#if total && total > 1}
+{#if (total && total > 1) || maybeHasMore}
   <div class="pagination" role="navigation" aria-label="Pagination">
     {#if current === 1}
       <span class="item disabled"><ChevronLeft size={20} /><span>Previous</span></span>
@@ -72,7 +74,9 @@
       {/if}
     {/each}
 
-    {#if current >= total}
+    {#if total <= 0 && maybeHasMore}
+      <a class="item" rel="next" href={next}><span>Next</span><ChevronRight size={20} /></a>
+    {:else if current >= total}
       <span class="item disabled"><span>Next</span><ChevronRight size={20} /></span>
     {:else}
       <a class="item" rel="next" href={next}><span>Next</span><ChevronRight size={20} /></a>

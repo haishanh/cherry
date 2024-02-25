@@ -70,11 +70,15 @@ export function getBookmarks(
   }
 
   if (text) {
-    join.push('bookmark_fts on (bookmark_fts.rowid = b.id)');
-    where.push('bookmark_fts match ?');
+    // join.push('bookmark_fts on (bookmark_fts.rowid = b.id)');
+    // where.push('bookmark_fts match ?');
+    join.push('bookmark_fts_v2 on (bookmark_fts_v2.rowid = b.id)');
+    where.push('bookmark_fts_v2 match simple_query(?)');
+
     params.push(text);
 
-    tokens.orderBy = 'bookmark_fts.rank';
+    // tokens.orderBy = 'bookmark_fts.rank';
+    tokens.orderBy = 'bookmark_fts_v2.rank';
   } else {
     tokens.orderBy = 'b.updatedAt desc, b.id desc';
   }

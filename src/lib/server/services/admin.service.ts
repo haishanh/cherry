@@ -4,9 +4,12 @@ import * as path from 'node:path';
 
 import type { Database } from 'better-sqlite3';
 import { format } from 'date-fns';
-import tar from 'tar';
+import * as tar from 'tar/create';
 
 import { BACKUP_S3_BUCKET, BACKUP_S3_PREFIX, DATA_DIR } from '$lib/env';
+import * as bookmarkDb from '$lib/server/db/bookmark.db';
+import * as groupDb from '$lib/server/db/group.db';
+import * as tagDb from '$lib/server/db/tag.db';
 import * as userDb from '$lib/server/db/user.db';
 import type { InputAdminDeleteUser } from '$lib/type';
 
@@ -39,11 +42,8 @@ export class AdminService {
     // we don't need to handle bookmark_tag
     // they will be taken care by the SQLite trigger
 
-    const tagDb = await import('$lib/server/db/tag.db');
     tagDb.deleteTagsByUserId(this.db, { userId });
-    const groupDb = await import('$lib/server/db/group.db');
     groupDb.deleteGroupsByUserId(this.db, { userId });
-    const bookmarkDb = await import('$lib/server/db/bookmark.db');
     bookmarkDb.deleteBookmarksByUserId(this.db, { userId });
   }
 
