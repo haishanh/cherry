@@ -22,4 +22,4 @@
 <svelte:head>
   <title>Cherry</title>
 </svelte:head>
-<Home {bookmarks} {meta} {totalPage} {url} />
+<Home {bookmarks} {meta} {totalPage} {url} maybeHasMore={data.maybeHasMore} />

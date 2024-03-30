@@ -1,0 +1,5 @@
+#!/command/execlineb -P
+with-contenv
+s6-setuidgid nodejs
+cd /app
+node ./build/index.js

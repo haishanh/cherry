@@ -1,0 +1,3 @@
+if { mkdir -p /var/log/cherry }
+if { chown nobody:nogroup /var/log/cherry }
+chmod 02755 /var/log/cherry

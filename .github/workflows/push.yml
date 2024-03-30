@@ -11,12 +11,12 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -25,11 +25,15 @@ jobs:
       - run: pnpm lint
       - run: pnpm sync
       - run: pnpm check
+      - run: |
+          wget 'https://github.com/wangfenjin/simple/releases/download/v0.4.0/libsimple-linux-ubuntu-latest.zip'
+          unzip libsimple-linux-ubuntu-latest.zip
+          cp libsimple-linux-ubuntu-latest/libsimple.so ./db/
       - run: pnpm test
       - run: pnpm build
 
       - name: Send Notification
-        uses: haishanh/actions-telegram-notification@v1
+        uses: haishanh/actions-telegram-notification@v2
         if: ${{ always() }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}
@@ -46,26 +50,26 @@ jobs:
         github.event.ref == 'refs/heads/test'
       )
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
 
       - name: Docker meta
         id: docker_meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             haishanh/cherry
             # ghcr.io/haishanh/cherry
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Set git commit sha
         id: revparse
@@ -74,7 +78,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           version: latest
 
@@ -84,20 +88,20 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
 
       - name: Login to r.haishan.me
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: r.haishan.me
           username: ${{ github.actor }}
           password: ${{ secrets.R_HAISHAN_ME_PASSWORD }}
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -105,10 +109,10 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./app.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }},ghcr.io/${{ steps.docker_meta.outputs.tags }}
@@ -116,7 +120,7 @@ jobs:
             COMMIT_SHA=${{ env.sha_short }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
-          cache-to: type=gha
+          cache-to: type=gha,mode=max
 
       - run: |
           printf '**Docker images**' >> $GITHUB_STEP_SUMMARY
@@ -131,7 +135,7 @@ jobs:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
 
       - name: Send Notification
-        uses: haishanh/actions-telegram-notification@v1
+        uses: haishanh/actions-telegram-notification@v2
         if: ${{ always() }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}

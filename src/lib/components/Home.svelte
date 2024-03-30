@@ -22,6 +22,7 @@
   export let bookmarks: BookmarkFromDb[] = [];
   // TODO merge this with meta?
   export let totalPage: number;
+  export let maybeHasMore: boolean;
   export let meta: PageMetaBookmarks = {};
   export let url: { pathname: string; search: string };
 
@@ -135,7 +136,14 @@
       <Empty />
     {/if}
     <BookmarkEditModal bind:this={editModal} on:ev0={handleBookmarkEditModalEv0} />
-    <Pagination {pageUriTemplate} previous="" next={pageUriNext} current={pageCurrent} total={pageTotal} />
+    <Pagination
+      {pageUriTemplate}
+      previous=""
+      next={pageUriNext}
+      current={pageCurrent}
+      total={pageTotal}
+      {maybeHasMore}
+    />
   </div>
   <div />
 </div>

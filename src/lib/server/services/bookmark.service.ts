@@ -99,25 +99,28 @@ export const bookmark = {
   },
 
   findBookmarks: (input: InputFindBookmarksOfUser) => {
-    const data: { items: BookmarkFromDb[]; count?: number; totalPage?: number } = { items: [] };
+    const data: { items: BookmarkFromDb[]; count?: number; totalPage?: number; maybeHasMore?: boolean } = { items: [] };
     const db = lite();
     const bookmarks = bookmarkDb.getBookmarks(db, input) as BookmarkFromDb[];
     // const b2 = bookmarkDb2.getBookmarks(db, input) as BookmarkFromDb[];
     data.items = tagDb.hydrateBookmarks(db, bookmarks);
 
-    let countRet: { count: number };
+    // let countRet: { count: number }
+    let count: number;
     if (('text' in input && input.text) || 'tagIds' in input || 'groupId' in input) {
-      countRet = bookmarkDb.getBookmarks(db, { ...input, counting: true }) as { count: number };
+      // countRet = bookmarkDb.getBookmarks(db, { ...input, counting: false }) as { count: number };
     } else {
       try {
-        countRet = bookmarkDb.getBookmarkCountOfUser(db, input);
+        const ret = bookmarkDb.getBookmarkCountOfUser(db, input);
+        count = ret.count;
       } catch (e) {
         if (e instanceof DataError && e.code === DataErrorCode.UserNotFound) throw new ApiError(HttpStatus.NOT_FOUND);
         throw e;
       }
     }
-    data.count = countRet.count || data.items.length;
-    data.totalPage = Math.ceil(data.count / PAGE_BOOKMARK_LIMIT);
+    const totalCount = typeof count === 'number' ? count : data.items.length;
+    data.totalPage = typeof count === 'number' ? Math.ceil(totalCount / PAGE_BOOKMARK_LIMIT) : -1;
+    data.maybeHasMore = totalCount >= PAGE_BOOKMARK_LIMIT;
     return { data };
   },
 
