@@ -97,7 +97,6 @@ export function getBookmarks(
   }
 
   const ret = buildSelect({ tokens, params });
-  console.log(ret.query);
   const stmt = db.prepare(ret.query);
   if (counting) {
     return stmt.get(ret.params) as { count: number };
