@@ -64,7 +64,7 @@ RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
 
-COPY docker/rootfs2 /
+COPY docker/rootfs /
 
 ENV PUID="1001" PGID="1001" PORT="5173" BODY_SIZE_LIMIT="52428800"
 
