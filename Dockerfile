@@ -38,10 +38,10 @@ RUN pnpm sync && \
 
 FROM init AS base
 
-ENV PUID="1001" PGID="1001" PORT="5173" BODY_SIZE_LIMIT="52428800"
-
-RUN addgroup --system --gid ${PGID} nodejs
-RUN adduser --system --uid ${PUID} -G nodejs -h /home/nodejs -s /bin/bash nodejs
+# ENV PUID="1001" PGID="1001" PORT="5173" BODY_SIZE_LIMIT="52428800"
+#
+# RUN addgroup --system --gid ${PGID} nodejs
+# RUN adduser --system --uid ${PUID} -G nodejs -h /home/nodejs -s /bin/bash nodejs
 
 WORKDIR /app
 ENV NODE_ENV production

@@ -112,7 +112,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./app.Dockerfile
+          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }},ghcr.io/${{ steps.docker_meta.outputs.tags }}
