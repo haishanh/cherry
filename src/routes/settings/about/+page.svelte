@@ -12,7 +12,7 @@
 
 <Cherry />
 <p>
-  🍒 Cherry version: <code>{version}</code>
+  Cherry version: <code>{version}</code>
   {#if sha}
     <span /><ExternalLink href={REPO_URL + `/tree/${sha}`}><code>{sha}</code></ExternalLink>
   {/if}
