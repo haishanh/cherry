@@ -18,7 +18,7 @@
     const last = buttons[buttons.length - 1];
 
     requestAnimationFrame(() => {
-      first && first.focus({ preventScroll: true });
+      if (first) first.focus({ preventScroll: true });
     });
 
     function handleWindowOnKeydown(event: KeyboardEvent) {

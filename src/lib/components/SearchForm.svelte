@@ -17,8 +17,9 @@
     const search = new URL(document.location.href).searchParams;
     const qStr = search.get('q');
     const tagStr = search.get('tag');
-    qStr ? (inputValue = qStr) : (inputValue = '');
+    inputValue = qStr ?? '';
     if (tagStr && $tagMapById.size > 0) {
+      // @ts-ignore
       tags = tagStr
         .split(',')
         .map((s) => parseInt(s, 10))
@@ -54,7 +55,9 @@
     switch (e.key) {
       case '/':
         e.preventDefault();
-        tagAutocomplete && tagAutocomplete.focus();
+        if (tagAutocomplete) {
+          tagAutocomplete.focus();
+        }
         return;
       default:
     }

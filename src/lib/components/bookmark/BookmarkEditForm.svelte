@@ -69,7 +69,7 @@
     // const tagMapById
     if ($tagListLoaded && tagIds && tagIds.length > 0 && typeof tagIds[0] === 'number') {
       const byId = $tagMapById;
-      tags = tagIds.map((id) => byId.get(id)).filter((t) => !!t);
+      tags = tagIds.map((id) => byId.get(id)).filter((t) => !!t) as TagType[];
     }
   }
 
@@ -82,11 +82,11 @@
     }
   }
 
-  $: $tagListLoaded && hydrateTags();
-  $: $groupListLoaded && hydrateGroup();
+  $: if ($tagListLoaded) hydrateTags();
+  $: if ($groupListLoaded) hydrateGroup();
   onMount(() => {
-    $tagListLoaded && hydrateTags();
-    $groupListLoaded && hydrateGroup();
+    if ($tagListLoaded) hydrateTags();
+    if ($groupListLoaded) hydrateGroup();
   });
 
   async function updateOrCreateBookmark(b: Omit<BookmarkHydrated, 'tagIds' | 'groupId' | 'createdAt' | 'updatedAt'>) {
@@ -140,7 +140,7 @@
       ...($tagListLoaded ? { tags } : undefined),
       // group can be null here
       // the backend should delete the `groupId` column in this case
-      ...($groupListLoaded ? { group } : undefined),
+      ...($groupListLoaded && group ? { group } : undefined),
     };
 
     delete b.groupId;

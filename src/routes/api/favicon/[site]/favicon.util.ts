@@ -99,9 +99,9 @@ export function findIconRelLinks(html: string) {
   if (!head || !('children' in head)) return [];
   return htmlparser2.DomUtils.find(
     (elem) => {
-      if (elem.type !== 'tag' || elem.name !== 'link') return;
+      if (elem.type !== 'tag' || elem.name !== 'link') return false;
       const rel = elem.attribs.rel?.toLowerCase();
-      return rel && rel.indexOf('icon') >= 0 && rel.indexOf('mask-icon') < 0;
+      return !!(rel && rel.indexOf('icon') >= 0 && rel.indexOf('mask-icon') < 0);
     },
     head.children,
     false,
@@ -265,7 +265,7 @@ export async function favicon(site: string) {
 
   if (href.substring(0, 5) === 'data:') {
     const ret = datauriUtil.parse(href);
-    if (!ret.type && type) ret.type === type;
+    if (!ret.type && type) ret.type = type;
     return ret;
   }
 

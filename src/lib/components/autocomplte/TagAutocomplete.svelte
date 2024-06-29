@@ -27,7 +27,7 @@
   export let autoSelect = false;
   export let focusWithForwardSlashKey = false;
   export function focus() {
-    inputRef && inputRef.focus();
+    if (inputRef) inputRef.focus();
   }
 
   const EVENT = {
@@ -140,7 +140,7 @@
     switch (e.key) {
       case 'Escape':
         e.preventDefault();
-        inputRef && inputRef.blur();
+        if (inputRef) inputRef.blur();
         // close();
         return;
       default:

@@ -15,13 +15,17 @@
   let deferShowLoadingTimeout: ReturnType<typeof setTimeout>;
   beforeNavigate((navigation) => {
     if (navigation.to?.url.pathname.startsWith('/api/downloads/')) return;
-    deferShowLoadingTimeout && clearTimeout(deferShowLoadingTimeout);
+    if (deferShowLoadingTimeout) {
+      clearTimeout(deferShowLoadingTimeout);
+    }
     deferShowLoadingTimeout = setTimeout(() => {
       isLoading = true;
     }, 200);
   });
   afterNavigate(() => {
-    deferShowLoadingTimeout && clearTimeout(deferShowLoadingTimeout);
+    if (deferShowLoadingTimeout) {
+      clearTimeout(deferShowLoadingTimeout);
+    }
     isLoading = false;
   });
 </script>

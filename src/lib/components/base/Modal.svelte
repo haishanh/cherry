@@ -54,7 +54,6 @@
         document.body.style.paddingRight = previousPr;
       };
     }
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
   }
 

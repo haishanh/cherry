@@ -13,15 +13,15 @@
   }
 
   function deferClose(delay = 750) {
-    openTimeoutId && clearTimeout(openTimeoutId);
+    if (openTimeoutId) clearTimeout(openTimeoutId);
     if (!isOpen) return;
-    closeTimeoutId && clearTimeout(closeTimeoutId);
+    if (closeTimeoutId) clearTimeout(closeTimeoutId);
     closeTimeoutId = setTimeout(close, delay);
   }
   function deferOpen(delay = 700) {
-    closeTimeoutId && clearTimeout(closeTimeoutId);
+    if (closeTimeoutId) clearTimeout(closeTimeoutId);
     if (isOpen) return;
-    openTimeoutId && clearTimeout(openTimeoutId);
+    if (openTimeoutId) clearTimeout(openTimeoutId);
     openTimeoutId = setTimeout(open, delay);
   }
 

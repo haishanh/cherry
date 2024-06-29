@@ -29,19 +29,19 @@
   }
 
   function deferOpen(delay = 700) {
-    closeTimeoutId && clearTimeout(closeTimeoutId);
+    if (closeTimeoutId) clearTimeout(closeTimeoutId);
     if (isOpen) return;
-    openTimeoutId && clearTimeout(openTimeoutId);
+    if (openTimeoutId) clearTimeout(openTimeoutId);
 
     openTimeoutId = setTimeout(() => {
       if (!isOpen) isOpen = true;
     }, delay);
   }
   function deferClose(delay = 750) {
-    openTimeoutId && clearTimeout(openTimeoutId);
+    if (openTimeoutId) clearTimeout(openTimeoutId);
     if (!isOpen) return;
 
-    closeTimeoutId && clearTimeout(closeTimeoutId);
+    if (closeTimeoutId) clearTimeout(closeTimeoutId);
     closeTimeoutId = setTimeout(() => {
       if (isOpen) isOpen = false;
     }, delay);
