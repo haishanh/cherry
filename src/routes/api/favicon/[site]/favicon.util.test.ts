@@ -1,5 +1,4 @@
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
+import { test, expect } from 'vitest';
 
 import * as faviconLib from './favicon.util';
 
@@ -12,7 +11,7 @@ test('links with sizes attr', () => {
   </head></html>
 `;
   const ret = faviconLib.findFaviconInHtml(html, 'test.com');
-  assert.equal(ret, { href: '/2.png', type: undefined });
+  expect(ret).toEqual({ href: '/2.png', type: undefined });
 });
 
 test('links with sizes attr2', () => {
@@ -26,7 +25,7 @@ test('links with sizes attr2', () => {
   </head></html>
 `;
   const ret = faviconLib.findFaviconInHtml(html, 'test.com');
-  assert.equal(ret, { href: '4', type: undefined });
+  expect(ret).toEqual({ href: '4', type: undefined });
 });
 
 test('www.yahoo.com', () => {
@@ -37,7 +36,7 @@ test('www.yahoo.com', () => {
   </head></html>
 `;
   const ret = faviconLib.findFaviconInHtml(html, 'test.com');
-  assert.equal(ret, { href: '1.ico', type: undefined });
+  expect(ret).toEqual({ href: '1.ico', type: undefined });
 });
 
 test('developer.chrome.com', () => {
@@ -49,7 +48,7 @@ test('developer.chrome.com', () => {
   </head></html>
 `;
   const ret = faviconLib.findFaviconInHtml(html, 'test.com');
-  assert.equal(ret, { href: '/1.png', type: undefined });
+  expect(ret).toEqual({ href: '/1.png', type: undefined });
 });
 
 test('open.spotify.com', () => {
@@ -59,7 +58,5 @@ test('open.spotify.com', () => {
   </head></html>
 `;
   const ret = faviconLib.findFaviconInHtml(html, 'test.com');
-  assert.equal(ret, { href: 'f32.png', type: 'image/png' });
+  expect(ret).toEqual({ href: 'f32.png', type: 'image/png' });
 });
-
-test.run();

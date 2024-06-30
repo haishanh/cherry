@@ -12,5 +12,8 @@ export default defineConfig(async () => {
       __COMMIT_SHA__: JSON.stringify(hash),
     },
     plugins: [sveltekit()],
+    test: {
+      include: ['src/**/*.{test,spec}.{js,ts}'],
+    },
   };
 });

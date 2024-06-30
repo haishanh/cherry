@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "dev": "vite dev",
-    "test": "NODE_OPTIONS='--import tsx' uvu src .test.ts",
+    "test": "vitest",
+    "test:2": "NODE_OPTIONS='--import tsx' uvu src .test.ts",
     "do": "NODE_OPTIONS='--import tsx' node",
     "test:1": "uvu -r esbuild-register -r tsconfig-paths/register",
     "build": "vite build",
@@ -71,8 +72,8 @@
     "typescript": "5.5.2",
     "typescript-eslint": "8.0.0-alpha.34",
     "undici": "6.19.2",
-    "uvu": "0.5.6",
-    "vite": "5.3.2"
+    "vite": "5.3.2",
+    "vitest": "1.6.0"
   },
   "type": "module",
   "dependencies": {

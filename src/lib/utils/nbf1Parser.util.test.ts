@@ -1,6 +1,4 @@
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
-
+import { test, expect } from 'vitest';
 import { Parser as NetscapeBookmarkFile1Parser } from './nbf1Parser.util';
 
 const html0 = `
@@ -106,7 +104,7 @@ test('NetscapeBookmarkFile1Parser 01', () => {
       { group: ['Bookmarks Bar', 'to'], attr: { HREF: 'xcc', ICON: '' }, text: 'p5_nX' },
     ],
   };
-  assert.equal(o, expected);
+  expect(o).toEqual(expected);
 });
 
 test('safari export', () => {
@@ -128,10 +126,8 @@ test('safari export', () => {
 `;
 
   const o = parseAsOb(html0);
-  assert.equal(o, {
+  expect(o).toEqual({
     Favorites: [{ group: ['Favorites'], attr: { HREF: 'abc' }, text: '01 02' }],
     '': [{ group: [], attr: { HREF: 'https://example.com' }, text: 'a' }],
   });
 });
-
-test.run();

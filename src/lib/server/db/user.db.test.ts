@@ -1,27 +1,28 @@
 import { randomUUID } from 'node:crypto';
 import * as fs from 'node:fs/promises';
 
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
+import { it, beforeEach, afterEach, describe, expect } from 'vitest';
 
 import { lite } from './common.db';
 import * as userDb from './user.db';
+import Sqlite from 'better-sqlite3';
 
-{
-  test.before.each((ctx) => {
-    ctx.dbFile = '_.' + randomUUID() + '.sqlite';
-    ctx.db = lite(ctx.dbFile);
+describe('user.db', () => {
+  let dbFile: string | undefined;
+  let db: Sqlite.Database | undefined;
+
+  beforeEach(() => {
+    dbFile = '_.' + randomUUID() + '.sqlite';
+    db = lite(dbFile);
   });
 
-  test.after.each(async (ctx) => {
-    await fs.unlink(ctx.dbFile);
+  afterEach(async () => {
+    if (db && dbFile) await fs.unlink(dbFile);
   });
 
-  test('getUserByUsername', async (ctx) => {
-    const user = await userDb.createUser(ctx.db, { username: 'u1', password: '123 ', attr: 0 });
-    const ret = userDb.getUserByUsername(ctx.db, { username: user.username });
-    assert.equal(ret.username, 'u1');
+  it('getUserByUsername', async () => {
+    const user = await userDb.createUser(db, { username: 'u1', password: '123 ', attr: 0 });
+    const ret = userDb.getUserByUsername(db, { username: user.username });
+    expect(ret.username).toEqual('u1');
   });
-
-  test.run();
-}
+});

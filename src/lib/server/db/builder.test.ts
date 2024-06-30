@@ -1,5 +1,4 @@
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
+import { test, expect } from 'vitest';
 
 import { buildSelect } from './builder';
 
@@ -12,8 +11,8 @@ test('01', () => {
     },
     params: [1],
   });
-  assert.equal(ret.query.split('\n'), ['SELECT id,title', 'FROM bookmark b', 'WHERE b.userId = ?']);
-  assert.equal(ret.params, [1]);
+  expect(ret.query.split('\n')).toEqual(['SELECT id,title', 'FROM bookmark b', 'WHERE b.userId = ?']);
+  expect(ret.params).toEqual([1]);
 });
 
 test('with limit offset', () => {
@@ -27,14 +26,14 @@ test('with limit offset', () => {
     },
     params: [1],
   });
-  assert.equal(ret.query.split('\n'), [
+  expect(ret.query.split('\n')).toEqual([
     'SELECT id,title',
     'FROM bookmark b',
     'WHERE b.userId = ?',
     'LIMIT 20',
     'OFFSET 100',
   ]);
-  assert.equal(ret.params, [1]);
+  expect(ret.params).toEqual([1]);
 });
 
 test('with as', () => {
@@ -59,7 +58,7 @@ test('with as', () => {
     },
     params: ['react'],
   });
-  assert.equal(ret.query.split('\n'), [
+  expect(ret.query.split('\n')).toEqual([
     'WITH original AS (SELECT id,title',
     '  FROM bookmark b',
     '  WHERE b.userId = ?)',
@@ -69,7 +68,7 @@ test('with as', () => {
     'WHERE bookmark_fts match ?',
     'ORDER BY bookmark_fts.rank',
   ]);
-  assert.equal(ret.params, [1, 'react']);
+  expect(ret.params).toEqual([1, 'react']);
 });
 
 test('with as and multiple joins', () => {
@@ -95,7 +94,7 @@ test('with as and multiple joins', () => {
     },
     params: ['react'],
   });
-  assert.equal(ret.query.split('\n'), [
+  expect(ret.query.split('\n')).toEqual([
     'WITH original AS (SELECT id,title',
     '  FROM bookmark b',
     '  JOIN bookmark_tag t0 on (t0.bookmarkId = b.id)',
@@ -107,7 +106,5 @@ test('with as and multiple joins', () => {
     'WHERE bookmark_fts match ?',
     'ORDER BY bookmark_fts.rank',
   ]);
-  assert.equal(ret.params, [1, 2, 3, 'react']);
+  expect(ret.params).toEqual([1, 2, 3, 'react']);
 });
-
-test.run();

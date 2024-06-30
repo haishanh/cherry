@@ -1,5 +1,4 @@
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
+import { test, expect } from 'vitest';
 
 import { Parser as SimpleCsvParser } from './SimpleCsvParser.util';
 
@@ -36,7 +35,6 @@ Folder/Nested folder   ,    http://yahoo.com,Yahoo,   Another search engine,"sea
       '1629980125',
     ],
   ];
-  assert.equal(rows, expected);
+  expect(rows).toEqual(expected);
 });
 
-test.run();
