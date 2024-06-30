@@ -47,7 +47,7 @@ export function getBookmarks(
   const select = counting ? 'count(b.id) as count' : BOOKMARK_PROPS1;
   const from = 'bookmark b';
   const where = ['b.userId = ?'];
-  const join = [];
+  const join: string[] = [];
 
   const tokens: Parameters<typeof buildSelect>[0]['tokens'] = { select, from, where, join };
   const params: Parameters<typeof buildSelect>[0]['params'] = [userId];

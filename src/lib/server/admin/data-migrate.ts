@@ -2,8 +2,10 @@ import type Sqlite from 'better-sqlite3';
 
 import { lite } from '$lib/server/db/common.db';
 
+type CodeException = { code: string };
+
 function table(from: Sqlite.Database, to: Sqlite.Database, name: string, columnsToIgnore: string[] = []) {
-  const stmt = from.prepare(`SELECT * FROM ${name}`);
+  const stmt = from.prepare<unknown[], Record<string, unknown>>(`SELECT * FROM ${name}`);
   let insertStmt: Sqlite.Statement;
   let columns: string[];
   const run = to.transaction(() => {
@@ -19,11 +21,11 @@ function table(from: Sqlite.Database, to: Sqlite.Database, name: string, columns
       try {
         insertStmt.run(params);
       } catch (e) {
-        if (e.code === 'SQLITE_CONSTRAINT_UNIQUE' && name === 'bookmark') {
+        if ((e as CodeException).code === 'SQLITE_CONSTRAINT_UNIQUE' && name === 'bookmark') {
           // ignore
           // some conflicts are expected as we added more constraints
         } else {
-          console.log(e, e.code);
+          console.log(e, (e as CodeException).code);
           console.log({ statement: insertStmt, params });
           throw e;
         }

@@ -13,7 +13,7 @@ export function parsePocketExportHtml(html: string): PocketBookmarkItem[] {
   for (const item of dom.children) {
     if (item.type === 'tag' && item.name === 'html') {
       const nodes = htmlparser2.DomUtils.findAll((elem) => {
-        return elem.type === 'tag' && elem.name === 'a' && elem.parent.type === 'tag' && elem.parent.name === 'li';
+        return elem.type === 'tag' && elem.name === 'a' && elem.parent?.type === 'tag' && elem.parent?.name === 'li';
       }, item.children);
 
       for (const node of nodes) {

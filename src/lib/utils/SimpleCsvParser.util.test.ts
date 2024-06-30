@@ -15,10 +15,10 @@ Folder/Nested folder   ,    http://yahoo.com,Yahoo,   Another search engine,"sea
 
 `;
 
-  const rows = [];
-  new SimpleCsvParser().parse(input, (row) => {
+  const rows: string[][] = [];
+  new SimpleCsvParser(input, (row) => {
     rows.push(row);
-  });
+  }).parse();
 
   const expected = [
     ['folder', 'url', '  title  ', 'description', 'tags', 'created'],
@@ -37,4 +37,3 @@ Folder/Nested folder   ,    http://yahoo.com,Yahoo,   Another search engine,"sea
   ];
   expect(rows).toEqual(expected);
 });
-

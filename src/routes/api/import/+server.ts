@@ -24,7 +24,7 @@ function doImport(opts: { items: importUtil.PocketBookmarkItem[]; userId: number
 
   const tagIdLookup = new Map<string, number>();
 
-  const tagItems = [];
+  const tagItems: { name: string }[] = [];
   for (const item of items) {
     item.tags.forEach((t) => {
       if (!tagIdLookup.has(t.name)) {

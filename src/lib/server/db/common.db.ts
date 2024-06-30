@@ -104,6 +104,6 @@ export class DataError extends Error {
   }
 }
 
-export function isConflict(e: Error) {
+export function isConflict(e: unknown) {
   return e instanceof Sqlite.SqliteError && e.code === 'SQLITE_CONSTRAINT_UNIQUE';
 }

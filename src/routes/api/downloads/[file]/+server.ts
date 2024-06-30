@@ -6,7 +6,7 @@ import { Readable } from 'node:stream';
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { DATA_DIR } from '$lib/env';
-import { HttpStatus } from '$lib/server/api.error';
+import { ApiError, HttpStatus } from '$lib/server/api.error';
 import { ensureUser, forbidden, notFound } from '$lib/server/handlers/helper';
 import { wrap } from '$lib/server/handlers/wrap';
 
@@ -14,6 +14,10 @@ export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
     const user = ensureUser(event);
     const file = event.params.file;
+    if (!file) {
+      throw new ApiError(HttpStatus.BAD_REQUEST);
+    }
+
     // [0] - type of the file
     // [1] - user id, owner of the file
     const parts = file.split('-');
@@ -27,9 +31,9 @@ export const GET: RequestHandler = async (event) => {
     try {
       await access(filepath, constants.R_OK);
     } catch (e) {
-      if (e.code === 'ENOENT') {
+      if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
         return notFound();
-      } else if (e.code === 'EACCES') {
+      } else if ((e as NodeJS.ErrnoException).code === 'EACCES') {
         return forbidden();
       }
       throw e;
@@ -37,6 +41,7 @@ export const GET: RequestHandler = async (event) => {
 
     const rs = fs.createReadStream(filepath);
     const readable = Readable.toWeb(rs);
+    // @ts-ignore
     return new Response(readable, {
       status: HttpStatus.OK,
       headers: {

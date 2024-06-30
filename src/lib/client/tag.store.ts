@@ -44,6 +44,7 @@ export function updateTagClientSide(t: Tag) {
   tagList.update((tags) => {
     for (const tag of tags) {
       if (tag.id === t.id) {
+        // @ts-ignore
         Object.keys(t).forEach((k) => (tag[k] = t[k]));
         break;
       }

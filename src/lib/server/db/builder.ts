@@ -19,7 +19,7 @@ export function buildSelect({ tokens, params }: { tokens: Tokens; params: Params
   const level = opts?.level || 0;
   const space = makeSpace(level * 2);
 
-  const q = [
+  const q: string = [
     with0
       ? ((sub = buildSelect(with0.as, { level: level + 1 })),
         (p = [...sub.params, ...p]),

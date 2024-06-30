@@ -6,7 +6,7 @@ import { logger } from '../logger';
 
 type Event = Parameters<RequestHandler>[0];
 
-export async function wrap(event: Event, fn: (e: Event) => any, fallbackHandler?: (e: Error) => Response) {
+export async function wrap(event: Event, fn: (e: Event) => any, fallbackHandler?: (e: unknown) => Response) {
   try {
     const t = fn(event);
     let r = t;

@@ -15,11 +15,11 @@ export const GET: RequestHandler = async (event) => {
     async (event) => {
       logger.debug('callback');
       const sp = event.url.searchParams;
-      const code = sp.get('code');
+      const code = sp.get('code')!;
       const stateFromProvider = sp.get('state');
 
       const reqHeaders = event.request.headers;
-      const cookieHeader = reqHeaders.get('cookie');
+      const cookieHeader = reqHeaders.get('cookie')!;
       logger.debug('cookieHeader %s', cookieHeader);
       const cookies = cookieUtil.parseCookie(cookieHeader);
       const stateFromUs = cookies[COOKIE_KEY_OAUTH_STATE];

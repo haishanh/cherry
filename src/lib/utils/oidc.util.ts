@@ -27,7 +27,7 @@ export function authCodeUrl() {
   return { authUrl, state };
 }
 
-export async function exchangeToken({ code }) {
+export async function exchangeToken({ code }: { code: string }) {
   const q = new URLSearchParams({
     code,
     grant_type: 'authorization_code',

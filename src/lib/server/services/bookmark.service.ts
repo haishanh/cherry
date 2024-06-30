@@ -27,7 +27,7 @@ const TRACKING_QUERYS = ['utm_campaign', 'utm_medium', 'utm_source', 'utm_conten
 function fixUrl(url: string, feature = 0) {
   const url0 = url || '';
   if ((feature & UserFeatureFlag.FF_STRIP_TRACKING_PARAMETERS) > 0) {
-    let u: URL;
+    let u: URL | undefined;
     try {
       u = new URL(url0);
     } catch (e) {
@@ -106,7 +106,7 @@ export const bookmark = {
     data.items = tagDb.hydrateBookmarks(db, bookmarks);
 
     // let countRet: { count: number }
-    let count: number;
+    let count: number | undefined;
     if (('text' in input && input.text) || 'tagIds' in input || 'groupId' in input) {
       // countRet = bookmarkDb.getBookmarks(db, { ...input, counting: false }) as { count: number };
     } else {
@@ -144,12 +144,14 @@ export const bookmark = {
     const { tags, id, user, group, ...updateProps } = opts;
     const bookmarkId = id;
 
+    type K = keyof typeof updateProps;
+
     const params: any[] = [];
 
     for (const field in updateProps) {
-      if (!updateProps[field]) continue;
+      if (!updateProps[field as K]) continue;
       updates.push(`${field}=?`);
-      params.push(updateProps[field]);
+      params.push(updateProps[field as K]);
     }
     if (group && group.id) {
       updates.push('groupId=?');

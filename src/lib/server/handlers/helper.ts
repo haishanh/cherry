@@ -30,20 +30,24 @@ export function forbidden() {
   throw new Response(undefined, { status: HttpStatus.FORBIDDEN });
 }
 
+function unauthorizedError() {
+  return new Response(undefined, { status: HttpStatus.UNAUTHORIZED });
+}
+
 export function unauthorized() {
-  throw new Response(undefined, { status: HttpStatus.UNAUTHORIZED });
+  throw unauthorizedError();
 }
 
 export function ensureUser(event: Event): { userId: number; feature: number } {
   const user = event.locals?.user;
-  if (!user || !user.userId) unauthorized();
+  if (!user || !user.userId) throw unauthorizedError();
   return user;
 }
 
 export function ensureAdminUser(event: Event) {
   const user = event.locals?.user;
   const id = user?.id || user?.userId;
-  if (!id) unauthorized();
+  if (!id) throw unauthorizedError();
   const userSrv = getUserService();
   const maybeAdminUser = userSrv.getUserByIdWithHydratedFeature({ id });
   if (maybeAdminUser.attr.admin !== true) unauthorized();

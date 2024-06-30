@@ -39,9 +39,9 @@ type OrderBy = { col: ColumnItem; dir?: OrderByDir } | string;
 export class SelectFrom {
   private tokens: {
     from?: TableItem;
-    select?: ColumnItem[];
+    select: ColumnItem[];
     join?: { col0: ColumnItem; col1: ColumnItem }[];
-    where?: WhereExpr[];
+    where: WhereExpr[];
     orderBy?: OrderBy[];
     limit?: number;
     offset?: number;
@@ -101,16 +101,18 @@ export class SelectFrom {
   }
   public build() {
     const tokens = this.tokens;
-    let joins: string[];
+    let joins: string[] = [];
 
     // table alias lookup
     const tableLookup = new Map<TableItem, string>();
+    assert(tokens.from);
     tableLookup.set(tokens.from, 't0');
     const from = `${tokens.from.name} t0`;
 
     if (tokens.join) {
       let count = 1;
       joins = tokens.join.map(({ col0, col1 }) => {
+        assert(col1.table);
         // join bookmark_fts fts on fts.rowid = b.id
         // TODO check item.col0.table === tokens.from in dev?
         let t1 = tableLookup.get(col1.table);
@@ -122,7 +124,7 @@ export class SelectFrom {
       });
     }
 
-    const params = [];
+    const params: unknown[] = [];
     const where = tokens.where
       .map(({ type, col, val: placeholder }) => {
         switch (type) {
@@ -153,7 +155,7 @@ export class SelectFrom {
 
     const source = [
       `SELECT ${select} FROM ${from}`,
-      joins ? joins.map((j) => `JOIN ${j}`).join(' ') : false,
+      joins && joins.length > 0 ? joins.map((j) => `JOIN ${j}`).join(' ') : false,
       where ? `WHERE ${where}` : false,
       orderBy ? `ORDER BY ${orderBy}` : false,
       tokens.limit ? `LIMIT ${tokens.limit}` : false,
@@ -211,12 +213,12 @@ class InsertInto {
       this.tokens.columns.every((col) => col.col.table === this.tokens.table),
       'One of the column does not belong to the table',
     );
-    const fields = [];
+    const fields: string[] = [];
     this.tokens.columns.forEach((col) => {
       fields.push(col.col.name);
     });
-    const values = [];
-    const params = [];
+    const values: string[] = [];
+    const params: unknown[] = [];
     this.tokens.columns.forEach((col) => {
       if (col.val === ValueToken.Now) {
         values.push("strftime('%s','now')");
@@ -243,7 +245,7 @@ class UpdateTable {
       col: ColumnItem;
       val: unknown;
     }>;
-    where?: WhereExpr[];
+    where: WhereExpr[];
   } = {
     columns: [],
     where: [],
@@ -273,8 +275,8 @@ class UpdateTable {
       this.tokens.columns.every((col) => col.col.table === this.tokens.table),
       'One of the column does not belong to the table',
     );
-    const updates = [];
-    const params = [];
+    const updates: string[] = [];
+    const params: unknown[] = [];
     this.tokens.columns.forEach((col) => {
       if (col.val === ValueToken.Now) {
         updates.push(`${col.col.name} = strftime('%s','now')`);
@@ -323,7 +325,7 @@ export const update_table = (t: TableItem) => {
 class DeleteFrom {
   private tokens: {
     table?: TableItem;
-    where?: WhereExpr[];
+    where: WhereExpr[];
   } = {
     where: [],
   };
@@ -344,7 +346,7 @@ class DeleteFrom {
   build() {
     assert(this.tokens.table, 'Must supply table');
     assert(this.tokens.where, 'Must supply where');
-    const params = [];
+    const params: unknown[] = [];
     const where = this.tokens.where
       .map(({ type, col, val }) => {
         switch (type) {

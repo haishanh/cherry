@@ -13,6 +13,13 @@ export class Parser {
   private idx: number;
   private visitor: VisitorFn;
 
+  constructor(input: string, visitor: VisitorFn) {
+    this.len = input.length;
+    this.input = input;
+    this.idx = 0;
+    this.visitor = visitor;
+  }
+
   isNewLine() {
     return this.input[this.idx] === NL || (this.input[this.idx] === CR && this.input[this.idx + 1] === NL);
   }
@@ -84,12 +91,7 @@ export class Parser {
     if (header.length !== 0) this.visitor(header);
   }
 
-  parse(input: string, visitor: VisitorFn) {
-    this.len = input.length;
-    this.input = input;
-    this.idx = 0;
-    this.visitor = visitor;
-
+  parse() {
     for (; this.idx < this.len; ) {
       this.parseHeader();
     }

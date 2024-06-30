@@ -21,8 +21,8 @@ describe('user.db', () => {
   });
 
   it('getUserByUsername', async () => {
-    const user = await userDb.createUser(db, { username: 'u1', password: '123 ', attr: 0 });
-    const ret = userDb.getUserByUsername(db, { username: user.username });
+    const user = await userDb.createUser(db!, { username: 'u1', password: '123 ', attr: 0 });
+    const ret = userDb.getUserByUsername(db!, { username: user.username });
     expect(ret.username).toEqual('u1');
   });
 });

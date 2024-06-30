@@ -46,7 +46,7 @@ export class ExportService {
     const pageSize = 10;
     let len = pageSize;
 
-    let after: { updatedAt: number; id: number };
+    let after: { updatedAt: number; id: number } | undefined;
 
     const stringifier = stringify({
       columns: ['created', 'group', 'tags', 'url', 'title', 'description'],
@@ -61,9 +61,9 @@ export class ExportService {
       // test writing to the file
       await writeFile(filepath, ' ', 'utf8');
     } catch (e) {
-      if (e.code === 'ENOENT') {
+      if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
         return notFound();
-      } else if (e.code === 'EACCES') {
+      } else if ((e as NodeJS.ErrnoException).code === 'EACCES') {
         return forbidden();
       }
       throw e;
@@ -81,11 +81,11 @@ export class ExportService {
       len = bookmarks.length;
       bookmarkCount += len;
       const last = bookmarks[len - 1];
-      after = { updatedAt: last.updatedAt, id: last.id };
+      after = { updatedAt: last.updatedAt!, id: last.id };
       await sleep(0);
       bookmarks.forEach((b) => {
-        const group = typeof b.groupId === 'number' ? groupMap.get(b.groupId).name : undefined;
-        const tags = Array.isArray(b.tagIds) ? b.tagIds.map((id) => tagMap.get(id).name).join(',') : undefined;
+        const group = typeof b.groupId === 'number' ? groupMap.get(b.groupId)?.name : undefined;
+        const tags = Array.isArray(b.tagIds) ? b.tagIds.map((id) => tagMap.get(id)!.name).join(',') : undefined;
         stringifier.write([b.createdAt, group, tags, b.url, b.title, b.desc]);
       });
     }

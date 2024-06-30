@@ -166,7 +166,7 @@ function doImportCsv(opts: { cnt: string; userId: number }) {
     tags?: { name: string }[];
     createdAt?: number;
   }[] = [];
-  new SimpleCsvParser().parse(cnt, (row) => {
+  new SimpleCsvParser(cnt, (row) => {
     const items = row.map((item) => item.trim());
     if (!header) {
       header = items;
@@ -190,17 +190,17 @@ function doImportCsv(opts: { cnt: string; userId: number }) {
     const tags0 = items[columnToIdx['tags']];
     const created0 = items[columnToIdx['created']];
 
-    let folder: { name: string };
+    let folder: { name: string } | undefined;
     if (folder0) {
       if (!seenGroupName.has(folder0)) {
         const g = { name: folder0 };
         seenGroupName.set(folder0, g);
         groups.push(g);
       }
-      folder = seenGroupName.get(folder0);
+      folder = seenGroupName.get(folder0)!;
     }
 
-    let tags1: { name: string }[];
+    let tags1: { name: string }[] = [];
     if (tags0) {
       tags1 = tags0.split(',').map((x: string) => {
         const name = x.trim();
@@ -209,7 +209,7 @@ function doImportCsv(opts: { cnt: string; userId: number }) {
           seenTagName.set(name, t);
           tags.push(t);
         }
-        return seenTagName.get(name);
+        return seenTagName.get(name)!;
       });
     }
 
@@ -224,7 +224,7 @@ function doImportCsv(opts: { cnt: string; userId: number }) {
       tags: tags1,
       createdAt,
     });
-  });
+  }).parse();
 
   const { result: groupResults } = groupSvc.batchUpsertGroup({ userId, items: groups });
 

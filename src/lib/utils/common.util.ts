@@ -25,10 +25,14 @@ export function ss(o: any) {
   }
 }
 
-export function sortAlphabetically<T>(prop: string) {
+function lowerCase(a: unknown) {
+  return typeof a === 'string' ? a.toLowerCase() : '';
+}
+
+export function sortAlphabetically<T extends Record<string, unknown>>(prop: keyof T) {
   return (a: T, b: T) => {
-    const f0 = (a[prop] || '').toLowerCase();
-    const f1 = (b[prop] || '').toLowerCase();
+    const f0 = lowerCase(a[prop]);
+    const f1 = lowerCase(b[prop]);
     if (f0 < f1) {
       return -1;
     } else if (f0 > f1) {

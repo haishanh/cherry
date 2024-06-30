@@ -77,7 +77,7 @@
     const id = element.getAttribute('data-id');
     if (id) {
       const item = findToastById(id);
-      setTimeoutOfToast(id, item.duration);
+      if (item) setTimeoutOfToast(id, item.duration);
     }
   }
 </script>
