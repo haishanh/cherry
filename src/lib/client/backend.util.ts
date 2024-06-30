@@ -3,11 +3,11 @@ export type Backend = {
   pat: string;
 };
 
-export function coalesceBase(b: Backend | null) {
+export function coalesceBase(b?: Backend) {
   return b && b.apiBase ? b.apiBase : '';
 }
 
-export function genAuthHeader(b: Backend | null) {
+export function genAuthHeader(b?: Backend) {
   return {
     ...(b && b.pat ? { Authorization: `Bearer ${b.pat}` } : undefined),
   };

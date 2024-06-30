@@ -30,7 +30,7 @@
     for (let i = 0; i < len; i++) {
       const cp = name.codePointAt(i);
       // [33, 126] -> printabel ascii chars (exclude "space", codepoint 32)
-      if (cp >= 33 && cp <= 126) return String.fromCodePoint(cp).toLowerCase();
+      if (cp && cp >= 33 && cp <= 126) return String.fromCodePoint(cp).toLowerCase();
     }
     return '-';
   }

@@ -9,11 +9,11 @@
   export let name = '';
   export let value = '';
   export let placeholder = '';
-  export let type: string | null = null;
+  export let type = '';
 
   export let error = '';
 
-  function handleInputOnInput(e: InputEvent) {
+  function handleInputOnInput(e: Event) {
     const target = e.target as HTMLInputElement;
     value = target.value;
     error = '';

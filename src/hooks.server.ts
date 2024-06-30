@@ -55,15 +55,15 @@ export const handle: Handle = async function handle({ event, resolve }) {
     return response;
   }
 
-  let token: string;
+  let token: string | undefined;
   const authHeader = request.headers.get('authorization');
   if (authHeader) token = authHeader.replace(/[bB]earer\s/, '');
 
   const sp = url.searchParams;
-  if (!token && sp.get('pat')) token = sp.get('pat');
+  if (!token && sp.get('pat')) token = sp.get('pat')!;
 
   if (!token) {
-    const cookieHeader = request.headers.get('cookie');
+    const cookieHeader = request.headers.get('cookie') || '';
     const cookies = cookieUtil.parseCookie(cookieHeader);
     token = cookies.token;
   }

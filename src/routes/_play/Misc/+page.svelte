@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
 
   onMount(() => {
     // var d = document;
     // prettier-ignore
-    function create(d,a) {
+    function create(d: Document,a: number) {
       var e = d.createElement('div');
       e.innerText = a?'Cherry Picked!':'Something went wrong!';
       var c = e.style;

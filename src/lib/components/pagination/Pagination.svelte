@@ -10,7 +10,7 @@
   export let pageUriTemplate = '';
   export let maybeHasMore: boolean;
 
-  type PaginationItem = { page: number; link: string } | { gap: boolean };
+  type PaginationItem = { page: number } | { gap: boolean };
 
   let items: PaginationItem[];
   $: items = makeNavItems(total, current);
@@ -26,8 +26,8 @@
   //          ^
   // 1 .. 95 96 97 98 99 100
   function makeNavItems(total: number, current: number) {
-    let items = [];
-    if (total <= 0 || typeof total !== 'number') return items;
+    if (total <= 0 || typeof total !== 'number') return [];
+    let items: PaginationItem[] = [];
     const maxNumberOfItems = 7;
     if (total <= maxNumberOfItems) {
       for (let i = 1; i <= total; i++) {

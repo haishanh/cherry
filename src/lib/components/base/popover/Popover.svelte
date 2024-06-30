@@ -13,17 +13,14 @@
 
   import { createEventDispatcher } from 'svelte';
 
-  import { popover } from '$lib/components/actions/popover.action';
+  import { popover, type PopoverPlacement } from '$lib/components/actions/popover.action';
 
   import Portal from '../misc/Portal.svelte';
   const dispatch = createEventDispatcher();
 
   let style = 'top:0;left:0;';
 
-  function handlePopoverPositionChange(opts: {
-    position: { top: number; left: number };
-    placement: 'north' | 'south';
-  }) {
+  function handlePopoverPositionChange(opts: { position: { top: number; left: number }; placement: PopoverPlacement }) {
     const { top, left } = opts.position;
     style = `top:${top}px;left:${left}px`;
     dispatch(EVENT.position, opts);

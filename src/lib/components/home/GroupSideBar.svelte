@@ -51,6 +51,7 @@
   function loadLastViewdGroupIds() {
     try {
       const v = localStorage.getItem(LAST_VIEWED_GROUPS_STORAGE_KEY);
+      if (!v) return [];
       const items = JSON.parse(v);
       return items || [];
     } catch (e) {
@@ -71,13 +72,13 @@
   }
 
   type GroupLinkItem = { href: string; label: string; groupId: number | null };
-  const fixedLinks = [
+  const fixedLinks: GroupLinkItem[] = [
     { href: '/', label: 'All', groupId: null },
     // { href: '/?group=0', label: 'Ungrouped', groupId: 0 },
   ];
 
   // let links = fixedLinks;
-  let lastViewedLinks: typeof fixedLinks = [];
+  let lastViewedLinks: GroupLinkItem[] = [];
 
   // $: {
   //   console.log(links.map((n) => n.label).join(','));

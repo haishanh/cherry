@@ -6,12 +6,12 @@
   const dispatch = createEventDispatcher();
 
   export let autoSelect = false;
-  export let filtered = [];
+  export let filtered: { name: string }[] = [];
 
   $: {
     const highlighted = filtered[highlightedIdx];
 
-    let idx: number;
+    let idx = -1;
     if (highlighted) idx = filtered.findIndex((item) => item.name === highlighted.name);
     if (highlighted && idx >= 0) {
       if (highlightedIdx !== idx) highlightedIdx = idx;

@@ -178,7 +178,7 @@
     }
   }
   function activatePrevBookmark() {
-    if (activeIdx > 0) activeIdx = activeIdx - 1;
+    if (typeof activeIdx === 'number' && activeIdx > 0) activeIdx = activeIdx - 1;
   }
   async function handleDeleteMulti() {
     const ids = retrieveSelectedBookmarks();
@@ -188,6 +188,7 @@
 
   function handleKeydown(event: KeyboardEvent) {
     const active = document.activeElement;
+    if (!active) return;
     const notSimple = event.metaKey || event.ctrlKey || event.shiftKey || event.isComposing;
     if (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA') return;
     if (document.querySelector('[data-cherry-modal-overlay]')) return;

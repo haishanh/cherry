@@ -9,11 +9,9 @@
   let tags: TagType[] = hydrateTags(tagIds);
 
   function hydrateTags(ids: number[]) {
-    if (ids && ids.length > 0) {
-      if (typeof ids[0] === 'number') {
-        const byId = $tagMapById;
-        return ids.map((id) => byId.get(id));
-      }
+    if (ids && ids.length > 0 && typeof ids[0] === 'number') {
+      const byId = $tagMapById;
+      return ids.map((id) => byId.get(id)!);
     }
     return [];
   }

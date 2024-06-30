@@ -32,26 +32,28 @@
   };
 
   export const close = () => {
-    group = null;
+    group = { name: '' };
     modal.close();
   };
   async function onSubmit() {
-    if (!group.name) return;
+    if (!group?.name) return;
 
     try {
-      if ('id' in group) {
-        await updateGroup(group);
-        addToast({ description: 'Group renamed', status: 'success' });
-      } else {
-        await createGroup(group);
-        addToast({ description: 'Group created', status: 'success' });
+      if (group) {
+        if ('id' in group) {
+          await updateGroup(group);
+          addToast({ description: 'Group renamed', status: 'success' });
+        } else {
+          await createGroup(group);
+          addToast({ description: 'Group created', status: 'success' });
+        }
       }
       close();
     } catch (err) {
       console.log('update or create group error', err);
       if (err instanceof RequestError) {
         const response = err.response;
-        if (response.status === 409) {
+        if (response?.status === 409) {
           addToast({ description: 'Group with this name already exists', status: 'warning' });
           return;
         }

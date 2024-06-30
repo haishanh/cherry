@@ -57,17 +57,18 @@ const html0 = `
 
 function parseAsOb(html: string) {
   const map = new Map();
-  new NetscapeBookmarkFile1Parser().parse(html, (b) => {
+  new NetscapeBookmarkFile1Parser(html, (b) => {
     if (map.has(b.group)) {
       map.get(b.group).push(b);
     } else {
       map.set(b.group, [b]);
     }
-  });
+  }).parse();
 
   const o = {};
   for (const e of map.entries()) {
     const key = e[0].join(':');
+    // @ts-ignore
     o[key] = e[1];
   }
   return o;

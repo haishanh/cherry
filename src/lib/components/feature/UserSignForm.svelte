@@ -24,10 +24,7 @@
     username: [commonRule.email],
     password: [passwordRule],
   };
-  let error = {
-    username: '',
-    password: '',
-  };
+  let error: Partial<{ username: string; password: string }> = {};
 
   let username = '';
   let password = '';
@@ -40,17 +37,23 @@
   }
 
   function onSubmit() {
-    const result = validate(rule, { username, password });
+    const valueBeforeValidation = { username, password };
+    const result = validate(rule, valueBeforeValidation);
     if (result.error) {
       error = result.error;
       return;
     }
 
+    const toSubmit = {
+      ...valueBeforeValidation,
+      ...result.value,
+    };
+
     let inflight: ReturnType<typeof join>;
     if (kind === 'signup') {
-      inflight = join(result.value);
+      inflight = join(toSubmit);
     } else {
-      inflight = signin(result.value);
+      inflight = signin(toSubmit);
     }
     inflight.then(onSuccessSignin, (err) => {
       if (err instanceof RequestError) {
@@ -79,8 +82,8 @@
 </script>
 
 <form on:submit|preventDefault={onSubmit}>
-  <Field name="Email" type="email" placeholder="hi@example.com" bind:value={username} error={error.username} />
-  <Field name="Password" type="password" placeholder="" bind:value={password} error={error.password} />
+  <Field name="Email" type="email" placeholder="hi@example.com" bind:value={username} error={error.username || ''} />
+  <Field name="Password" type="password" placeholder="" bind:value={password} error={error.password || ''} />
   <div class="action">
     <Button type="submit">{kind === 'signup' ? 'Join' : 'Sign in'}</Button>
   </div>

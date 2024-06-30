@@ -17,11 +17,14 @@ type ValidationRuleItem = {
 };
 
 // it either returns { value: {} } or { error: {} }
-export function validate<V>(rule: { [k in keyof V]: ValidationRuleItem[] }, value: V) {
-  const keys = Object.keys(value);
-  const validatedValue: V = {} as V;
+export function validate<V extends { [key: string]: string }>(
+  rule: { [k in keyof V]: ValidationRuleItem[] },
+  value: V,
+) {
+  const keys: (keyof V)[] = Object.keys(value);
+  const validatedValue: Partial<{ [k in keyof V]: string }> = {};
 
-  const error: { [k in keyof V]: string } = {} as { [k in keyof V]: string };
+  const error: Partial<{ [k in keyof V]: string }> = {};
   for (const k of keys) error[k] = '';
 
   let valid = true;

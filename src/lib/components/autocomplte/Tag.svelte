@@ -4,10 +4,10 @@
 
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
-  export let color: string | number = 1;
+  export let color: keyof typeof colorMap = '1';
   export let hasClose = true;
 
-  export let tag: { name: string } = null;
+  export let tag: { name: string };
 
   const dispatch = createEventDispatcher();
 
@@ -18,8 +18,6 @@
 
   const colorMap = {
     '0': 'color:#14551B;background:#ADF29B;',
-    // color: var(--accent);
-    // background-color: hsla(94deg, 99%, 33%, 0.2);
     '1': 'color:var(--accent);background-color:hsla(94deg, 99%, 33%, 0.2)',
     '2': 'color:#6C0E58;background:#FFAAD3;',
     '3': 'color:var(--color-text);background:hsl(0deg 0% 97%);border-color:hsl(0deg 0% 80%);',

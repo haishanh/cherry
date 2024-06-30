@@ -17,7 +17,7 @@
     pathname = location.pathname;
   });
 
-  const expanded = {
+  const expanded: Record<string, boolean> = {
     // if user lands on a page like "/settings/admin/users", then we should expand nodes of "/settings/admin"
     '/settings/admin': pathname.startsWith('/settings/admin'),
   };

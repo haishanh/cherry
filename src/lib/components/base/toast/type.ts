@@ -12,5 +12,5 @@ export type ToastItemInput = {
 
 export type ToastItem = ToastItemInput & {
   id: string;
-  duration?: number;
+  duration: number;
 };

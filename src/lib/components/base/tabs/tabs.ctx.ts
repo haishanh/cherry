@@ -47,6 +47,7 @@ export const actions = {
   selectTab: (ctx: ContextType, tab0: HTMLButtonElement) => {
     tab0.focus();
     const id = tab0.getAttribute('aria-controls');
+    if (!id) return;
     const store = ctx.store;
     store.update((s) => {
       s.activePanelId = id;

@@ -25,7 +25,7 @@ export const groupMapById = derived<typeof groupList, Map<number, Group>>(groupL
 export let fetchPromise: Promise<any>;
 let initialFetchPromise: Promise<any>;
 
-async function fetchGroups0(opts: { server: Backend }) {
+async function fetchGroups0(opts: { server?: Backend }) {
   const base = coalesceBase(opts?.server);
   const ret = await request({
     url: base + '/api/groups',

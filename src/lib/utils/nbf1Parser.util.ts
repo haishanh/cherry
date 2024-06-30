@@ -10,12 +10,19 @@ export class Parser {
   private idx: number;
   private visitor: VisitorFn;
 
+  constructor(input: string, visitor: VisitorFn) {
+    this.len = input.length;
+    this.input = input;
+    this.idx = 0;
+    this.visitor = visitor;
+  }
+
   // <abc>text</abc>
   //     ^
   // expect cursor here or before
   parseTagTextContent() {
-    let open: number;
-    let close: number;
+    let open: number | undefined;
+    let close: number | undefined;
 
     for (let i = this.idx; i < this.len; i++) {
       this.idx = i;
@@ -253,12 +260,7 @@ export class Parser {
     return cnt.toLowerCase() === '<!doctype netscape-bookmark-file-1>';
   }
 
-  parse(input: string, visitor: VisitorFn) {
-    this.len = input.length;
-    this.input = input;
-    this.idx = 0;
-    this.visitor = visitor;
-
+  parse() {
     if (!this.checkDoctype()) {
       throw new Error('E001');
     }

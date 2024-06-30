@@ -44,7 +44,7 @@ export const POST: RequestHandler = async (event) => {
 function doImport(opts: { html: string; userId: number }) {
   const { html, userId } = opts;
   const map = new Map();
-  new NetscapeBookmarkFile1Parser().parse(html, (b) => {
+  new NetscapeBookmarkFile1Parser(html, (b) => {
     // XXX we probably should use utilize ADD_DATE and LAST_MODIFIED in b.attr?
     const url: string = b.attr?.HREF ?? '';
     if (!url.startsWith('https://') && !url.startsWith('http://')) return;
@@ -55,7 +55,7 @@ function doImport(opts: { html: string; userId: number }) {
     } else {
       map.set(b.group, [b0]);
     }
-  });
+  }).parse();
 
   const groupItems = [];
   const groupKeys = [];
