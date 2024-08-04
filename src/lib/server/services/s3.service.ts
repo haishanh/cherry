@@ -1,8 +1,8 @@
 import { PutObjectCommand, type PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 
 export class S3Service {
-  private s3: S3Client;
-  private bucket: string;
+  public readonly s3: S3Client;
+  public readonly bucket: string;
 
   constructor(opts: {
     s3Endpoint: string;

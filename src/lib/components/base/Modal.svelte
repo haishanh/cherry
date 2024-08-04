@@ -172,15 +172,15 @@
     max-height: 100%;
     display: flex;
     flex-direction: column;
+    background-color: var(--bg-card);
+    border: 1px solid var(--bo);
+    border-radius: 10px;
     @media (prefers-color-scheme: dark) {
       --bo: hsl(0deg 0% 29%);
     }
     @media (prefers-color-scheme: light) {
       --bo: transparent;
     }
-    background-color: var(--bg-card);
-    border: 1px solid var(--bo);
-    border-radius: 10px;
   }
   .action {
     position: absolute;

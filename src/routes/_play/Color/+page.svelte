@@ -37,13 +37,13 @@
     background-color: hsl(35.48deg 94.9% 61.57% / 30%);
   }
   .chip.yellow {
+    background-color: hsl(49.65deg 100% 50% / 81%);
     @media (prefers-color-scheme: light) {
       color: hsl(55.76deg 78.17% 26.98%);
     }
     @media (prefers-color-scheme: dark) {
       color: hsl(55.76deg 78.01% 84.18%);
     }
-    background-color: hsl(49.65deg 100% 50% / 81%);
   }
 
   @media (prefers-color-scheme: light) {

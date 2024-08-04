@@ -31,17 +31,6 @@
     --fg: var(--color-text);
     --bg: var(--bg-btn);
     --shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
-    @media (prefers-color-scheme: dark) {
-      --bo-lightness: 30%;
-      --bo-lightness-hover: 70%;
-      --bg-hover: hsl(0deg 0% 19%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bo-lightness: 80%;
-      --bo-lightness-hover: 15%;
-      --bg-hover: hsl(0deg 0% 90%);
-    }
-
     position: relative;
     appearance: none;
     outline: none;
@@ -57,6 +46,16 @@
     border: 1px solid var(--color-btn-bo);
     border-radius: 100px;
     border-color: hsl(0deg 0% var(--bo-lightness));
+    @media (prefers-color-scheme: dark) {
+      --bo-lightness: 30%;
+      --bo-lightness-hover: 70%;
+      --bg-hover: hsl(0deg 0% 19%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bo-lightness: 80%;
+      --bo-lightness-hover: 15%;
+      --bg-hover: hsl(0deg 0% 90%);
+    }
     &:hover {
       border-color: hsl(0deg 0% var(--bo-lightness-hover));
       background-color: var(--bg-hover);

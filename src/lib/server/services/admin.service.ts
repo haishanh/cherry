@@ -1,11 +1,10 @@
-import { createReadStream } from 'node:fs';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-
+import { Upload } from '@aws-sdk/lib-storage';
 import type { Database } from 'better-sqlite3';
 import { format } from 'date-fns';
 import * as tar from 'tar/create';
-
+import { Duplex } from 'node:stream';
 import { BACKUP_S3_BUCKET, BACKUP_S3_PREFIX, DATA_DIR } from '$lib/env';
 import * as bookmarkDb from '$lib/server/db/bookmark.db';
 import * as groupDb from '$lib/server/db/group.db';
@@ -56,15 +55,36 @@ export class AdminService {
     const tarballFilepath = filepath + '.tar.gz';
     try {
       const result = await this.db.backup(filepath);
-      await tar.create({ gzip: true, file: tarballFilepath }, [filepath]);
+      const tarReadStream = tar.create({ gzip: true }, [filepath]);
+      const dup = Duplex.from(tarReadStream);
       const prefix = BACKUP_S3_PREFIX.replace(/\/$/, '');
       const Key = `${prefix}/${yearmonth}/${path.basename(tarballFilepath)}`;
-      const Body = createReadStream(tarballFilepath);
-      await this.s3Srv.putObject({ Key, Body });
+      const parallelUploads3 = new Upload({
+        client: this.s3Srv.s3,
+        params: { Bucket: this.s3Srv.bucket, Key, Body: dup },
+        tags: [],
+        // additional optional fields show default values below:
+
+        // (optional) concurrency configuration
+        queueSize: 4,
+
+        // (optional) size of each part, in bytes, at least 5MB
+        partSize: 1024 * 1024 * 5,
+
+        // (optional) when true, do not automatically call AbortMultipartUpload when
+        // a multipart upload fails to complete. You should then manually handle
+        // the leftover parts.
+        leavePartsOnError: false,
+      });
+
+      parallelUploads3.on('httpUploadProgress', (progress) => {
+        logger.info(progress, 'httpUploadProgress');
+      });
+      await parallelUploads3.done();
+
       return { ...result, key: Key };
     } finally {
       fs.unlink(filepath).catch(noop);
-      fs.unlink(tarballFilepath).catch(noop);
     }
   }
 
