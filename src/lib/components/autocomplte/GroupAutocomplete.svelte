@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { ChevronDownIcon } from 'lucide-svelte';
-
+  import { ChevronDownIcon } from 'lucide-svelte';
 
   import VisuallyHidden from '../base/VisuallyHidden.svelte';
   import { fuzzysearch } from './fuzzy';

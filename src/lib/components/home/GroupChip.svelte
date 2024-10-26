@@ -6,7 +6,7 @@
 
   import { groupAddModal, groupDeleteConfirmModal } from '$lib/client/modal.store';
   import Button from '$lib/components/base/Button.svelte';
-    import { EditIcon, TrashIcon } from 'lucide-svelte';
+  import { EditIcon, TrashIcon } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 

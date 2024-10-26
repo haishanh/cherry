@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { FilterIcon } from "lucide-svelte";
+  import { FilterIcon } from 'lucide-svelte';
 
   export let value = '';
 </script>

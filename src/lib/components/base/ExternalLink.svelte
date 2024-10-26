@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { ExternalLink } from 'lucide-svelte';
-
+  import { ExternalLink } from 'lucide-svelte';
 
   interface Props {
     href?: string;

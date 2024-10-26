@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ArrowUpCircle, Inbox } from 'lucide-svelte';
+  import { ArrowUpCircle, Inbox } from 'lucide-svelte';
   import Dropzone from 'svelte-file-dropzone';
 
   import Button from '$lib/components/base/Button.svelte';

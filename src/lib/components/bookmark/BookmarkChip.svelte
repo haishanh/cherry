@@ -8,7 +8,7 @@
   import type { BookmarkFromDb } from '$lib/type';
 
   import BookmarkTagsPreview from './BookmarkTagsPreview.svelte';
-    import { CheckSquareIcon, SquareIcon } from 'lucide-svelte';
+  import { CheckSquareIcon, SquareIcon } from 'lucide-svelte';
 
   export let bookmark: BookmarkFromDb;
   export let isOpen = false;

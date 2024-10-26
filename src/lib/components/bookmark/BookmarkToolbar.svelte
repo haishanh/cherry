@@ -11,7 +11,7 @@
   import Button from '$lib/components/base/Button.svelte';
   import Tooltip from '$lib/components/base/popover/Tooltip.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-    import { EditIcon, PlusIcon } from 'lucide-svelte';
+  import { EditIcon, PlusIcon } from 'lucide-svelte';
 
   export let tools = ['arrange', 'add'];
 

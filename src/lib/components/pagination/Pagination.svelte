@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+  import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-svelte';
 
   // current page
   export let current = 1;

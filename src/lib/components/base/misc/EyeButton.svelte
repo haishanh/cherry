@@ -1,7 +1,6 @@
 <script lang="ts">
-
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-    import { EyeIcon, EyeOffIcon } from 'lucide-svelte';
+  import { EyeIcon, EyeOffIcon } from 'lucide-svelte';
 
   export let show = false;
 </script>

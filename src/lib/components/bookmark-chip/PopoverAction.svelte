@@ -3,7 +3,7 @@
 
   import Button from '$lib/components/base/Button.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-    import { EditIcon, TrashIcon, XIcon } from 'lucide-svelte';
+  import { EditIcon, TrashIcon, XIcon } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
