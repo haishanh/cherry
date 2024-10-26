@@ -4,7 +4,7 @@
   export let placeholder = '';
 </script>
 
-<textarea {id} {placeholder} rows={3} bind:value />
+<textarea {id} {placeholder} rows={3} bind:value></textarea>
 
 <style lang="scss">
   textarea {

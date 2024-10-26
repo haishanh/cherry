@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
+  import { Trash } from 'lucide-svelte'
 
   import { deleteGroupClientSide } from '$lib/client/group.store';
   import Button from '$lib/components/base/Button.svelte';
@@ -49,8 +49,11 @@
     <h2>Delete group "{group.name}"?</h2>
     <p>Note, all bookmarks in this group will be kept.</p>
     <div class="action">
-      <Button modifier={['warn']} on:click={handleClickDelete}>
-        <Trash slot="icon" size={16} />
+      <Button modifier={['warn']} onclick={handleClickDelete}>
+        {#snippet icon()}
+        <Trash size={16} />
+      {/snippet}
+
         <span>Delete</span>
       </Button>
     </div>

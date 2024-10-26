@@ -97,7 +97,7 @@
       {#if item.icon && item.icon === 'loading'}
         <Spinner size={18} />
       {:else}
-        <span />
+        <span></span>
       {/if}
       <p>{item.description}</p>
       {#if item.action}

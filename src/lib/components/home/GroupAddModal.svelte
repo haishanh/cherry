@@ -73,7 +73,10 @@
     <Field name="Name" placeholder="" bind:value={group.name} />
     <div class="action">
       <Button type="submit">
-        <Save slot="icon" size={16} />
+        {#snippet icon()}
+        <Save size={16} />
+        {/snippet}
+
         <span>Save</span>
       </Button>
     </div>
