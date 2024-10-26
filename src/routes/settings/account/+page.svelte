@@ -53,8 +53,8 @@ fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.h
   <section>
     <h3>Password</h3>
     {#snippet icon()}
-    <Lock size={18} />
-{/snippet}
+      <Lock size={18} />
+    {/snippet}
     <Button onclick={handleClickChangePassword} icon={icon}><span>Change password</span></Button>
   </section>
 {/if}

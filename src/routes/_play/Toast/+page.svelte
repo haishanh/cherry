@@ -40,12 +40,12 @@
     <ToastList />
   </section>
   <section>
-    <Button on:click={() => send('normal')}>normal</Button>
-    <Button on:click={() => send('info')}>info</Button>
-    <Button on:click={() => send('success')}>success</Button>
-    <Button on:click={() => send('error')}>error</Button>
-    <Button on:click={() => send('warning')}>warning</Button>
-    <Button on:click={testPromise}>promise</Button>
+    <Button onclick={() => send('normal')}>normal</Button>
+    <Button onclick={() => send('info')}>info</Button>
+    <Button onclick={() => send('success')}>success</Button>
+    <Button onclick={() => send('error')}>error</Button>
+    <Button onclick={() => send('warning')}>warning</Button>
+    <Button onclick={testPromise}>promise</Button>
   </section>
 </main>
 
