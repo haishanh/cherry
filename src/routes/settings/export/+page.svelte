@@ -38,7 +38,7 @@
   <p>The exported file is a CSV. Example ouptut:</p>
   <pre class="pre">{sampleCsv}</pre>
   <div class="action">
-    <Button on:click={startExport}>Export Now</Button>
+    <Button onclick={startExport}>Export Now</Button>
   </div>
   {#if data.jobs && data.jobs.length > 0}
     <h3 class="mb-1">Previous Exports</h3>

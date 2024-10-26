@@ -30,14 +30,15 @@
 <div class="dock">
   <p>{count} selected</p>
   <div class="btn-group">
-    <Button on:click={handleClickGrouping}>
-      <span class="btn-text">Group</span><Folder slot="icon" size={16} />
+    <Button onclick={handleClickGrouping}>
+      <span class="btn-text">Group</span>
+      <Folder slot="icon" size={16} />
     </Button>
-    <Button modifier={['icon']} on:click={handleClickDelete}>
+    <Button modifier={['icon']} onclick={handleClickDelete}>
       <VisuallyHidden>Delete</VisuallyHidden>
       <Trash size={16} /><span class="btn-label"><kbd>SHIFT</kbd> + <kbd>3</kbd></span>
     </Button>
-    <Button modifier={['icon']} on:click={handleClickCancel}>
+    <Button modifier={['icon']} onclick={handleClickCancel}>
       <VisuallyHidden>Cancel</VisuallyHidden>
       <CloseIcon size={16} /><span class="btn-label"><kbd>ESC</kbd></span>
     </Button>

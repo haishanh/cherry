@@ -23,19 +23,19 @@
     </Tab>
     <Tab idx="chrome">
       <div class="item-brand-title">
-        <figure class="icon" style="background-image:url({chromeLogoUrl});" />
+        <figure class="icon" style="background-image:url({chromeLogoUrl});"></figure>
         <span>Chrome</span>
       </div>
     </Tab>
     <Tab idx="firefox">
       <div class="item-brand-title">
-        <figure class="icon" style="background-image:url({firefoxLogoUrl});" />
+        <figure class="icon" style="background-image:url({firefoxLogoUrl});"></figure>
         <span>Firefox</span>
       </div>
     </Tab>
     <Tab idx="safari">
       <div class="item-brand-title">
-        <figure class="icon" style="background-image:url({safariLogoUrl});" />
+        <figure class="icon" style="background-image:url({safariLogoUrl});"></figure>
         <span>Safari</span>
       </div>
     </Tab>

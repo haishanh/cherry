@@ -113,7 +113,7 @@
       <div class="cnt" use:focus0 transition:fly={{ delay: 0, duration: 300, y: 100 }}>
         <div class="focus-guard" data-leading-focus-guard tabindex="-1" />
         <div class="action" class:left={closeButtonPosition === 'left'} class:right={closeButtonPosition === 'right'}>
-          <Button modifier={['minimal', 'p5']} title="Close" on:click={close}>
+          <Button modifier={['minimal', 'p5']} title="Close" onclick={close}>
             <VisuallyHidden>Close</VisuallyHidden><CloseIcon size={20} />
           </Button>
         </div>

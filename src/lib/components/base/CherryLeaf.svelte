@@ -1,5 +1,11 @@
 <script>
-  export let size = 100;
+  /**
+   * @typedef {Object} Props
+   * @property {number} [size]
+   */
+
+  /** @type {Props} */
+  let { size = 100 } = $props();
 </script>
 
 <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">

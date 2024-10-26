@@ -30,7 +30,7 @@
   {#each tools as tool (tool)}
     {#if tool === 'arrange'}
       <Tooltip>
-        <Button slot="trigger" modifier={['icon']} on:click={handleClickArrangeBookmarksButton}>
+        <Button slot="trigger" modifier={['icon']} onclick={handleClickArrangeBookmarksButton}>
           <Edit size={16} />
           <VisuallyHidden>Bulk Edit</VisuallyHidden>
         </Button>
@@ -38,7 +38,7 @@
       </Tooltip>
     {:else if tool === 'add'}
       <Tooltip>
-        <Button slot="trigger" modifier={['icon']} on:click={handleClickAddButton}>
+        <Button slot="trigger" modifier={['icon']} onclick={handleClickAddButton}>
           <Plus size={16} />
           <VisuallyHidden>Add New Bookmark</VisuallyHidden>
         </Button>

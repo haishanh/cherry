@@ -59,14 +59,15 @@
     {/if}
   </Dropzone>
   <div class="action">
-    <Button disabled={loading || !files.accepted[0]} on:click={handleClickImport}>
-      <svelte:fragment slot="icon">
-        {#if loading}
-          <Spinner size={18} />
-        {:else}
-          <ArrowUpCircle size={18} />
-        {/if}
-      </svelte:fragment>
+    {#snippet icon()}
+      {#if loading}
+        <Spinner size={18} />
+      {:else}
+        <ArrowUpCircle size={18} />
+      {/if}
+    {/snippet}
+
+    <Button disabled={loading || !files.accepted[0]} onclick={handleClickImport} icon={icon}>
       <span>Import</span>
     </Button>
   </div>

@@ -79,7 +79,7 @@
   </div>
 
   <div slot="footer" class="footer">
-    <Button on:click={handleClickAdd}>
+    <Button onclick={handleClickAdd}>
       <Plus slot="icon" size={16} />
       <span>Create New</span>
     </Button>

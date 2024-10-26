@@ -9,21 +9,38 @@
     | 'p5'
     | 'warn';
 
-  export let type: 'reset' | 'submit' | 'button' | null = null;
-  export let modifier: Modifier[] | null = null;
-  // native tooltip
-  export let title: string | null = null;
-  export let disabled = false;
-  export let style: string | null = null;
+  
+  interface Props {
+    type?: 'reset' | 'submit' | 'button' | null;
+    modifier?: Modifier[] | null;
+    // native tooltip
+    title?: string | null;
+    disabled?: boolean;
+    style?: string | null;
+    icon?: import('svelte').Snippet;
+    children?: import('svelte').Snippet;
+    onclick?: any;
+  }
+
+  let {
+    type = null,
+    modifier = null,
+    title = null,
+    disabled = false,
+    style = null,
+    icon,
+    children,
+    onclick,
+  }: Props = $props();
 </script>
 
-<button {disabled} {type} {title} {style} class={modifier ? modifier.join(' ') : ''} on:click>
-  {#if $$slots.icon}
+<button {disabled} {type} {title} {style} class={modifier ? modifier.join(' ') : ''} onclick={onclick}>
+  {#if icon}
     <span class="btn-icon">
-      <slot name="icon" />
+      {@render icon?.()}
     </span>
   {/if}
-  <slot />
+  {@render children?.()}
 </button>
 
 <style lang="scss">

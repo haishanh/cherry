@@ -109,16 +109,16 @@
     autocomplete="off"
     autocapitalize="none"
     spellcheck="false"
-    on:focus={onFocus}
-    on:input={handleInputOnInput}
-    on:blur={onBlur}
+    onfocus={onFocus}
+    oninput={handleInputOnInput}
+    onblur={onBlur}
     aria-autocomplete="list"
     aria-haspopup="listbox"
     aria-expanded={expanded}
   />
   <button
     class="icon"
-    on:click={handleClickExpandButton}
+    onclick={handleClickExpandButton}
     tabindex="-1"
     aria-label="Show suggestions"
     aria-haspopup="listbox"
