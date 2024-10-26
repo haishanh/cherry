@@ -1,14 +1,14 @@
 <script lang="ts">
-  export let value = '';
+  import { FilterIcon } from 'lucide-svelte';
 
-  import Filter from '@hsjs/svelte-icons/feather/Filter.svelte';
+  export let value = '';
 </script>
 
 <div class="root">
   <div class="input-wrap">
     <input placeholder="Search" bind:value />
     <span class="icon-wrap">
-      <Filter size={16} />
+      <FilterIcon size={16} />
     </span>
   </div>
 </div>

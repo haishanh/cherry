@@ -5,10 +5,17 @@
 
   const dispatch = createEventDispatcher();
 
-  export let autoSelect = false;
-  export let filtered: { name: string }[] = [];
+  type Props = {
+    autoSelect?: boolean;
+    filtered?: { name: string }[];
+    itemComp: import('svelte').Snippet<[{ name: string }]>;
+  };
 
-  $: {
+  let { autoSelect = false, filtered = [], itemComp }: Props = $props();
+
+  let highlightedIdx = $state(autoSelect ? 0 : -1);
+
+  $effect(() => {
     const highlighted = filtered[highlightedIdx];
 
     let idx = -1;
@@ -20,12 +27,11 @@
     }
 
     ensureItemVisible(highlightedIdx);
-  }
+  });
 
   const idPrefix = makeId();
 
   let listbox: HTMLElement;
-  let highlightedIdx = autoSelect ? 0 : -1;
   function highlightItemAt(idx: number | string) {
     highlightedIdx = typeof idx === 'number' ? idx : parseInt(idx, 10);
     ensureItemVisible(highlightedIdx);
@@ -113,6 +119,13 @@
       default:
     }
   }
+
+  function preventDefault<E extends UIEvent>(fn: (e: E) => void) {
+    return function (event: E) {
+      event.preventDefault();
+      fn(event);
+    };
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -131,10 +144,10 @@
         class:hi={idx === highlightedIdx}
         aria-selected={idx === highlightedIdx}
         data-idx={idx}
-        on:mousedown|preventDefault={handleClickItem}
-        on:mouseenter|preventDefault={handleMouseEnterItem}
+        onmousedown={preventDefault(handleClickItem)}
+        onmouseenter={preventDefault(handleMouseEnterItem)}
       >
-        <slot {item} />
+        {@render itemComp(item)}
       </li>
     {/each}
   </ul>
@@ -152,18 +165,18 @@
 
     border-radius: 7px;
     border: 1px solid transparent;
-    @media (prefers-color-scheme: dark) {
-      --lightness: 30%;
-    }
-    @media (prefers-color-scheme: light) {
-      --lightness: 50%;
-    }
     border-color: hsl(0deg 0% var(--lightness));
     // prettier-ignore
     box-shadow: 0 1px 1px rgba(0,0,0,0.1),
                 0 2px 2px rgba(0,0,0,0.1),
                 0 4px 4px rgba(0,0,0,0.1),
                 0 8px 10px rgba(0,0,0,0.1);
+    @media (prefers-color-scheme: dark) {
+      --lightness: 30%;
+    }
+    @media (prefers-color-scheme: light) {
+      --lightness: 50%;
+    }
   }
   ul {
     position: relative;

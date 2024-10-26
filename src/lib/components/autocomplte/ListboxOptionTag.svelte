@@ -1,10 +1,13 @@
 <script lang="ts">
-  export let item: { name: string; id?: number };
+  import { TagIcon } from 'lucide-svelte';
+  interface Props {
+    item: { name: string; id?: number };
+  }
 
-  import TagIcon from '@hsjs/svelte-icons/feather/Tag.svelte';
+  let { item }: Props = $props();
 </script>
 
-<span class="tag-label"><TagIcon size={18} /><span>{item.name}</span></span>
+<span class="tag-label"><TagIcon size={17} /><span>{item.name}</span></span>
 {#if !('id' in item)}
   <span>New tag</span>
 {/if}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ChevronDown from '@hsjs/svelte-icons/feather/ChevronDown.svelte';
+  import { ChevronDownIcon } from 'lucide-svelte';
 
   import VisuallyHidden from '../base/VisuallyHidden.svelte';
   import { fuzzysearch } from './fuzzy';
@@ -109,26 +109,28 @@
     autocomplete="off"
     autocapitalize="none"
     spellcheck="false"
-    on:focus={onFocus}
-    on:input={handleInputOnInput}
-    on:blur={onBlur}
+    onfocus={onFocus}
+    oninput={handleInputOnInput}
+    onblur={onBlur}
     aria-autocomplete="list"
     aria-haspopup="listbox"
     aria-expanded={expanded}
   />
   <button
     class="icon"
-    on:click={handleClickExpandButton}
+    onclick={handleClickExpandButton}
     tabindex="-1"
     aria-label="Show suggestions"
     aria-haspopup="listbox"
   >
-    <ChevronDown size={20} />
+    <ChevronDownIcon size={20} />
     <VisuallyHidden>Show suggestions</VisuallyHidden>
   </button>
   {#if expanded && filtered.length > 0}
-    <ListboxList {filtered} let:item on:confirm={handleConfirmSelection}>
-      <ListboxOptionGroup {item} />
+    <ListboxList {filtered} on:confirm={handleConfirmSelection}>
+      {#snippet itemComp(item)}
+        <ListboxOptionGroup {item} />
+      {/snippet}
     </ListboxList>
   {/if}
 </div>

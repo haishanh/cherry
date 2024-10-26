@@ -1,8 +1,6 @@
 <script lang="ts">
-  import CheckCircle from '@hsjs/svelte-icons/feather/CheckCircle.svelte';
-  import Copy from '@hsjs/svelte-icons/feather/Copy.svelte';
-
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import { CheckCircleIcon, CopyIcon } from 'lucide-svelte';
 
   let state = 'none';
   export let provide: () => Promise<string> | string;
@@ -22,11 +20,11 @@
   <VisuallyHidden>Copy</VisuallyHidden>
   {#if state === 'copied'}
     <span class="ico">
-      <CheckCircle size={18} />
+      <CheckCircleIcon size={18} />
     </span>
   {:else}
     <span class="ico">
-      <Copy size={18} />
+      <CopyIcon size={18} />
     </span>
   {/if}
 </button>

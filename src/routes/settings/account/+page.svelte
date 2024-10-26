@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Lock from '@hsjs/svelte-icons/feather/Lock.svelte';
-  import LogOut from '@hsjs/svelte-icons/feather/LogOut.svelte';
+  import { Lock, LogOut } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
   import Button from '$lib/components/base/Button.svelte';
@@ -53,7 +52,10 @@ fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.h
 {#if user.passwordless !== true}
   <section>
     <h3>Password</h3>
-    <Button on:click={handleClickChangePassword}><Lock slot="icon" size={18} /><span>Change password</span></Button>
+    {#snippet icon()}
+      <Lock size={18} />
+    {/snippet}
+    <Button onclick={handleClickChangePassword} {icon}><span>Change password</span></Button>
   </section>
 {/if}
 <section class="signout">

@@ -6,13 +6,12 @@
 </script>
 
 <script lang="ts">
-  import Edit from '@hsjs/svelte-icons/feather/Edit.svelte';
-  import Plus from '@hsjs/svelte-icons/feather/Plus.svelte';
   import { createEventDispatcher } from 'svelte';
 
   import Button from '$lib/components/base/Button.svelte';
   import Tooltip from '$lib/components/base/popover/Tooltip.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import { EditIcon, PlusIcon } from 'lucide-svelte';
 
   export let tools = ['arrange', 'add'];
 
@@ -30,16 +29,16 @@
   {#each tools as tool (tool)}
     {#if tool === 'arrange'}
       <Tooltip>
-        <Button slot="trigger" modifier={['icon']} on:click={handleClickArrangeBookmarksButton}>
-          <Edit size={16} />
+        <Button slot="trigger" modifier={['icon']} onclick={handleClickArrangeBookmarksButton}>
+          <EditIcon size={16} />
           <VisuallyHidden>Bulk Edit</VisuallyHidden>
         </Button>
         <div class="tooltip-cnt" slot="content">Bulk Edit</div>
       </Tooltip>
     {:else if tool === 'add'}
       <Tooltip>
-        <Button slot="trigger" modifier={['icon']} on:click={handleClickAddButton}>
-          <Plus size={16} />
+        <Button slot="trigger" modifier={['icon']} onclick={handleClickAddButton}>
+          <PlusIcon size={16} />
           <VisuallyHidden>Add New Bookmark</VisuallyHidden>
         </Button>
         <div class="tooltip-cnt" slot="content">Add New Bookmark</div>

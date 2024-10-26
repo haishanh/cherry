@@ -56,12 +56,12 @@
     padding: 8px;
     overflow: hidden;
     border: 1px solid transparent;
+    border-color: hsl(0deg 0% var(--lightness));
     @media (prefers-color-scheme: dark) {
       --lightness: 30%;
     }
     @media (prefers-color-scheme: light) {
       --lightness: 50%;
     }
-    border-color: hsl(0deg 0% var(--lightness));
   }
 </style>

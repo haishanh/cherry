@@ -27,6 +27,8 @@
     width: 600px;
     padding: 15px 22px;
     border-radius: 10px;
+    background-color: var(--bg);
+    color: var(--fg);
     @media (prefers-color-scheme: light) {
       box-shadow: var(--shadow1);
       border: 1px solid hsl(0deg 0% 96%);
@@ -46,9 +48,5 @@
       --bg: hsl(0deg 0% 99%);
       --fg: hsl(0deg 0% 13%);
     }
-    background-color: var(--bg);
-    color: var(--fg);
-    // --lightness: 50%;
-    // border: 1px solid hsl(0deg 0% var(--lightness));
   }
 </style>

@@ -1,5 +1,11 @@
 <script>
-  export let size = 160;
+  /**
+   * @typedef {Object} Props
+   * @property {number} [size]
+   */
+
+  /** @type {Props} */
+  let { size = 160 } = $props();
 
   const strokeBright = '#f6bbc4';
   // const strokeDark = '#CC4458';

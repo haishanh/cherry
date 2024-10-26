@@ -1,8 +1,6 @@
 <script lang="ts">
-  import Eye from '@hsjs/svelte-icons/feather/Eye.svelte';
-  import EyeOff from '@hsjs/svelte-icons/feather/EyeOff.svelte';
-
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import { EyeIcon, EyeOffIcon } from 'lucide-svelte';
 
   export let show = false;
 </script>
@@ -11,11 +9,11 @@
   <VisuallyHidden>Copy</VisuallyHidden>
   {#if !show}
     <span class="ico">
-      <Eye size={18} />
+      <EyeIcon size={18} />
     </span>
   {:else}
     <span class="ico">
-      <EyeOff size={18} />
+      <EyeOffIcon size={18} />
     </span>
   {/if}
 </button>

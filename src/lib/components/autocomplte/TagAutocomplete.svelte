@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SearchIcon from '@hsjs/svelte-icons/feather/Search.svelte';
+  import { SearchIcon } from 'lucide-svelte';
   import { createEventDispatcher } from 'svelte';
   import invariant from 'tiny-invariant';
 
@@ -129,8 +129,8 @@
     // }
   }
 
-  function handleClickCloseTag(e: CustomEvent<TagType>) {
-    const tag = e.detail;
+  function handleClickCloseTag(tag: { name: string }) {
+    // const tag = e.detail;
     invariant(tag, 'handleClickCloseTag: something went wrong');
     tags = tags.filter((t) => t !== tag);
     dispatch('change', [...tags]);
@@ -152,7 +152,7 @@
 <div class="autocomplete-wrapper">
   <div class="autocomplete" class:round={search}>
     {#each tags as tag (tag.name)}
-      <Tag {tag} on:clickclose={handleClickCloseTag} />
+      <Tag {tag} clickclose={handleClickCloseTag} />
     {/each}
     <input
       autocomplete="off"
@@ -184,8 +184,10 @@
   </div>
   <!-- listbox -->
   {#if expanded && filtered.length > 0}
-    <ListboxList {autoSelect} {filtered} on:confirm={handleConfirmSelection} let:item>
-      <ListboxOptionTag {item} />
+    <ListboxList {autoSelect} {filtered} on:confirm={handleConfirmSelection}>
+      {#snippet itemComp(item)}
+        <ListboxOptionTag {item} />
+      {/snippet}
     </ListboxList>
   {/if}
 </div>
@@ -218,17 +220,8 @@
     }
   }
 
-  .search-wrapper button .search-icon-wrapper {
-    color: var(--color-input-bo);
+  .search-wrapper .search-icon-wrapper {
     display: inline-flex;
-  }
-
-  .search-wrapper button:hover .search-icon-wrapper {
-    color: var(--color-text);
-  }
-
-  .search-wrapper button:focus .search-icon-wrapper {
-    color: var(--color-text);
   }
 
   .autocomplete {

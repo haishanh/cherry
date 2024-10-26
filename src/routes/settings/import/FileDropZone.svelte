@@ -1,6 +1,5 @@
 <script lang="ts">
-  import ArrowUpCircle from '@hsjs/svelte-icons/feather/ArrowUpCircle.svelte';
-  import Inbox from '@hsjs/svelte-icons/feather/Inbox.svelte';
+  import { ArrowUpCircle, Inbox } from 'lucide-svelte';
   import Dropzone from 'svelte-file-dropzone';
 
   import Button from '$lib/components/base/Button.svelte';
@@ -59,14 +58,15 @@
     {/if}
   </Dropzone>
   <div class="action">
-    <Button disabled={loading || !files.accepted[0]} on:click={handleClickImport}>
-      <svelte:fragment slot="icon">
-        {#if loading}
-          <Spinner size={18} />
-        {:else}
-          <ArrowUpCircle size={18} />
-        {/if}
-      </svelte:fragment>
+    {#snippet icon()}
+      {#if loading}
+        <Spinner size={18} />
+      {:else}
+        <ArrowUpCircle size={18} />
+      {/if}
+    {/snippet}
+
+    <Button disabled={loading || !files.accepted[0]} onclick={handleClickImport} {icon}>
       <span>Import</span>
     </Button>
   </div>
@@ -74,12 +74,6 @@
 
 <style lang="scss">
   :global(.dzone) {
-    @media (prefers-color-scheme: dark) {
-      --bo: hsl(0deg 0% 22%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bo: hsl(0deg 0% 86%);
-    }
     background-color: var(--bg-card);
     border: 1px dashed var(--bo);
     border-radius: 15px;
@@ -91,6 +85,12 @@
     }
     .note {
       margin: 8px 0;
+    }
+    @media (prefers-color-scheme: dark) {
+      --bo: hsl(0deg 0% 22%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bo: hsl(0deg 0% 86%);
     }
   }
   :global(.dragenter) {

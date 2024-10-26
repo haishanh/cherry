@@ -1,13 +1,18 @@
 <script lang="ts">
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
+  import { XIcon as CloseIcon } from 'lucide-svelte';
+
   import { createEventDispatcher } from 'svelte';
 
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
-  export let color: keyof typeof colorMap = '1';
-  export let hasClose = true;
+  interface Props {
+    color?: keyof typeof colorMap;
+    hasClose?: boolean;
+    tag: { name: string };
+    clickclose: (tag: { name: string }) => void;
+  }
 
-  export let tag: { name: string };
+  let { color = '1', hasClose = true, tag, clickclose }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
@@ -27,7 +32,7 @@
 <span class="tag" class:hasClose style={colorMap[color]}>
   <span>{tag.name}</span>
   {#if hasClose}
-    <button type="button" on:mousedown|preventDefault={handleClickClose}>
+    <button type="button" onmousedown={() => clickclose(tag)}>
       <VisuallyHidden>Remove this tag</VisuallyHidden><CloseIcon size={14} />
     </button>
   {/if}

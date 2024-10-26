@@ -9,21 +9,37 @@
     | 'p5'
     | 'warn';
 
-  export let type: 'reset' | 'submit' | 'button' | null = null;
-  export let modifier: Modifier[] | null = null;
-  // native tooltip
-  export let title: string | null = null;
-  export let disabled = false;
-  export let style: string | null = null;
+  interface Props {
+    type?: 'reset' | 'submit' | 'button' | null;
+    modifier?: Modifier[] | null;
+    // native tooltip
+    title?: string | null;
+    disabled?: boolean;
+    style?: string | null;
+    icon?: import('svelte').Snippet;
+    children?: import('svelte').Snippet;
+    onclick?: any;
+  }
+
+  let {
+    type = null,
+    modifier = null,
+    title = null,
+    disabled = false,
+    style = null,
+    icon,
+    children,
+    onclick,
+  }: Props = $props();
 </script>
 
-<button {disabled} {type} {title} {style} class={modifier ? modifier.join(' ') : ''} on:click>
-  {#if $$slots.icon}
+<button {disabled} {type} {title} {style} class={modifier ? modifier.join(' ') : ''} {onclick}>
+  {#if icon}
     <span class="btn-icon">
-      <slot name="icon" />
+      {@render icon?.()}
     </span>
   {/if}
-  <slot />
+  {@render children?.()}
 </button>
 
 <style lang="scss">
@@ -46,6 +62,10 @@
     border: 1px solid var(--color-btn-bo);
     border-radius: 100px;
     border-color: hsl(0deg 0% var(--bo-lightness));
+    &:hover {
+      border-color: hsl(0deg 0% var(--bo-lightness-hover));
+      background-color: var(--bg-hover);
+    }
     @media (prefers-color-scheme: dark) {
       --bo-lightness: 30%;
       --bo-lightness-hover: 70%;
@@ -55,10 +75,6 @@
       --bo-lightness: 80%;
       --bo-lightness-hover: 15%;
       --bg-hover: hsl(0deg 0% 90%);
-    }
-    &:hover {
-      border-color: hsl(0deg 0% var(--bo-lightness-hover));
-      background-color: var(--bg-hover);
     }
     &:active {
       transform: scale(0.99) translateY(1%);

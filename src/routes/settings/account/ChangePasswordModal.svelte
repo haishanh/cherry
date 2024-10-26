@@ -7,8 +7,7 @@
     modal.close();
   };
 
-  import Save from '@hsjs/svelte-icons/feather/Save.svelte';
-
+  import { Save } from 'lucide-svelte';
   import { beforeNavigate } from '$app/navigation';
   import Button from '$lib/components/base/Button.svelte';
   import Field from '$lib/components/base/Field.svelte';
@@ -98,8 +97,11 @@
       error={error.newPassword2}
     />
     <div class="action">
-      <Button type="submit">
-        <Save slot="icon" size={16} />
+      {#snippet icon()}
+        <Save size={16} />
+      {/snippet}
+
+      <Button type="submit" {icon}>
         <span>Save</span>
       </Button>
     </div>

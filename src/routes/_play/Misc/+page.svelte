@@ -27,7 +27,7 @@
 </script>
 
 <main>
-  <section />
+  <section></section>
 </main>
 
 <style lang="scss">

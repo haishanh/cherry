@@ -1,11 +1,9 @@
 <script lang="ts">
-  import Edit from '@hsjs/svelte-icons/feather/Edit.svelte';
-  import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
   import { createEventDispatcher } from 'svelte';
 
   import Button from '$lib/components/base/Button.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import { EditIcon, TrashIcon, XIcon } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -57,14 +55,14 @@
 </script>
 
 <div class="action" use:focus0>
-  <Button modifier={['icon']} title="View and Edit" on:click={emit('edit')}>
-    <VisuallyHidden>View and Edit</VisuallyHidden><Edit size={14} />
+  <Button modifier={['icon']} title="View and Edit" onclick={emit('edit')}>
+    <VisuallyHidden>View and Edit</VisuallyHidden><EditIcon size={14} />
   </Button>
-  <Button modifier={['icon']} title="Delete" on:click={emit('delete')}>
-    <VisuallyHidden>Delete</VisuallyHidden><Trash size={14} />
+  <Button modifier={['icon']} title="Delete" onclick={emit('delete')}>
+    <VisuallyHidden>Delete</VisuallyHidden><TrashIcon size={14} />
   </Button>
-  <Button modifier={['icon']} title="Close" on:click={emit('close')}>
-    <VisuallyHidden>Close</VisuallyHidden><CloseIcon size={14} />
+  <Button modifier={['icon']} title="Close" onclick={emit('close')}>
+    <VisuallyHidden>Close</VisuallyHidden><XIcon size={14} />
   </Button>
 </div>
 

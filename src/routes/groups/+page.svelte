@@ -10,7 +10,7 @@
 
 <ul class="groups">
   {#each data.groups as g (g.id)}
-    <li />
+    <li></li>
   {/each}
 </ul>
 

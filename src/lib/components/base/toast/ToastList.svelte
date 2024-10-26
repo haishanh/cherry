@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
+  import { XIcon as CloseIcon } from 'lucide-svelte';
   import { fly } from 'svelte/transition';
 
   import Spinner from '$lib/components/feedback/Spinner.svelte';
@@ -97,7 +97,7 @@
       {#if item.icon && item.icon === 'loading'}
         <Spinner size={18} />
       {:else}
-        <span />
+        <span></span>
       {/if}
       <p>{item.description}</p>
       {#if item.action}
@@ -121,17 +121,6 @@
     z-index: 100;
   }
   button {
-    @media (prefers-color-scheme: dark) {
-      --bg: hsl(0deg 0% 100% / 7%);
-      --bg-hover: hsl(0deg 0% 100% / 17%);
-      --bo-hover: hsl(0deg 0% 100% / 27%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bg: hsl(0deg 0% 0% / 5%);
-      --bg-hover: hsl(0deg 0% 0% / 15%);
-      --bo-hover: hsl(0deg 0% 0% / 25%);
-    }
-
     appearance: none;
     outline: none;
     user-select: none;
@@ -152,6 +141,16 @@
     &:hover {
       background-color: var(--bg-hover);
       border-color: var(--bo-hover);
+    }
+    @media (prefers-color-scheme: dark) {
+      --bg: hsl(0deg 0% 100% / 7%);
+      --bg-hover: hsl(0deg 0% 100% / 17%);
+      --bo-hover: hsl(0deg 0% 100% / 27%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bg: hsl(0deg 0% 0% / 5%);
+      --bg-hover: hsl(0deg 0% 0% / 15%);
+      --bo-hover: hsl(0deg 0% 0% / 25%);
     }
   }
 

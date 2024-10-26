@@ -5,7 +5,6 @@
 </script>
 
 <script lang="ts">
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
   import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
   import { fade } from 'svelte/transition';
@@ -15,6 +14,7 @@
   import { decModalZi, incModalZi } from '$lib/utils/common.util';
 
   import Portal from './misc/Portal.svelte';
+  import { XIcon } from 'lucide-svelte';
 
   export let closeButtonPosition: 'left' | 'right' = 'right';
   export let verticalAlign: 'start' | 'center' | 'end' = 'center';
@@ -109,12 +109,12 @@
       transition:fade={{ delay: 0, duration: 300 }}
     >
       <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-      <div class="inset0" on:click={handleClickOverlay} />
+      <div class="inset0" on:click={handleClickOverlay}></div>
       <div class="cnt" use:focus0 transition:fly={{ delay: 0, duration: 300, y: 100 }}>
-        <div class="focus-guard" data-leading-focus-guard tabindex="-1" />
+        <div class="focus-guard" data-leading-focus-guard tabindex="-1"></div>
         <div class="action" class:left={closeButtonPosition === 'left'} class:right={closeButtonPosition === 'right'}>
-          <Button modifier={['minimal', 'p5']} title="Close" on:click={close}>
-            <VisuallyHidden>Close</VisuallyHidden><CloseIcon size={20} />
+          <Button modifier={['minimal', 'p5']} title="Close" onclick={close}>
+            <VisuallyHidden>Close</VisuallyHidden><XIcon size={20} />
           </Button>
         </div>
         <div class="slot-wrap"><slot /></div>
@@ -122,7 +122,7 @@
           <div class="footer"><slot name="footer" /></div>
         {/if}
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-        <div class="focus-guard" data-tailing-focus-guard tabindex="0" />
+        <div class="focus-guard" data-tailing-focus-guard tabindex="0"></div>
       </div>
     </div>
   {/if}
@@ -134,12 +134,6 @@
     inset: 0;
   }
   .overlay {
-    @media (prefers-color-scheme: dark) {
-      --bg: hsl(0deg 0% 0% / 52%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bg: hsl(240deg 12% 92% / 90%);
-    }
     position: fixed;
     inset: 0;
     background-color: var(--bg);
@@ -155,6 +149,12 @@
     }
     &.end {
       justify-content: flex-end;
+    }
+    @media (prefers-color-scheme: dark) {
+      --bg: hsl(0deg 0% 0% / 52%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bg: hsl(240deg 12% 92% / 90%);
     }
   }
   .slot-wrap {

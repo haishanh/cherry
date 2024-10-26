@@ -23,6 +23,7 @@
     color: var(--fg);
     background-color: var(--bg);
     border: 1px solid var(--color-btn-bo);
+    border-color: hsl(0deg 0% var(--bo-lightness));
 
     @media (prefers-color-scheme: dark) {
       --bo-lightness: 30%;
@@ -34,7 +35,6 @@
       --bo-lightness-hover: 15%;
       --bg-hover: hsl(0deg 0% 90%);
     }
-    border-color: hsl(0deg 0% var(--bo-lightness));
     &:hover {
       border-color: hsl(0deg 0% var(--bo-lightness-hover));
       background-color: var(--bg-hover);

@@ -8,7 +8,7 @@
   class:dark={mode === 'dark'}
   class:light={mode === 'light'}
   style="width:{size}px;height:{size}px;"
-/>
+></span>
 
 <style lang="scss">
   .loading {

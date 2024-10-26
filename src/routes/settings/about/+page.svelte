@@ -14,7 +14,7 @@
 <p>
   Cherry version: <code>{version}</code>
   {#if sha}
-    <span /><ExternalLink href={REPO_URL + `/tree/${sha}`}><code>{sha}</code></ExternalLink>
+    <span></span><ExternalLink href={REPO_URL + `/tree/${sha}`}><code>{sha}</code></ExternalLink>
   {/if}
 </p>
 <p>

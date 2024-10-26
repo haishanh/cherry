@@ -145,7 +145,7 @@
       {maybeHasMore}
     />
   </div>
-  <div />
+  <div></div>
 </div>
 
 <style lang="scss">
