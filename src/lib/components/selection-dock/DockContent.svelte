@@ -5,7 +5,7 @@
     dock: 'dock',
   };
 
-import { Folder, Trash, XIcon } from 'lucide-svelte'
+  import { Folder, Trash, XIcon } from 'lucide-svelte';
 
   import { createEventDispatcher } from 'svelte';
 
@@ -32,7 +32,7 @@ import { Folder, Trash, XIcon } from 'lucide-svelte'
     <Button onclick={handleClickGrouping}>
       <span class="btn-text">Group</span>
       {#snippet icon()}
-      <Folder size={16} />
+        <Folder size={16} />
       {/snippet}
     </Button>
     <Button modifier={['icon']} onclick={handleClickDelete}>

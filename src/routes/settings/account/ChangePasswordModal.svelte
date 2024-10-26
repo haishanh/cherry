@@ -101,7 +101,7 @@
         <Save size={16} />
       {/snippet}
 
-      <Button type="submit" icon={icon}>
+      <Button type="submit" {icon}>
         <span>Save</span>
       </Button>
     </div>

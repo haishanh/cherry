@@ -1,6 +1,4 @@
 <script lang="ts">
-
-  
   import { Trash, XIcon } from 'lucide-svelte';
 
   import Button from '$lib/components/base/Button.svelte';
@@ -52,19 +50,19 @@
   <section>
     <Button>
       {#snippet icon()}
-      <Trash size={18} />
+        <Trash size={18} />
       {/snippet}
       <span>Delete</span>
     </Button>
     <Button>
       {#snippet icon()}
-      <Spinner size={18} />
+        <Spinner size={18} />
       {/snippet}
       <span>Delete</span>
     </Button>
     <Button disabled>
       {#snippet icon()}
-      <Spinner size={18} />
+        <Spinner size={18} />
       {/snippet}
       <span>Delete</span>
     </Button>

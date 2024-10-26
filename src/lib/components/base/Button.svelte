@@ -9,7 +9,6 @@
     | 'p5'
     | 'warn';
 
-  
   interface Props {
     type?: 'reset' | 'submit' | 'button' | null;
     modifier?: Modifier[] | null;
@@ -34,7 +33,7 @@
   }: Props = $props();
 </script>
 
-<button {disabled} {type} {title} {style} class={modifier ? modifier.join(' ') : ''} onclick={onclick}>
+<button {disabled} {type} {title} {style} class={modifier ? modifier.join(' ') : ''} {onclick}>
   {#if icon}
     <span class="btn-icon">
       {@render icon?.()}

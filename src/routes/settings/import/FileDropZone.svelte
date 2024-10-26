@@ -67,7 +67,7 @@
       {/if}
     {/snippet}
 
-    <Button disabled={loading || !files.accepted[0]} onclick={handleClickImport} icon={icon}>
+    <Button disabled={loading || !files.accepted[0]} onclick={handleClickImport} {icon}>
       <span>Import</span>
     </Button>
   </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Folder } from 'lucide-svelte'
+  import { Folder } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';
@@ -152,7 +152,7 @@
       <Tooltip>
         <Button slot="trigger" modifier={['minimal']} style="padding:8px 10px" onclick={open}>
           {#snippet icon()}
-          <Folder size={15} />
+            <Folder size={15} />
           {/snippet}
           <VisuallyHidden>Show more groups</VisuallyHidden>
         </Button>
