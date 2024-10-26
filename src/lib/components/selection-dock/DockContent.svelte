@@ -5,9 +5,8 @@
     dock: 'dock',
   };
 
-  import Folder from '@hsjs/svelte-icons/feather/Folder.svelte';
-  import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
-  import CloseIcon from '@hsjs/svelte-icons/feather/XCircle.svelte';
+import { Folder, Trash, XIcon } from 'lucide-svelte'
+
   import { createEventDispatcher } from 'svelte';
 
   import { groupSelectModal } from '$lib/client/modal.store';
@@ -32,7 +31,9 @@
   <div class="btn-group">
     <Button onclick={handleClickGrouping}>
       <span class="btn-text">Group</span>
-      <Folder slot="icon" size={16} />
+      {#snippet icon()}
+      <Folder size={16} />
+      {/snippet}
     </Button>
     <Button modifier={['icon']} onclick={handleClickDelete}>
       <VisuallyHidden>Delete</VisuallyHidden>
@@ -40,7 +41,7 @@
     </Button>
     <Button modifier={['icon']} onclick={handleClickCancel}>
       <VisuallyHidden>Cancel</VisuallyHidden>
-      <CloseIcon size={16} /><span class="btn-label"><kbd>ESC</kbd></span>
+      <XIcon size={16} /><span class="btn-label"><kbd>ESC</kbd></span>
     </Button>
   </div>
 </div>
