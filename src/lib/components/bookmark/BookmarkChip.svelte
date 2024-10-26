@@ -302,11 +302,13 @@
   .clamp {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    line-clamp: 3;
     -webkit-line-clamp: 3;
     overflow: hidden;
     overflow-wrap: anywhere;
   }
   .clamp-2 {
+    line-clamp: 2;
     -webkit-line-clamp: 2;
   }
 </style>

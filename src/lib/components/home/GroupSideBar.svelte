@@ -234,9 +234,6 @@
       @media (min-width: 1200px) {
         display: none;
       }
-      span {
-        font-size: 0.9em;
-      }
     }
   }
   .wrap:hover .btn-wrap {
