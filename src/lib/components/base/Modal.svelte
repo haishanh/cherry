@@ -134,12 +134,6 @@
     inset: 0;
   }
   .overlay {
-    @media (prefers-color-scheme: dark) {
-      --bg: hsl(0deg 0% 0% / 52%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bg: hsl(240deg 12% 92% / 90%);
-    }
     position: fixed;
     inset: 0;
     background-color: var(--bg);
@@ -155,6 +149,12 @@
     }
     &.end {
       justify-content: flex-end;
+    }
+    @media (prefers-color-scheme: dark) {
+      --bg: hsl(0deg 0% 0% / 52%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bg: hsl(240deg 12% 92% / 90%);
     }
   }
   .slot-wrap {

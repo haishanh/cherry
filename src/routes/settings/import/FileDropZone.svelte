@@ -75,12 +75,6 @@
 
 <style lang="scss">
   :global(.dzone) {
-    @media (prefers-color-scheme: dark) {
-      --bo: hsl(0deg 0% 22%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bo: hsl(0deg 0% 86%);
-    }
     background-color: var(--bg-card);
     border: 1px dashed var(--bo);
     border-radius: 15px;
@@ -92,6 +86,12 @@
     }
     .note {
       margin: 8px 0;
+    }
+    @media (prefers-color-scheme: dark) {
+      --bo: hsl(0deg 0% 22%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bo: hsl(0deg 0% 86%);
     }
   }
   :global(.dragenter) {

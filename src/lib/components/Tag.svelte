@@ -114,20 +114,19 @@
     align-items: center;
     gap: 5px;
     text-decoration: none;
+    --fg: var(--text-v3);
+    color: var(--fg);
 
     &.isOpen {
+      border-color: hsl(0deg 0% var(--lightness));
       @media (prefers-color-scheme: dark) {
         --lightness: 30%;
       }
       @media (prefers-color-scheme: light) {
         --lightness: 50%;
       }
-      border-color: hsl(0deg 0% var(--lightness));
     }
 
-    --fg: var(--text-v3);
-
-    color: var(--fg);
     @media (prefers-color-scheme: dark) {
       border-color: hsl(0deg 0% 31%);
     }

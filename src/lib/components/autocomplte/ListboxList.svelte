@@ -152,18 +152,18 @@
 
     border-radius: 7px;
     border: 1px solid transparent;
-    @media (prefers-color-scheme: dark) {
-      --lightness: 30%;
-    }
-    @media (prefers-color-scheme: light) {
-      --lightness: 50%;
-    }
     border-color: hsl(0deg 0% var(--lightness));
     // prettier-ignore
     box-shadow: 0 1px 1px rgba(0,0,0,0.1),
                 0 2px 2px rgba(0,0,0,0.1),
                 0 4px 4px rgba(0,0,0,0.1),
                 0 8px 10px rgba(0,0,0,0.1);
+    @media (prefers-color-scheme: dark) {
+      --lightness: 30%;
+    }
+    @media (prefers-color-scheme: light) {
+      --lightness: 50%;
+    }
   }
   ul {
     position: relative;
