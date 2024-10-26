@@ -229,22 +229,22 @@
     outline: none;
     word-break: break-all;
     &:focus {
+      border-color: hsl(0deg 0% var(--lightness));
       @media (prefers-color-scheme: dark) {
         --lightness: 30%;
       }
       @media (prefers-color-scheme: light) {
         --lightness: 50%;
       }
-      border-color: hsl(0deg 0% var(--lightness));
     }
     &.isOpen {
+      border-color: hsl(0deg 0% var(--lightness));
       @media (prefers-color-scheme: dark) {
         --lightness: 30%;
       }
       @media (prefers-color-scheme: light) {
         --lightness: 50%;
       }
-      border-color: hsl(0deg 0% var(--lightness));
     }
     &.isActive {
       background-color: var(--bg-card-hover);
