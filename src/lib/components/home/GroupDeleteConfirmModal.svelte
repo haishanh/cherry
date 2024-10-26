@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash } from 'lucide-svelte'
+  import { Trash } from 'lucide-svelte';
 
   import { deleteGroupClientSide } from '$lib/client/group.store';
   import Button from '$lib/components/base/Button.svelte';
@@ -51,8 +51,8 @@
     <div class="action">
       <Button modifier={['warn']} onclick={handleClickDelete}>
         {#snippet icon()}
-        <Trash size={16} />
-      {/snippet}
+          <Trash size={16} />
+        {/snippet}
 
         <span>Delete</span>
       </Button>

@@ -1,6 +1,6 @@
 import * as crc32Util from '@node-rs/crc32';
 import type { RequestHandler } from '@sveltejs/kit';
-import { fileTypeFromBuffer} from 'file-type'
+import { fileTypeFromBuffer } from 'file-type';
 
 import { FAVICON_CACHE_MAX_AGE_FOUND, FAVICON_CACHE_MAX_AGE_MISS } from '$lib/env';
 import { ApiError, HttpStatus } from '$lib/server/api.error';

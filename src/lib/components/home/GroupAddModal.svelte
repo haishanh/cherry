@@ -74,7 +74,7 @@
     <div class="action">
       <Button type="submit">
         {#snippet icon()}
-        <Save size={16} />
+          <Save size={16} />
         {/snippet}
 
         <span>Save</span>
