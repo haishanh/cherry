@@ -184,8 +184,10 @@
   </div>
   <!-- listbox -->
   {#if expanded && filtered.length > 0}
-    <ListboxList {autoSelect} {filtered} on:confirm={handleConfirmSelection} let:item>
+    <ListboxList {autoSelect} {filtered} on:confirm={handleConfirmSelection}>
+      {#snippet itemComp(item)}
       <ListboxOptionTag {item} />
+      {/snippet}
     </ListboxList>
   {/if}
 </div>

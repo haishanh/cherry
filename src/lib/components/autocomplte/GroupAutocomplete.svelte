@@ -127,8 +127,10 @@
     <VisuallyHidden>Show suggestions</VisuallyHidden>
   </button>
   {#if expanded && filtered.length > 0}
-    <ListboxList {filtered} let:item on:confirm={handleConfirmSelection}>
-      <ListboxOptionGroup {item} />
+    <ListboxList {filtered} on:confirm={handleConfirmSelection}>
+      {#snippet itemComp(item)}
+        <ListboxOptionGroup {item} />
+      {/snippet}
     </ListboxList>
   {/if}
 </div>

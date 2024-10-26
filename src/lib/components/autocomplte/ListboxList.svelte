@@ -5,10 +5,20 @@
 
   const dispatch = createEventDispatcher();
 
-  export let autoSelect = false;
-  export let filtered: { name: string }[] = [];
+  type Props = {
+    autoSelect?: boolean;
+    filtered?: { name: string }[];
+    itemComp: import('svelte').Snippet<[{name: string}]>;
+  };
 
-  $: {
+  let { autoSelect = false, filtered = [], itemComp }: Props = $props();
+
+  // export let autoSelect = false;
+  // export let filtered: { name: string }[] = [];
+
+  let highlightedIdx = $state(autoSelect ? 0 : -1);
+
+  $effect(() => {
     const highlighted = filtered[highlightedIdx];
 
     let idx = -1;
@@ -20,12 +30,11 @@
     }
 
     ensureItemVisible(highlightedIdx);
-  }
+  });
 
   const idPrefix = makeId();
 
   let listbox: HTMLElement;
-  let highlightedIdx = autoSelect ? 0 : -1;
   function highlightItemAt(idx: number | string) {
     highlightedIdx = typeof idx === 'number' ? idx : parseInt(idx, 10);
     ensureItemVisible(highlightedIdx);
@@ -113,6 +122,13 @@
       default:
     }
   }
+
+  function preventDefault<E extends UIEvent>(fn: (e: E) => void) {
+    return function (event: E) {
+      event.preventDefault();
+      fn(event);
+    };
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -131,10 +147,10 @@
         class:hi={idx === highlightedIdx}
         aria-selected={idx === highlightedIdx}
         data-idx={idx}
-        on:mousedown|preventDefault={handleClickItem}
-        on:mouseenter|preventDefault={handleMouseEnterItem}
+        onmousedown={preventDefault(handleClickItem)}
+        onmouseenter={preventDefault(handleMouseEnterItem)}
       >
-        <slot {item} />
+        {@render itemComp(item)}
       </li>
     {/each}
   </ul>
