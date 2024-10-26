@@ -11,6 +11,13 @@ export default defineConfig(async () => {
       __VERSION__: JSON.stringify(pkg.version),
       __COMMIT_SHA__: JSON.stringify(hash),
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler', // or "modern"
+        },
+      },
+    },
     plugins: [sveltekit()],
     test: {
       include: ['src/**/*.{test,spec}.{js,ts}'],

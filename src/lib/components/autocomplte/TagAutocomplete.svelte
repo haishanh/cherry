@@ -129,8 +129,8 @@
     // }
   }
 
-  function handleClickCloseTag(e: CustomEvent<TagType>) {
-    const tag = e.detail;
+  function handleClickCloseTag(tag: { name: string }) {
+    // const tag = e.detail;
     invariant(tag, 'handleClickCloseTag: something went wrong');
     tags = tags.filter((t) => t !== tag);
     dispatch('change', [...tags]);
@@ -152,7 +152,7 @@
 <div class="autocomplete-wrapper">
   <div class="autocomplete" class:round={search}>
     {#each tags as tag (tag.name)}
-      <Tag {tag} on:clickclose={handleClickCloseTag} />
+      <Tag {tag} clickclose={handleClickCloseTag} />
     {/each}
     <input
       autocomplete="off"

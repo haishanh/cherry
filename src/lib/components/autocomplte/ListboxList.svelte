@@ -13,9 +13,6 @@
 
   let { autoSelect = false, filtered = [], itemComp }: Props = $props();
 
-  // export let autoSelect = false;
-  // export let filtered: { name: string }[] = [];
-
   let highlightedIdx = $state(autoSelect ? 0 : -1);
 
   $effect(() => {

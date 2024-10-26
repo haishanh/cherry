@@ -46,18 +46,18 @@
 
 :root {
   color-scheme: dark light;
-  @media (prefers-color-scheme: dark) {
-    @include dark;
-  }
-  @media (prefers-color-scheme: light) {
-    @include light;
-  }
   --color-focus-blue: #387cec;
   --focus-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
   // cherry red
   // --accent: hsl(351deg 57% 60%);
   // cherry green
   --accent: hsl(94deg 99% 33%);
+  @media (prefers-color-scheme: dark) {
+    @include dark;
+  }
+  @media (prefers-color-scheme: light) {
+    @include light;
+  }
 }
 
 :root {
