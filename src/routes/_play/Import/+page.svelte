@@ -1,5 +1,5 @@
 <script>
-  import Inbox from '@hsjs/svelte-icons/feather/Inbox.svelte';
+  import { Inbox } from 'lucide-svelte'
   import Dropzone from 'svelte-file-dropzone';
 
   // import { request } from '$lib/utils/http.util';

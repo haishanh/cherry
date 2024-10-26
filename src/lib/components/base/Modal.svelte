@@ -5,7 +5,6 @@
 </script>
 
 <script lang="ts">
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
   import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
   import { fade } from 'svelte/transition';
@@ -15,6 +14,7 @@
   import { decModalZi, incModalZi } from '$lib/utils/common.util';
 
   import Portal from './misc/Portal.svelte';
+    import { XIcon } from 'lucide-svelte';
 
   export let closeButtonPosition: 'left' | 'right' = 'right';
   export let verticalAlign: 'start' | 'center' | 'end' = 'center';
@@ -114,7 +114,7 @@
         <div class="focus-guard" data-leading-focus-guard tabindex="-1"></div>
         <div class="action" class:left={closeButtonPosition === 'left'} class:right={closeButtonPosition === 'right'}>
           <Button modifier={['minimal', 'p5']} title="Close" onclick={close}>
-            <VisuallyHidden>Close</VisuallyHidden><CloseIcon size={20} />
+            <VisuallyHidden>Close</VisuallyHidden><XIcon size={20} />
           </Button>
         </div>
         <div class="slot-wrap"><slot /></div>

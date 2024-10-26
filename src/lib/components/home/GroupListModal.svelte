@@ -1,7 +1,6 @@
 <script lang="ts">
   export let itemAs: 'link' | 'label' = 'link';
 
-  import Plus from '@hsjs/svelte-icons/feather/Plus.svelte';
   import { createEventDispatcher, tick } from 'svelte';
 
   import { beforeNavigate } from '$app/navigation';
@@ -13,6 +12,7 @@
   import Spinner from '../feedback/Spinner.svelte';
   import GroupChip from './GroupChip.svelte';
   import GroupFilterInput from './GroupFilterInput.svelte';
+    import { PlusIcon } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -81,7 +81,7 @@
   <div slot="footer" class="footer">
     <Button onclick={handleClickAdd}>
       {#snippet icon()}
-        <Plus size={16} />
+        <PlusIcon size={16} />
       {/snippet}
       <span>Create New</span>
     </Button>

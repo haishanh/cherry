@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
+  import { XIcon as CloseIcon } from 'lucide-svelte';
   import { fly } from 'svelte/transition';
 
   import Spinner from '$lib/components/feedback/Spinner.svelte';

@@ -36,7 +36,6 @@
     "@browser-logos/safari": "2.1.0",
     "@eslint/js": "9.13.0",
     "@fontsource/inter": "5.1.0",
-    "@hsjs/svelte-icons": "0.0.1-rc.4",
     "@sveltejs/adapter-node": "5.2.9",
     "@sveltejs/kit": "2.7.3",
     "@sveltejs/package": "2.3.7",

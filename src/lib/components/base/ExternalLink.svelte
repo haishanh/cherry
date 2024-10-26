@@ -1,5 +1,6 @@
 <script lang="ts">
-  import ExternalLink from '@hsjs/svelte-icons/feather/ExternalLink.svelte';
+    import { ExternalLink } from 'lucide-svelte';
+
 
   interface Props {
     href?: string;

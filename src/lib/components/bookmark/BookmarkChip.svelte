@@ -1,6 +1,4 @@
 <script lang="ts">
-  import CheckSquare from '@hsjs/svelte-icons/feather/CheckSquare.svelte';
-  import Square from '@hsjs/svelte-icons/feather/Square.svelte';
   import { createEventDispatcher } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';
@@ -10,6 +8,7 @@
   import type { BookmarkFromDb } from '$lib/type';
 
   import BookmarkTagsPreview from './BookmarkTagsPreview.svelte';
+    import { CheckSquareIcon, SquareIcon } from 'lucide-svelte';
 
   export let bookmark: BookmarkFromDb;
   export let isOpen = false;
@@ -140,9 +139,9 @@
     <label class="check">
       <input type="checkbox" bind:checked={isSelected} />
       {#if isSelected}
-        <CheckSquare size={16} />
+        <CheckSquareIcon size={16} />
       {:else}
-        <Square size={16} />
+        <SquareIcon size={16} />
       {/if}
     </label>
   {/if}

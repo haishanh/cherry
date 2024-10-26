@@ -2,12 +2,11 @@
   export let group: { id: number; name: string; count?: number };
   export let itemAs: 'link' | 'label' = 'link';
 
-  import Edit from '@hsjs/svelte-icons/feather/Edit.svelte';
-  import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
   import { createEventDispatcher } from 'svelte';
 
   import { groupAddModal, groupDeleteConfirmModal } from '$lib/client/modal.store';
   import Button from '$lib/components/base/Button.svelte';
+    import { EditIcon, TrashIcon } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -71,12 +70,12 @@
   {/if}
   <span class="edit" class:isOpen>
     <Button modifier={['p5']} onclick={handleClickEdit}>
-      <Edit size={12} />
+      <EditIcon size={12} />
     </Button>
   </span>
   <span class="delete" class:isOpen>
     <Button modifier={['p5']} onclick={handleClickDelete}>
-      <Trash size={12} />
+      <TrashIcon size={12} />
     </Button>
   </span>
 </span>

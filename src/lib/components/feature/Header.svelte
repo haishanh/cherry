@@ -1,10 +1,9 @@
 <script lang="ts">
-  import Settings from '@hsjs/svelte-icons/feather/Settings.svelte';
-  import TagIcon from '@hsjs/svelte-icons/feather/Tag.svelte';
 
   import { afterNavigate } from '$app/navigation';
   import Cherry from '$lib/components/base/Cherry.svelte';
   import Dice from '$lib/components/base/icons/Dice.svelte';
+    import { SettingsIcon, TagIcon } from 'lucide-svelte';
 
   let randomCount = 0;
   afterNavigate(() => {
@@ -24,7 +23,7 @@
   <ul>
     <li><a href="/tags"><TagIcon size={18} /><span>Tags</span></a></li>
     <li><a href="/?random&r={randomCount}"><Dice size={18} /><span>Random</span></a></li>
-    <li><a href="/settings/account"><Settings size={18} /><span>Settings</span></a></li>
+    <li><a href="/settings/account"><SettingsIcon size={18} /><span>Settings</span></a></li>
   </ul>
 </header>
 

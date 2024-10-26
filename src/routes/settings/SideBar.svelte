@@ -1,12 +1,5 @@
 <script lang="ts">
-  import ChevronDown from '@hsjs/svelte-icons/feather/ChevronDown.svelte';
-  import Command from '@hsjs/svelte-icons/feather/Command.svelte';
-  import DownloadCloud from '@hsjs/svelte-icons/feather/DownloadCloud.svelte';
-  import Info from '@hsjs/svelte-icons/feather/Info.svelte';
-  import Settings from '@hsjs/svelte-icons/feather/Settings.svelte';
-  import UploadCloud from '@hsjs/svelte-icons/feather/UploadCloud.svelte';
-  import User from '@hsjs/svelte-icons/feather/User.svelte';
-
+  import { ChevronDown, Command, DownloadCloud, Info, Settings, UploadCloud, User } from 'lucide-svelte';
   import { afterNavigate } from '$app/navigation';
   import type { UserMe } from '$lib/type';
 

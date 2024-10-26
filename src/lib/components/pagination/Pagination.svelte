@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ChevronLeft from '@hsjs/svelte-icons/feather/ChevronLeft.svelte';
-  import ChevronRight from '@hsjs/svelte-icons/feather/ChevronRight.svelte';
+    import { ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+
   // current page
   export let current = 1;
   // total pages
@@ -57,9 +57,9 @@
 {#if (total && total > 1) || maybeHasMore}
   <div class="pagination" role="navigation" aria-label="Pagination">
     {#if current === 1}
-      <span class="item disabled"><ChevronLeft size={20} /><span>Previous</span></span>
+      <span class="item disabled"><ChevronLeftIcon size={20} /><span>Previous</span></span>
     {:else}
-      <a class="item" rel="prev" href={previous}><ChevronLeft size={20} /><span>Previous</span></a>
+      <a class="item" rel="prev" href={previous}><ChevronLeftIcon size={20} /><span>Previous</span></a>
     {/if}
 
     {#each items as item}
@@ -75,11 +75,11 @@
     {/each}
 
     {#if total <= 0 && maybeHasMore}
-      <a class="item" rel="next" href={next}><span>Next</span><ChevronRight size={20} /></a>
+      <a class="item" rel="next" href={next}><span>Next</span><ChevronRightIcon size={20} /></a>
     {:else if current >= total}
-      <span class="item disabled"><span>Next</span><ChevronRight size={20} /></span>
+      <span class="item disabled"><span>Next</span><ChevronRightIcon size={20} /></span>
     {:else}
-      <a class="item" rel="next" href={next}><span>Next</span><ChevronRight size={20} /></a>
+      <a class="item" rel="next" href={next}><span>Next</span><ChevronRightIcon size={20} /></a>
     {/if}
   </div>
 {/if}

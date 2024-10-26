@@ -1,6 +1,5 @@
 <script lang="ts">
-  import ArrowUpCircle from '@hsjs/svelte-icons/feather/ArrowUpCircle.svelte';
-  import Inbox from '@hsjs/svelte-icons/feather/Inbox.svelte';
+import { ArrowUpCircle, Inbox } from 'lucide-svelte';
   import Dropzone from 'svelte-file-dropzone';
 
   import Button from '$lib/components/base/Button.svelte';

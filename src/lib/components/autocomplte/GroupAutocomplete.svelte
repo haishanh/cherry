@@ -1,5 +1,6 @@
 <script lang="ts">
-  import ChevronDown from '@hsjs/svelte-icons/feather/ChevronDown.svelte';
+    import { ChevronDownIcon } from 'lucide-svelte';
+
 
   import VisuallyHidden from '../base/VisuallyHidden.svelte';
   import { fuzzysearch } from './fuzzy';
@@ -123,7 +124,7 @@
     aria-label="Show suggestions"
     aria-haspopup="listbox"
   >
-    <ChevronDown size={20} />
+    <ChevronDownIcon size={20} />
     <VisuallyHidden>Show suggestions</VisuallyHidden>
   </button>
   {#if expanded && filtered.length > 0}
