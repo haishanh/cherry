@@ -1,8 +1,10 @@
 <script lang="ts">
-  export let item: { name: string; id?: number };
-  
   import { FolderIcon } from 'lucide-svelte';
+  interface Props {
+    item: { name: string; id?: number };
+  }
 
+  let { item }: Props = $props();
 </script>
 
 <span class="tag-label"><FolderIcon size={17} /><span>{item.name}</span></span>

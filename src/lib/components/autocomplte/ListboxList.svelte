@@ -8,7 +8,7 @@
   type Props = {
     autoSelect?: boolean;
     filtered?: { name: string }[];
-    itemComp: import('svelte').Snippet<[{name: string}]>;
+    itemComp: import('svelte').Snippet<[{ name: string }]>;
   };
 
   let { autoSelect = false, filtered = [], itemComp }: Props = $props();
