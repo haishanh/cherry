@@ -1,7 +1,7 @@
 import type { Element } from 'domhandler';
 import * as htmlparser2 from 'htmlparser2';
 import { fetch, ProxyAgent } from 'undici';
-
+import { fileTypeFromBuffer } from 'file-type';
 import { HTTP_PROXY } from '$lib/env';
 import { logger } from '$lib/server/logger';
 
@@ -321,7 +321,8 @@ export async function buf(
     if (input.type === type) {
       return { type: input.type, buffer };
     } else {
-      const type = typeFromBuffer(buffer);
+      const x = await fileTypeFromBuffer(buffer);
+      const type = x?.mime;
       if (type) {
         return { type, buffer };
       } else {
@@ -335,13 +336,6 @@ export async function buf(
   }
 
   return { buffer };
-}
-
-export function typeFromBuffer(b: Buffer) {
-  const len = b.length;
-  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff && b[len - 2] === 0xff && b[len - 1] === 0xd9)
-    return 'image/jpeg';
-  if (Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).equals(b.subarray(0, 8))) return 'image/png';
 }
 
 function typeFromExt(x: string) {

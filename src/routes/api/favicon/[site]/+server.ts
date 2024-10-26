@@ -1,5 +1,6 @@
 import * as crc32Util from '@node-rs/crc32';
 import type { RequestHandler } from '@sveltejs/kit';
+import { fileTypeFromBuffer} from 'file-type'
 
 import { FAVICON_CACHE_MAX_AGE_FOUND, FAVICON_CACHE_MAX_AGE_MISS } from '$lib/env';
 import { ApiError, HttpStatus } from '$lib/server/api.error';
@@ -34,8 +35,8 @@ export const GET: RequestHandler = async (event) => {
           buffer = Buffer.from(decodeURIComponent(ret.data));
         }
         if (!type) {
-          const t = favicon.typeFromBuffer(buffer);
-          if (t) type = t;
+          const t = await fileTypeFromBuffer(buffer);
+          if (t) type = t.mime;
         }
       } else {
         const tmp = await favicon.buf(ret, site);
