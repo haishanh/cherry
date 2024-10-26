@@ -70,12 +70,12 @@
     </span>
   {/if}
   <span class="edit" class:isOpen>
-    <Button modifier={['p5']} on:click={handleClickEdit}>
+    <Button modifier={['p5']} onclick={handleClickEdit}>
       <Edit size={12} />
     </Button>
   </span>
   <span class="delete" class:isOpen>
-    <Button modifier={['p5']} on:click={handleClickDelete}>
+    <Button modifier={['p5']} onclick={handleClickDelete}>
       <Trash size={12} />
     </Button>
   </span>

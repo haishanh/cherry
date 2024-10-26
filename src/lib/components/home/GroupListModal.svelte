@@ -80,7 +80,9 @@
 
   <div slot="footer" class="footer">
     <Button onclick={handleClickAdd}>
-      <Plus slot="icon" size={16} />
+      {#snippet icon()}
+        <Plus size={16} />
+      {/snippet}
       <span>Create New</span>
     </Button>
   </div>
