@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SearchIcon from '@hsjs/svelte-icons/feather/Search.svelte';
+  import { SearchIcon } from 'lucide-svelte';
   import { createEventDispatcher } from 'svelte';
   import invariant from 'tiny-invariant';
 
@@ -218,17 +218,8 @@
     }
   }
 
-  .search-wrapper button .search-icon-wrapper {
-    color: var(--color-input-bo);
+  .search-wrapper .search-icon-wrapper {
     display: inline-flex;
-  }
-
-  .search-wrapper button:hover .search-icon-wrapper {
-    color: var(--color-text);
-  }
-
-  .search-wrapper button:focus .search-icon-wrapper {
-    color: var(--color-text);
   }
 
   .autocomplete {
