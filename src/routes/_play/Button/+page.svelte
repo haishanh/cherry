@@ -1,6 +1,7 @@
 <script lang="ts">
-  import Trash from '@hsjs/svelte-icons/feather/Trash.svelte';
-  import CloseIcon from '@hsjs/svelte-icons/feather/X.svelte';
+
+  
+  import { Trash, XIcon } from 'lucide-svelte';
 
   import Button from '$lib/components/base/Button.svelte';
   import Tooltip from '$lib/components/base/popover/Tooltip.svelte';
@@ -46,19 +47,25 @@
     <Button>hello</Button>
     <Button modifier={['minimal']}>minimal</Button>
     <Button modifier={['minimal', 'icon']}><Trash size={14} /></Button>
-    <Button modifier={['minimal', 'circular']}><CloseIcon size={16} /></Button>
+    <Button modifier={['minimal', 'circular']}><XIcon size={16} /></Button>
   </section>
   <section>
     <Button>
-      <Trash size={18} slot="icon" />
+      {#snippet icon()}
+      <Trash size={18} />
+      {/snippet}
       <span>Delete</span>
     </Button>
     <Button>
-      <Spinner slot="icon" size={18} />
+      {#snippet icon()}
+      <Spinner size={18} />
+      {/snippet}
       <span>Delete</span>
     </Button>
     <Button disabled>
-      <Spinner slot="icon" size={18} />
+      {#snippet icon()}
+      <Spinner size={18} />
+      {/snippet}
       <span>Delete</span>
     </Button>
   </section>

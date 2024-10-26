@@ -19,7 +19,7 @@
 </script>
 
 <main>
-  <Button on:click={toggle}>open</Button>
+  <Button onclick={toggle}>open</Button>
 
   <Modal bind:this={modal}>
     <h1>hello</h1>
