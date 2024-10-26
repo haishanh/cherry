@@ -41,7 +41,7 @@
     <pre class="pre">{data.backupDbMeta.s3KeyTemplate}</pre>
     <p>They will be uploaded to the bucket "{data.backupDbMeta.s3Bucket}".</p>
     <div class="action">
-      <Button on:click={startBackup}>Backup Now</Button>
+      <Button onclick={startBackup}>Backup Now</Button>
     </div>
   {/if}
 </div>

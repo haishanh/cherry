@@ -56,6 +56,7 @@
     "eslint-plugin-svelte": "^2.45.1",
     "globals": "15.9.0",
     "ky": "1.7.2",
+    "lucide-svelte": "0.453.0",
     "nanoid": "5.0.7",
     "postcss": "8.4.40",
     "prettier": "3.3.3",
