@@ -46,6 +46,10 @@
     border: 1px solid var(--color-btn-bo);
     border-radius: 100px;
     border-color: hsl(0deg 0% var(--bo-lightness));
+    &:hover {
+      border-color: hsl(0deg 0% var(--bo-lightness-hover));
+      background-color: var(--bg-hover);
+    }
     @media (prefers-color-scheme: dark) {
       --bo-lightness: 30%;
       --bo-lightness-hover: 70%;
@@ -55,10 +59,6 @@
       --bo-lightness: 80%;
       --bo-lightness-hover: 15%;
       --bg-hover: hsl(0deg 0% 90%);
-    }
-    &:hover {
-      border-color: hsl(0deg 0% var(--bo-lightness-hover));
-      background-color: var(--bg-hover);
     }
     &:active {
       transform: scale(0.99) translateY(1%);

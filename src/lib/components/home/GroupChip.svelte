@@ -105,12 +105,6 @@
     display: inline;
   }
   .link {
-    @media (prefers-color-scheme: dark) {
-      --bg: hsl(0deg 0% 27%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bg: hsl(0deg 0% 95%);
-    }
     border-radius: 100px;
     padding: 8px 10px;
     color: inherit;
@@ -142,6 +136,13 @@
         background-color: hsla(94deg, 99%, 33%, 0.5);
         color: #fff;
       }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      --bg: hsl(0deg 0% 27%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bg: hsl(0deg 0% 95%);
     }
   }
 </style>

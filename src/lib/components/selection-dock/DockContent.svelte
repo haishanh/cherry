@@ -59,15 +59,6 @@
     margin: 0;
   }
   kbd {
-    @media (prefers-color-scheme: dark) {
-      --bg: #3b4046;
-      --shadow: inset 0 -2px 0 0 hsl(0deg 0% 20%), inset 0 0 1px 1px hsl(0deg 0% 21%),
-        0 2px 2px 0 hsl(0deg 0% 11% / 69%);
-    }
-    @media (prefers-color-scheme: light) {
-      --bg: linear-gradient(-225deg, #d5dbe4, #f8f8f8);
-      --shadow: inset 0 -2px 0 0 hsl(0deg 0% 77%), inset 0 0 1px 1px #fff, 0 1px 2px 1px hsl(0deg 0% 60% / 70%);
-    }
     background: var(--bg);
     box-shadow: var(--shadow);
     border-radius: 3px;
@@ -79,6 +70,15 @@
     line-height: 1;
     padding: 3px 5px;
     white-space: nowrap;
+    @media (prefers-color-scheme: dark) {
+      --bg: #3b4046;
+      --shadow: inset 0 -2px 0 0 hsl(0deg 0% 20%), inset 0 0 1px 1px hsl(0deg 0% 21%),
+        0 2px 2px 0 hsl(0deg 0% 11% / 69%);
+    }
+    @media (prefers-color-scheme: light) {
+      --bg: linear-gradient(-225deg, #d5dbe4, #f8f8f8);
+      --shadow: inset 0 -2px 0 0 hsl(0deg 0% 77%), inset 0 0 1px 1px #fff, 0 1px 2px 1px hsl(0deg 0% 60% / 70%);
+    }
   }
   .btn-label {
     margin-left: 5px;

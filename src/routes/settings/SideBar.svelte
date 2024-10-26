@@ -63,7 +63,7 @@
           <ul class="nodes">
             {#each link.nodes as node (node.href)}
               <li class:active={node.href === pathname}>
-                <span /><a class="link" href={node.href}><span>{node.label}</span></a>
+                <span></span><a class="link" href={node.href}><span>{node.label}</span></a>
               </li>
             {/each}
           </ul>
