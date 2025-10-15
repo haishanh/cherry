@@ -4,17 +4,18 @@ concurrency:
   group: push-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  install:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [24.x]
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
         with:
-          version: 8
+          run_install: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -26,7 +27,7 @@ jobs:
       - run: pnpm sync
       - run: pnpm check
       - run: |
-          wget 'https://github.com/wangfenjin/simple/releases/download/v0.4.0/libsimple-linux-ubuntu-latest.zip'
+          wget 'https://github.com/wangfenjin/simple/releases/download/v0.5.2/libsimple-linux-ubuntu-latest.zip'
           unzip libsimple-linux-ubuntu-latest.zip
           cp libsimple-linux-ubuntu-latest/libsimple.so ./db/
       - run: pnpm test
@@ -39,7 +40,7 @@ jobs:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}
           job-status: ${{ job.status }}
   docker:
-    needs: install
+    needs: build
     runs-on: ubuntu-latest
     if: >
       github.event_name == 'push' &&
@@ -52,21 +53,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Cache Docker layers
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-buildx-
+      - uses: actions/github-script@v8
+        id: set-images
+        with:
+          script: |
+            const images = [];
+            // "ref" like "refs/heads/v0.0.9-rc.4",
+            if (context.eventName === 'push' && context.ref.startsWith('refs/heads/v') && /-rc\.[\d]+/.test(context.ref)) {
+              images.push('r0.haishan.me/haishanh/cherry');
+            } else {
+              images.push('haishanh/cherry');
+              images.push('ghcr.io/haishanh/cherry');
+            }
+            return images.join('\n');
+          result-encoding: string
 
       - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@v5
         with:
-          images: |
-            haishanh/cherry
-            # ghcr.io/haishanh/cherry
+          images: ${{ steps.set-images.outputs.result }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -87,19 +93,17 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
 
-      - name: Login to r.haishan.me
+      - name: Login to r0.haishan.me
         uses: docker/login-action@v3
         with:
-          registry: r.haishan.me
+          registry: r0.haishan.me
           username: ${{ github.actor }}
           password: ${{ secrets.R_HAISHAN_ME_PASSWORD }}
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
@@ -115,24 +119,24 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }},ghcr.io/${{ steps.docker_meta.outputs.tags }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
           build-args: |
             COMMIT_SHA=${{ env.sha_short }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - run: |
-          printf '**Docker images**' >> $GITHUB_STEP_SUMMARY
-          printf "\n" >> $GITHUB_STEP_SUMMARY
-          printf '```' >> $GITHUB_STEP_SUMMARY
-          printf "\n" >> $GITHUB_STEP_SUMMARY
-          printf "$TAGS" >> $GITHUB_STEP_SUMMARY
-          printf "\n" >> $GITHUB_STEP_SUMMARY
-          printf '```' >> $GITHUB_STEP_SUMMARY
-          printf "\n" >> $GITHUB_STEP_SUMMARY
+      - name: Generate summary
+        uses: actions/github-script@v8
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
+        with:
+          script: |
+            core.summary.addHeading('Docker Images', '2');
+            core.summary.addEOL();
+            core.summary.addCodeBlock(`${process.env.TAGS}`);
+            core.summary.addEOL();
+            core.summary.write();
 
       - name: Send Notification
         uses: haishanh/actions-telegram-notification@v2

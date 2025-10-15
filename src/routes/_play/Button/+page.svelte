@@ -14,6 +14,8 @@
     desc: 'test',
     tagIds: [3714],
   };
+
+  const onev0 = () => {};
 </script>
 
 <main>
@@ -21,7 +23,7 @@
     <LeafSpinner size={150} />
   </section>
   <section>
-    <BookmarkEditForm {bookmark} />
+    <BookmarkEditForm {bookmark} {onev0} />
   </section>
   <section>
     <div style="background-color:#000;padding:15px;">
@@ -72,8 +74,12 @@
   </section>
   <section>
     <Tooltip>
-      <Button slot="trigger">hello</Button>
-      <div slot="content">hdllo</div>
+      {#snippet trigger()}
+        <Button>hello</Button>
+      {/snippet}
+      {#snippet content()}
+        <div>hdllo</div>
+      {/snippet}
     </Tooltip>
   </section>
 </main>

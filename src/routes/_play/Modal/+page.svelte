@@ -10,7 +10,7 @@
     modal.close();
   }
   function toggle() {
-    if (modal.state().isOpen) {
+    if (modal.getState().isOpen) {
       close();
     } else {
       open();

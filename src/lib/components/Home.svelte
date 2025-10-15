@@ -4,10 +4,7 @@
   import { fetchGroups } from '$lib/client/group.store';
   import { fetchTags } from '$lib/client/tag.store';
   import { addToast } from '$lib/components/base/toast/store';
-  import {
-    type Event0 as BEFEvent0,
-    Event0Type as BEFEvent0Type,
-  } from '$lib/components/bookmark/BookmarkEditForm.svelte';
+  import { Event0Type as BEFEvent0Type, type Event0 } from '$lib/components/bookmark/BookmarkEditForm.svelte';
   import BookmarkEditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
   import BookmarkList from '$lib/components/bookmark/BookmarkList.svelte';
   import BookmarkToolbar, { EVENT_TYPE as TOOLBAR_EVENT_TYPE } from '$lib/components/bookmark/BookmarkToolbar.svelte';
@@ -18,6 +15,7 @@
 
   import Empty from './home/Empty.svelte';
   import Pagination from './pagination/Pagination.svelte';
+  import { SvelteURLSearchParams } from 'svelte/reactivity';
 
   export let bookmarks: BookmarkFromDb[] = [];
   // TODO merge this with meta?
@@ -33,17 +31,18 @@
     fetchGroups({ initial: true });
   });
 
-  function handleBookmarkEditModalEv0(e: BEFEvent0) {
-    const type = e.detail?.type;
+  function handleBookmarkEditModalEv0(e: Event0) {
+    console.log(JSON.stringify(e, null, 2));
+    const type = e.type;
     switch (type) {
       case BEFEvent0Type.UpdateCompleted:
-        handleBookmarkUpdateCompleted(e.detail?.payload);
+        handleBookmarkUpdateCompleted(e.payload);
         break;
       case BEFEvent0Type.CreateCompleted:
-        handleBookmarkCreateCompleted(e.detail?.payload);
+        handleBookmarkCreateCompleted(e.payload);
         break;
       case BEFEvent0Type.UpdateFailed:
-        handleBookmarkUpdateFailed(e.detail?.payload);
+        handleBookmarkUpdateFailed(e.payload);
         break;
     }
   }
@@ -70,7 +69,7 @@
     editModal.close();
   }
 
-  function handleBookmarkUpdateFailed(e: { bookmark: BookmarkFromDb; error: any }) {
+  function handleBookmarkUpdateFailed(e: { bookmark: unknown; error: any }) {
     editModal.close();
     const error = e.error;
     if (error && error instanceof RequestError) {
@@ -83,8 +82,8 @@
     addToast({ description: 'Something went wrong.', status: 'error' });
   }
 
-  function handleToolbarEvent0(e: CustomEvent<{ type: TOOLBAR_EVENT_TYPE }>) {
-    const type = e.detail?.type;
+  function handleToolbarEvent0(e: { type: TOOLBAR_EVENT_TYPE }) {
+    const type = e.type;
     switch (type) {
       case TOOLBAR_EVENT_TYPE.ClickAddButton:
         editModal.openEmpty();
@@ -104,7 +103,7 @@
   let groupId: number | null;
 
   $: {
-    q = new URLSearchParams(url.search);
+    q = new SvelteURLSearchParams(url.search);
     pageCurrent = q.get('p') ? parseInt(q.get('p') || '', 10) : 1;
     groupId = q.get('group') ? parseInt(q.get('group') || '', 10) : null;
     q.delete('p');
@@ -132,10 +131,10 @@
     {#if bookmarks.length > 0}
       <BookmarkList bind:bookmarks {editModal} />
     {:else}
-      <BookmarkToolbar tools={['add']} on:ev0={handleToolbarEvent0} />
+      <BookmarkToolbar tools={['add']} ev0={handleToolbarEvent0} />
       <Empty />
     {/if}
-    <BookmarkEditModal bind:this={editModal} on:ev0={handleBookmarkEditModalEv0} />
+    <BookmarkEditModal bind:this={editModal} onev0={handleBookmarkEditModalEv0} />
     <Pagination
       {pageUriTemplate}
       previous=""

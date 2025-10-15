@@ -1,6 +1,4 @@
 <script lang="ts">
-  export let dryrun = false;
-
   import { onMount } from 'svelte';
 
   import { afterNavigate, goto } from '$app/navigation';
@@ -9,8 +7,10 @@
   import TagAutocomplete from '$lib/components/autocomplte/TagAutocomplete.svelte';
   import type { TagType } from '$lib/type';
 
-  let tags: TagType[] = [];
-  let inputValue = '';
+  const noop = () => {};
+  let { focus0 = noop, blur0 = noop, dryrun = false, inputValue = '' } = $props();
+
+  let tags: TagType[] = $state([]);
   let tagAutocomplete: TagAutocomplete;
 
   function updateState() {
@@ -19,7 +19,6 @@
     const tagStr = search.get('tag');
     inputValue = qStr ?? '';
     if (tagStr && $tagMapById.size > 0) {
-      // @ts-ignore
       tags = tagStr
         .split(',')
         .map((s) => parseInt(s, 10))
@@ -36,7 +35,8 @@
 
   afterNavigate(updateState);
 
-  function onSubmit() {
+  function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
     const q = (inputValue || '').trim();
     const tag = tags.map((t) => t.id).join(',');
     const o: { q?: string; tag?: string } = {};
@@ -65,7 +65,7 @@
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
-<form on:submit|preventDefault={onSubmit}>
+<form onsubmit={onSubmit}>
   <TagAutocomplete
     bind:this={tagAutocomplete}
     options={$tagList}
@@ -75,8 +75,8 @@
     focusWithForwardSlashKey
     bind:inputValue
     placeholder="Search"
-    on:focus0
-    on:blur0
+    {focus0}
+    {blur0}
   />
 </form>
 

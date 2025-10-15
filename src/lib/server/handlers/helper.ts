@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { ZodError, ZodSchema } from 'zod';
+import * as z from 'zod';
 
 import { dev } from '$app/environment';
 import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
@@ -93,12 +93,16 @@ export async function signInUser(user: { id: number; username: string; feature: 
   return new Response(undefined, { status: redirect ? 303 : 204, headers });
 }
 
-export function zalidate<T>(schema: ZodSchema<T>, data: unknown): T {
+export function zalidate<
+  T extends {
+    parse: (d: unknown) => z.infer<T>;
+  },
+>(schema: T, data: unknown) {
   try {
     return schema.parse(data);
   } catch (e) {
-    if (!(e instanceof ZodError)) throw e;
-    const err = e.errors[0];
+    if (!(e instanceof z.ZodError)) throw e;
+    const err = e.issues[0];
     throw new ApiError(400, undefined, `Invalid ${err.path.join('.')}`);
   }
 }

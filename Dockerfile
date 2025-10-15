@@ -1,32 +1,34 @@
 ARG COMMIT_SHA=""
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} node:20-bookworm-slim AS init
+ARG NODE_IMAGE_TAG="24-trixie-slim"
+
+FROM node:${NODE_IMAGE_TAG} AS init
 RUN corepack enable && pnpm version
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 
-FROM init as deps
+FROM init AS deps
 WORKDIR /app
 RUN mkdir -p src/assets
 COPY ./scripts ./scripts
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 
-FROM init as modules
+FROM init AS modules
 WORKDIR /app
 RUN mkdir -p src/assets
 COPY ./scripts ./scripts
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 
 FROM init AS builder
 ARG COMMIT_SHA
 WORKDIR /app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json tsconfig.json svelte.config.js vite.config.js ./
 COPY ./static ./static
@@ -39,7 +41,7 @@ RUN pnpm sync && \
 
 FROM init AS base
 WORKDIR /app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY --from=modules --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/.svelte-kit ./.svelte-kit
 COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
@@ -47,10 +49,10 @@ COPY --from=builder --chown=nodejs:nodejs /app/build ./build
 COPY --from=builder /app/cherry /usr/local/bin/cherry
 
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} node:20-bookworm-slim
+FROM node:${NODE_IMAGE_TAG}
 ARG S6_OVERLAY_VERSION=3.1.6.2
 RUN apt-get update && \
-  apt-get install -y nginx \
+    apt-get install -y nginx \
     libnginx-mod-http-brotli-static \
     libnginx-mod-http-brotli-filter \
     xz-utils \
@@ -70,7 +72,7 @@ RUN addgroup --gid ${PGID} nodejs
 RUN adduser --uid ${PUID} --gid ${PGID} --home /home/nodejs --shell /bin/bash nodejs
 
 WORKDIR /app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY --from=base --chown=nodejs:nodejs /app/ /app/
 COPY --from=base /usr/local/bin/cherry /usr/local/bin/cherry
 COPY --from=ghcr.io/haishanh/sqlite-simple-tokenizer:main --chown=nodejs:nodejs /libsimple.so /app/db/libsimple.so

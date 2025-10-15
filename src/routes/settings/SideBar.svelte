@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChevronDown, Command, DownloadCloud, Info, Settings, UploadCloud, User } from 'lucide-svelte';
+  import { ChevronDown, Command, CloudDownload, Info, Settings, CloudUpload, User } from 'lucide-svelte';
   import { afterNavigate } from '$app/navigation';
   import type { UserMe } from '$lib/type';
 
@@ -24,8 +24,8 @@
   const links = [
     { href: '/settings/account', component: User, label: 'Account', display: trueFn },
     { href: '/settings/settings', component: Settings, label: 'Settings', display: trueFn },
-    { href: '/settings/import', component: UploadCloud, label: 'Import', display: trueFn },
-    { href: '/settings/export', component: DownloadCloud, label: 'Export', display: trueFn },
+    { href: '/settings/import', component: CloudUpload, label: 'Import', display: trueFn },
+    { href: '/settings/export', component: CloudDownload, label: 'Export', display: trueFn },
     {
       href: '/settings/admin',
       component: Command,

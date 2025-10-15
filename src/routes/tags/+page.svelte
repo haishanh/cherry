@@ -82,7 +82,7 @@
   {/if}
 </div>
 
-<TagEditModal bind:this={editModal} on:updatecompleted={handleUpdateTagCompleted} />
+<TagEditModal bind:this={editModal} updatecompleted={handleUpdateTagCompleted} />
 
 <style lang="scss">
   .main {

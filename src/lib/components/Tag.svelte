@@ -1,9 +1,13 @@
 <script lang="ts">
   import { deleteTagClientSide } from '$lib/client/tag.store';
 
-  export let tag: { name: string; id: number; count?: number };
-  export let tagVariantTotal = 4;
-  export let editModal: TagEditModal;
+  type Props = {
+    tag: { name: string; id: number; count?: number };
+    tagVariantTotal?: number;
+    editModal: TagEditModal;
+  };
+
+  let { tag, tagVariantTotal = 4, editModal }: Props = $props();
 
   import type TagEditModal from '$lib/components/tag/TagEditModal.svelte';
   import { request } from '$lib/utils/http.util';
@@ -12,8 +16,8 @@
   import { addToast } from './base/toast/store';
   import PopoverAction from './bookmark-chip/PopoverAction.svelte';
 
-  let anchor: HTMLElement;
-  let isOpen = false;
+  let anchor: HTMLElement | null = $state(null);
+  let isOpen = $state(false);
   let openTimeoutId: ReturnType<typeof setTimeout>;
   let closeTimeoutId: ReturnType<typeof setTimeout>;
 
@@ -84,8 +88,8 @@
   class:v_1={tag.id % tagVariantTotal === 1}
   class:v_2={tag.id % tagVariantTotal === 2}
   bind:this={anchor}
-  on:mouseenter={handleItemOnMouseEnter}
-  on:mouseleave={handleItemOnMouseLeave}
+  onmouseenter={handleItemOnMouseEnter}
+  onmouseleave={handleItemOnMouseLeave}
 >
   {tag.name}
   {#if typeof tag.count === 'number' && tag.count >= 0}
@@ -97,11 +101,11 @@
   bind:isOpen
   {anchor}
   close={closePopup}
-  on:mouseenter0={handlePopoverOnMouseEnter}
-  on:mouseleave0={handlePopoverOnMouseLeave}
+  mouseenter0={handlePopoverOnMouseEnter}
+  mouseleave0={handlePopoverOnMouseLeave}
 >
   <div class="popover-wrap">
-    <PopoverAction on:close={closePopup} on:delete={handleDelete} on:edit={handleEdit} />
+    <PopoverAction onclose={closePopup} ondelete={handleDelete} onedit={handleEdit} />
   </div>
 </Popover>
 

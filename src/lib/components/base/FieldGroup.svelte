@@ -5,9 +5,13 @@
 
   let id = '' + makeId();
 
-  export let name = 'Group';
-  export let options: TagType[] = [];
-  export let group: { name: string; id: number } | null = null;
+  type Props = {
+    name?: string;
+    options: TagType[];
+    group: { name: string; id: number } | null;
+  };
+
+  let { name = 'Group', options = [], group = $bindable(null) }: Props = $props();
 </script>
 
 <div>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { XIcon as CloseIcon } from 'lucide-svelte';
   import { fly } from 'svelte/transition';
+  import { SvelteMap } from 'svelte/reactivity';
 
   import Spinner from '$lib/components/feedback/Spinner.svelte';
 
@@ -9,8 +10,8 @@
 
   type ToastId = string;
 
-  const timeoutMap = new Map<ToastId, ReturnType<typeof setTimeout>>();
-  const timeoutDurationMap = new Map<ToastId, number | undefined>();
+  const timeoutMap = new SvelteMap<ToastId, ReturnType<typeof setTimeout>>();
+  const timeoutDurationMap = new SvelteMap<ToastId, number | undefined>();
 
   function clearTimeoutOfToast(toastId: ToastId) {
     const tid = timeoutMap.get(toastId);
@@ -26,8 +27,6 @@
       const tid = setTimeout(() => {
         removeToast(toastId);
       }, duration);
-      // debugger
-      // console.log('set', toastId, tid);
       timeoutMap.set(toastId, tid);
     }
     timeoutDurationMap.set(toastId, duration);
@@ -39,7 +38,7 @@
     }
   }
 
-  $: {
+  $effect(() => {
     for (const item of $toasts) {
       const dur = timeoutDurationMap.get(item.id);
       // if duration changed -> reset timeout
@@ -48,7 +47,7 @@
         setTimeoutOfToast(item.id, item.duration);
       }
     }
-  }
+  });
 
   function closeToast(item: ToastItem) {
     removeToast(item.id);
@@ -91,8 +90,8 @@
       data-id={item.id}
       role="list"
       use:armTimeout={item}
-      on:mouseenter={handleMouseEnter}
-      on:mouseleave={handleMouseLeave}
+      onmouseenter={handleMouseEnter}
+      onmouseleave={handleMouseLeave}
     >
       {#if item.icon && item.icon === 'loading'}
         <Spinner size={18} />
@@ -101,9 +100,9 @@
       {/if}
       <p>{item.description}</p>
       {#if item.action}
-        <button on:click={item.action.fn}>{item.action.label}</button>
+        <button onclick={item.action.fn}>{item.action.label}</button>
       {/if}
-      <button title="Close" class="close" on:click={() => closeToast(item)}>
+      <button title="Close" class="close" onclick={() => closeToast(item)}>
         <span class="vh">Close</span><CloseIcon size={14} />
       </button>
     </div>

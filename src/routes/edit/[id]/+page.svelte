@@ -19,10 +19,8 @@
     fetchGroups({ initial: true });
   });
 
-  function handleBookmarkEditFormEv0(
-    e: CustomEvent<{ type: BookmarkEditFormEvent.UpdateCompleted | BookmarkEditFormEvent.UpdateFailed }>,
-  ) {
-    const type = e.detail?.type;
+  function handleBookmarkEditFormEv0(e: { type: BookmarkEditFormEvent }) {
+    const type = e.type;
     switch (type) {
       case BookmarkEditFormEvent.UpdateCompleted:
         addToast({ description: 'Saved', status: 'success' });
@@ -38,7 +36,7 @@
   {#if bookmark}
     <h1>Edit</h1>
     <section>
-      <BookmarkEditForm {bookmark} on:ev0={handleBookmarkEditFormEv0} />
+      <BookmarkEditForm {bookmark} onev0={handleBookmarkEditFormEv0} />
     </section>
   {:else}
     <h2>Bookmark Not Found</h2>

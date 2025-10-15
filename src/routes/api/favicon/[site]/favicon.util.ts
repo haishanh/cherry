@@ -10,7 +10,7 @@ import * as datauriUtil from './datauri.util';
 const TIMEOUT = 5000;
 
 // prettier-ignore
-const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36';
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
 
 const fetchInit = {
   ...(process.env.NODE_ENV === 'development' && HTTP_PROXY?.startsWith('http')
@@ -20,8 +20,8 @@ const fetchInit = {
 
 function makeAbsUrl(prefix: string, uri: string) {
   if (uri.startsWith('https://') || uri.startsWith('http://')) return uri;
-  if (uri.startsWith('//')) return 'https:' + uri;
-  return prefix + (uri.startsWith('/') ? uri : '/' + uri);
+  if (uri.startsWith('//')) return `https:${uri}`;
+  return prefix + (uri.startsWith('/') ? uri : `/${uri}`);
 }
 
 async function request(site: string): Promise<{ html: string; base: string }> {
@@ -286,7 +286,7 @@ export class FaviconError extends Error {
 export async function buf(
   input: { type?: string; url: string },
   site?: string,
-): Promise<{ buffer: Buffer; type?: string }> {
+): Promise<{ buffer: ArrayBuffer; type?: string }> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), TIMEOUT);
   const res = await fetch(input.url, {
@@ -310,8 +310,7 @@ export async function buf(
     throw new FaviconError(FaviconErrorCode.FaviconNotFound);
   }
 
-  const ab = await res.arrayBuffer();
-  const buffer = Buffer.from(new Uint8Array(ab));
+  const buffer = await res.arrayBuffer();
 
   const type = typeFromExt(input.url);
 

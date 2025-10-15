@@ -10,7 +10,7 @@
   export let pageUriTemplate = '';
   export let maybeHasMore: boolean;
 
-  type PaginationItem = { page: number } | { gap: boolean };
+  type PaginationItem = { key: number; page: number } | { key: number; gap: boolean };
 
   let items: PaginationItem[];
   $: items = makeNavItems(total, current);
@@ -27,28 +27,29 @@
   // 1 .. 95 96 97 98 99 100
   function makeNavItems(total: number, current: number) {
     if (total <= 0 || typeof total !== 'number') return [];
+    let key = 0;
     let items: PaginationItem[] = [];
     const maxNumberOfItems = 7;
     if (total <= maxNumberOfItems) {
       for (let i = 1; i <= total; i++) {
-        items.push({ page: i });
+        items.push({ page: i, key: key++ });
       }
     } else if (current - 1 <= maxNumberOfItems - 2) {
       for (let i = 1; i <= maxNumberOfItems - 1; i++) {
-        items.push({ page: i });
+        items.push({ page: i, key: key++ });
       }
-      items.push({ gap: true }, { page: total });
+      items.push({ gap: true, key: key++ }, { page: total, key: key++ });
     } else if (total - current <= maxNumberOfItems - 2) {
-      items.push({ page: 1 }, { gap: true });
+      items.push({ page: 1, key: key++ }, { gap: true, key: key++ });
       for (let i = total - (maxNumberOfItems - 2); i <= total; i++) {
-        items.push({ page: i });
+        items.push({ page: i, key: key++ });
       }
     } else {
-      items.push({ page: 1 }, { gap: true });
+      items.push({ page: 1, key: key++ }, { gap: true, key: key++ });
       for (let i = current - 2; i <= current + 2; i++) {
-        items.push({ page: i });
+        items.push({ page: i, key: key++ });
       }
-      items.push({ gap: true }, { page: total });
+      items.push({ gap: true, key: key++ }, { page: total, key: key++ });
     }
     return items;
   }
@@ -62,7 +63,7 @@
       <a class="item" rel="prev" href={previous}><ChevronLeftIcon size={20} /><span>Previous</span></a>
     {/if}
 
-    {#each items as item}
+    {#each items as item (item.key)}
       {#if 'page' in item}
         {#if item.page === current}
           <span class="current item desktop">{item.page}</span>

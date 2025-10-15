@@ -1,7 +1,4 @@
 <script lang="ts">
-  export let bookmarks: BookmarkFromDb[] = [];
-  export let editModal: EditModal;
-
   import { nanoid } from 'nanoid';
 
   import { afterNavigate, invalidate } from '$app/navigation';
@@ -14,19 +11,26 @@
   import Dock from '$lib/components/selection-dock/Dock.svelte';
   import type { BookmarkFromDb } from '$lib/type';
   import * as httpUtil from '$lib/utils/http.util';
+  import type { DockOperation } from '../selection-dock/DockContent.svelte';
 
   type Group = { id: number; name: string; count?: number };
 
-  let groupSelectModal0: GroupListModal;
-  $: groupSelectModal.set(groupSelectModal0);
+  type Props = {
+    editModal?: EditModal;
+    bookmarks: BookmarkFromDb[];
+  };
 
-  let isArranging = false;
+  let { editModal, bookmarks = $bindable([]) }: Props = $props();
+
+  let groupSelectModal0: GroupListModal;
+  $effect(() => {
+    groupSelectModal.set(groupSelectModal0);
+  });
+
+  let isArranging = $state(false);
   let bookmarkListSnapshot: typeof bookmarks = [];
-  let selectedBookmarkLookup: Record<number, boolean> = {};
-  let selectedBookmarkCount = 0;
-  $: {
-    selectedBookmarkCount = countTruthyValues(selectedBookmarkLookup);
-  }
+  let selectedBookmarkLookup: Record<number, boolean> = $state({});
+  let selectedBookmarkCount = $derived(countTruthyValues(selectedBookmarkLookup));
 
   function countTruthyValues(o: Record<any, boolean>) {
     let v = 0;
@@ -81,9 +85,8 @@
     restoreBookmarkList();
   }
 
-  function handleEditBookmark(e: CustomEvent<BookmarkFromDb>) {
-    const bookmark = e.detail;
-    editModal.open(bookmark);
+  function handleEditBookmark(bookmark: BookmarkFromDb) {
+    editModal?.open(bookmark);
   }
 
   async function groupBookmarksServer(ids: BookmarkId[], groupId: number) {
@@ -137,8 +140,7 @@
     }
   }
 
-  async function handleDeleteSingle(e: CustomEvent<number>) {
-    const bookmarkId = e.detail;
+  async function handleDeleteSingle(bookmarkId: number) {
     const ids = [bookmarkId];
     await deleteBookmarks(ids);
   }
@@ -149,7 +151,7 @@
     isArranging = false;
   }
 
-  let activeIdx: number | null = null;
+  let activeIdx: number | null = $state(null);
   afterNavigate(() => {
     // disallow cross-page selection
     // tho we can keep this state after user navigate to next page
@@ -220,8 +222,7 @@
     }
   }
 
-  function handleEventFromDock(e: CustomEvent<{ op: 'delete' | 'cancel' }>) {
-    const op = e.detail.op;
+  function handleEventFromDock({ op }: { op: DockOperation }) {
     if (op === 'delete') {
       handleDeleteMulti();
     } else if (op === 'cancel') {
@@ -229,7 +230,7 @@
     }
   }
   function openEmptyEditModal() {
-    editModal.openEmpty();
+    editModal?.openEmpty();
   }
   function handleClickArrangeBookmarksButton() {
     isArranging = !isArranging;
@@ -244,16 +245,16 @@
     const result = await groupBookmarksServer(ids, groupId);
     groupBookmarksClient(result.success, groupId);
   }
-  async function handleSelectGroup(e: CustomEvent<{ group: Group }>) {
+  async function handleSelectGroup(e: { group: Group }) {
     $groupSelectModal?.close();
     const ids = retrieveSelectedBookmarks();
     resetMultiSelection();
-    const groupId = e.detail.group.id;
+    const groupId = e.group.id;
     await groupBookmarks(ids, groupId);
   }
 
-  function handleToolbarEvent0(e: CustomEvent<{ type: TOOLBAR_EVENT_TYPE }>) {
-    const type = e.detail?.type;
+  function handleToolbarEvent0(e: { type: TOOLBAR_EVENT_TYPE }) {
+    const type = e.type;
     switch (type) {
       case TOOLBAR_EVENT_TYPE.ClickAddButton:
         openEmptyEditModal();
@@ -268,7 +269,7 @@
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
-<BookmarkToolbar on:ev0={handleToolbarEvent0} />
+<BookmarkToolbar ev0={handleToolbarEvent0} />
 <div class="list">
   {#each bookmarks as bookmark, idx (bookmark.id)}
     {#if bookmark.url && (bookmark.url.startsWith('https://') || bookmark.url.startsWith('http://'))}
@@ -277,22 +278,17 @@
         isSelectable={isArranging}
         isActive={idx === activeIdx}
         bind:isSelected={selectedBookmarkLookup[bookmark.id]}
-        on:delete={handleDeleteSingle}
-        on:edit={handleEditBookmark}
+        deleteBookmark={handleDeleteSingle}
+        editBookmark={handleEditBookmark}
       />
     {/if}
   {/each}
 </div>
 {#if isArranging}
-  <Dock count={selectedBookmarkCount} on:dock={handleEventFromDock} />
+  <Dock count={selectedBookmarkCount} ondock={handleEventFromDock} />
 {/if}
 
-<GroupListModal
-  bind:this={groupSelectModal0}
-  itemAs="label"
-  on:clickadd={handleClickAdd}
-  on:select={handleSelectGroup}
-/>
+<GroupListModal bind:this={groupSelectModal0} itemAs="label" clickadd={handleClickAdd} select={handleSelectGroup} />
 
 <style lang="scss">
   .list {

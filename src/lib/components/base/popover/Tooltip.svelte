@@ -1,7 +1,15 @@
 <script lang="ts">
   import Popover from '$lib/components/base/popover/Popover.svelte';
+  import type { Snippet } from 'svelte';
 
-  export let isOpen = false;
+  type Props = {
+    content: Snippet;
+    trigger: Snippet;
+    isOpen?: boolean;
+  };
+
+  let { content, trigger, isOpen = false }: Props = $props();
+
   let openTimeoutId: ReturnType<typeof setTimeout>;
   let closeTimeoutId: ReturnType<typeof setTimeout>;
 
@@ -41,12 +49,12 @@
     deferClose(250);
   }
 
-  let anchor: HTMLElement;
+  let anchor: HTMLElement | null = $state(null);
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<span bind:this={anchor} on:mouseenter={handleItemOnMouseEnter} on:mouseleave={handleItemOnMouseLeave}>
-  <slot name="trigger" />
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<span bind:this={anchor} onmouseenter={handleItemOnMouseEnter} onmouseleave={handleItemOnMouseLeave}>
+  {@render trigger()}
 </span>
 
 <Popover
@@ -54,10 +62,10 @@
   {anchor}
   vOffset={5}
   close={closePopup}
-  on:mouseenter0={handlePopoverOnMouseEnter}
-  on:mouseleave0={handlePopoverOnMouseLeave}
+  mouseenter0={handlePopoverOnMouseEnter}
+  mouseleave0={handlePopoverOnMouseLeave}
 >
-  <slot name="content" />
+  {@render content()}
 </Popover>
 
 <style lang="scss">

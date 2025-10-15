@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-
   import Button from '$lib/components/base/Button.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { EditIcon, TrashIcon, XIcon } from 'lucide-svelte';
+  import { SquarePen, TrashIcon, XIcon } from 'lucide-svelte';
 
-  const dispatch = createEventDispatcher();
+  type Props = {
+    onedit: () => void;
+    ondelete: () => void;
+    onclose: () => void;
+  };
 
-  const emit = (event: string) => () => dispatch(event);
+  let { onclose, onedit, ondelete }: Props = $props();
 
   // trap focus and focus the first button on mount
   function focus0(node: HTMLDivElement) {
@@ -37,7 +39,7 @@
             const active = document.activeElement as HTMLButtonElement;
             if (buttons.includes(active) && 'blur' in active) {
               event.preventDefault();
-              emit('close')();
+              onclose();
             }
           }
           break;
@@ -55,13 +57,13 @@
 </script>
 
 <div class="action" use:focus0>
-  <Button modifier={['icon']} title="View and Edit" onclick={emit('edit')}>
-    <VisuallyHidden>View and Edit</VisuallyHidden><EditIcon size={14} />
+  <Button modifier={['icon']} title="View and Edit" onclick={() => onedit()}>
+    <VisuallyHidden>View and Edit</VisuallyHidden><SquarePen size={14} />
   </Button>
-  <Button modifier={['icon']} title="Delete" onclick={emit('delete')}>
+  <Button modifier={['icon']} title="Delete" onclick={() => ondelete()}>
     <VisuallyHidden>Delete</VisuallyHidden><TrashIcon size={14} />
   </Button>
-  <Button modifier={['icon']} title="Close" onclick={emit('close')}>
+  <Button modifier={['icon']} title="Close" onclick={() => onclose()}>
     <VisuallyHidden>Close</VisuallyHidden><XIcon size={14} />
   </Button>
 </div>

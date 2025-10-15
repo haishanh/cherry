@@ -1,25 +1,26 @@
+<script lang="ts" module>
+  export type DockOperation = 'delete' | 'cancel';
+</script>
+
 <script lang="ts">
-  export let count: number;
-
-  const EVENT = {
-    dock: 'dock',
-  };
-
   import { Folder, Trash, XIcon } from 'lucide-svelte';
-
-  import { createEventDispatcher } from 'svelte';
 
   import { groupSelectModal } from '$lib/client/modal.store';
   import Button from '$lib/components/base/Button.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
-  const dispatch = createEventDispatcher();
+  type Props = {
+    ondock: (event: { op: DockOperation }) => void;
+    count: number;
+  };
+
+  let { ondock, count }: Props = $props();
 
   function handleClickDelete(_e: MouseEvent) {
-    dispatch(EVENT.dock, { op: 'delete' });
+    ondock({ op: 'delete' });
   }
   function handleClickCancel(_e: MouseEvent) {
-    dispatch(EVENT.dock, { op: 'cancel' });
+    ondock({ op: 'cancel' });
   }
   function handleClickGrouping() {
     $groupSelectModal?.open();
@@ -74,8 +75,8 @@
     white-space: nowrap;
     @media (prefers-color-scheme: dark) {
       --bg: #3b4046;
-      --shadow: inset 0 -2px 0 0 hsl(0deg 0% 20%), inset 0 0 1px 1px hsl(0deg 0% 21%),
-        0 2px 2px 0 hsl(0deg 0% 11% / 69%);
+      --shadow:
+        inset 0 -2px 0 0 hsl(0deg 0% 20%), inset 0 0 1px 1px hsl(0deg 0% 21%), 0 2px 2px 0 hsl(0deg 0% 11% / 69%);
     }
     @media (prefers-color-scheme: light) {
       --bg: linear-gradient(-225deg, #d5dbe4, #f8f8f8);

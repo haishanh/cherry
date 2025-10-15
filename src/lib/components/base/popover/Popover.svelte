@@ -1,29 +1,49 @@
 <script lang="ts">
-  export let isOpen = false;
-  export let anchor: HTMLElement;
-  export let close: () => void;
-  // vertical offset - how far the popover will be placed with the anchor
-  export let vOffset = 2;
-
   const EVENT = {
     mouseenter0: 'mouseenter0',
     mouseleave0: 'mouseleave0',
     position: 'position',
   };
 
-  import { createEventDispatcher } from 'svelte';
-
   import { popover, type PopoverPlacement } from '$lib/components/actions/popover.action';
+  import type { Snippet } from 'svelte';
 
   import Portal from '../misc/Portal.svelte';
-  const dispatch = createEventDispatcher();
 
-  let style = 'top:0;left:0;';
+  type PositionChangeOpts = {
+    position: { top: number; left: number };
+    placement: PopoverPlacement;
+  };
 
-  function handlePopoverPositionChange(opts: { position: { top: number; left: number }; placement: PopoverPlacement }) {
+  type Props = {
+    mouseenter0: () => void;
+    mouseleave0: () => void;
+    position?: (x: PositionChangeOpts) => void;
+    isOpen?: boolean;
+    anchor: HTMLElement;
+    close: () => void;
+    // vertical offset - how far the popover will be placed with the anchor
+    vOffset?: number;
+    children: Snippet;
+  };
+
+  let {
+    mouseenter0,
+    mouseleave0,
+    position,
+    isOpen = $bindable(false),
+    anchor,
+    close,
+    vOffset = 2,
+    children,
+  }: Props = $props();
+
+  let style = $state('top:0;left:0;');
+
+  function handlePopoverPositionChange(opts: PositionChangeOpts) {
     const { top, left } = opts.position;
     style = `top:${top}px;left:${left}px`;
-    dispatch(EVENT.position, opts);
+    position?.(opts);
   }
 </script>
 
@@ -34,10 +54,10 @@
       use:popover={{ anchor, vOffset, closeFn: close, onPosition: handlePopoverPositionChange }}
       {style}
       role="tooltip"
-      on:mouseenter={() => dispatch(EVENT.mouseenter0)}
-      on:mouseleave={() => dispatch(EVENT.mouseleave0)}
+      onmouseenter={() => mouseenter0()}
+      onmouseleave={() => mouseleave0()}
     >
-      <slot />
+      {@render children?.()}
     </div>
   </Portal>
 {/if}

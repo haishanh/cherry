@@ -1,32 +1,33 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-
   import Modal from '$lib/components/base/Modal.svelte';
   import TagEditForm from '$lib/components/tag/TagEditForm.svelte';
   import type { TagFromDb } from '$lib/type';
 
-  const EVENT = {
-    open: 'open',
-    close: 'close',
+  type Props = {
+    onopen?: () => void;
+    onclose?: () => void;
+    updatecompleted: () => void;
   };
 
-  let modal: Modal;
-  let tag: TagFromDb;
+  let { onopen, onclose, updatecompleted }: Props = $props();
 
-  const dispatch = createEventDispatcher();
+  let modal: Modal;
+  let tag: TagFromDb | null = $state(null);
 
   export const open = (data: { tag: TagFromDb }) => {
     tag = data.tag;
     modal.open();
-    dispatch(EVENT.open);
+    onopen?.();
   };
 
   export const close = () => {
     modal.close();
-    dispatch(EVENT.close);
+    onclose?.();
   };
 </script>
 
 <Modal bind:this={modal}>
-  <TagEditForm {tag} on:updatecompleted />
+  {#if tag}
+    <TagEditForm {tag} {updatecompleted} />
+  {/if}
 </Modal>

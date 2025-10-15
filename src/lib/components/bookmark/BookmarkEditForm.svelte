@@ -1,21 +1,38 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   export enum Event0Type {
     UpdateStart,
     UpdateFailed,
     UpdateCompleted,
     CreateCompleted,
   }
-  export type Event0 = CustomEvent<
+
+  export type Event0 =
     | {
-        type: Event0Type.UpdateStart | Event0Type.CreateCompleted | Event0Type.UpdateCompleted;
+        type: Event0Type.UpdateStart;
+        payload: {
+          url: string;
+          title: string;
+          desc: string;
+          // tags:
+        };
+      }
+    | {
+        type: Event0Type.CreateCompleted | Event0Type.UpdateCompleted;
         payload: BookmarkFromDb;
       }
-    | { type: Event0Type.UpdateFailed; payload: { bookmark: BookmarkFromDb; error: any } }
-  >;
+    | {
+        type: Event0Type.UpdateFailed;
+        payload: {
+          bookmark: {
+            url: string;
+          };
+          error: any;
+        };
+      };
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import invariant from 'tiny-invariant';
 
   import { coalesceBase, genAuthHeader } from '$lib/client/backend.util';
@@ -37,12 +54,18 @@
   };
   type BookmarkHydrated = BookmarkRaw & { tags?: TagType[]; group?: Group };
 
-  export let bookmark: BookmarkRaw;
-  // this mainly for the browser ext
-  export let server = { apiBase: '', pat: '' };
+  // onev0({ type: Event0Type.UpdateFailed, payload: { bookmark: b, error: err } });
 
-  let tags: TagType[] = [];
-  let group: Group | null = null;
+  type Props = {
+    onev0: (x: Event0) => void;
+    bookmark: BookmarkRaw;
+    // this mainly for the browser ext
+    server?: { apiBase: string; pat: string };
+  };
+  let { onev0, bookmark, server = { apiBase: '', pat: '' } }: Props = $props();
+
+  let tags: TagType[] = $state([]);
+  let group: Group | null = $state(null);
 
   const ourApi = {
     fetchTagsByTagIds: async (tagIds: number[]) => {
@@ -62,8 +85,6 @@
     fetchGroups({ initial: true, server }).catch(logError);
   });
 
-  const dispatch = createEventDispatcher();
-
   function hydrateTags() {
     const tagIds = bookmark.tagIds;
     // const tagMapById
@@ -82,8 +103,13 @@
     }
   }
 
-  $: if ($tagListLoaded) hydrateTags();
-  $: if ($groupListLoaded) hydrateGroup();
+  $effect(() => {
+    if ($tagListLoaded) untrack(() => hydrateTags());
+  });
+  $effect(() => {
+    if ($groupListLoaded) untrack(hydrateGroup);
+  });
+
   onMount(() => {
     if ($tagListLoaded) hydrateTags();
     if ($groupListLoaded) hydrateGroup();
@@ -114,9 +140,7 @@
   const rule = {
     url: [commonRule.url],
   };
-  let error = {
-    url: '',
-  };
+  let error = $state({ url: '' });
 
   async function updateTagStore(tagIds: number[]) {
     if (!tagIds || tagIds.length === 0) return;
@@ -124,7 +148,8 @@
     addTagsClientSide(tags0);
   }
 
-  async function onSubmit() {
+  async function onSubmit(e: Event) {
+    e.preventDefault();
     const result = validate(rule, { url: bookmark.url });
     if (result.error) {
       // @ts-ignore
@@ -149,27 +174,27 @@
     delete b.updatedAt;
 
     let id0 = b.id;
-    dispatch('ev0', { type: Event0Type.UpdateStart, payload: b });
+    onev0({ type: Event0Type.UpdateStart, payload: b });
     try {
       // ret is a bookmark
       const ret = await updateOrCreateBookmark(b);
       if (!id0) {
         invariant(ret.id, 'updateOrCreateBookmark should resolve to an object with prop id');
-        dispatch('ev0', { type: Event0Type.CreateCompleted, payload: ret });
+        onev0({ type: Event0Type.CreateCompleted, payload: ret });
       } else {
-        dispatch('ev0', { type: Event0Type.UpdateCompleted, payload: ret });
+        onev0({ type: Event0Type.UpdateCompleted, payload: ret });
       }
       if (ret.tagIds) {
         updateTagStore(ret.tagIds).catch((e) => console.log('updateTagStore failed', e));
       }
     } catch (err) {
-      dispatch('ev0', { type: Event0Type.UpdateFailed, payload: { bookmark: b, error: err } });
+      onev0({ type: Event0Type.UpdateFailed, payload: { bookmark: b, error: err } });
       console.log('Update bookmark failed', err);
     }
   }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form onsubmit={onSubmit}>
   <Field name="Link" type="url" placeholder="https://example.com" bind:value={bookmark.url} error={error.url} />
   <FieldTag options={$tagList} bind:tags />
   <FieldGroup options={$groupListSorted} bind:group />

@@ -1,42 +1,52 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-
   import { afterNavigate } from '$app/navigation';
   import { env } from '$env/dynamic/public';
   import Popover from '$lib/components/base/popover/Popover.svelte';
   import PopoverAction from '$lib/components/bookmark-chip/PopoverAction.svelte';
   import type { BookmarkFromDb } from '$lib/type';
+  import { untrack } from 'svelte';
 
   import BookmarkTagsPreview from './BookmarkTagsPreview.svelte';
-  import { CheckSquareIcon, SquareIcon } from 'lucide-svelte';
+  import { SquareCheckBig, SquareIcon } from 'lucide-svelte';
 
-  export let bookmark: BookmarkFromDb;
-  export let isOpen = false;
-  export let isSelected = false;
-  export let isActive = false;
-  export let isSelectable = false;
+  type Props = {
+    deleteBookmark: (id: number) => void;
+    editBookmark: (bookmark: BookmarkFromDb) => void;
+    bookmark: BookmarkFromDb;
+    isSelected?: boolean;
+    isActive?: boolean;
+    isSelectable?: boolean;
+  };
 
+  let {
+    deleteBookmark,
+    editBookmark,
+    bookmark,
+    isSelected = $bindable(),
+    isActive = false,
+    isSelectable = false,
+  }: Props = $props();
+
+  let isOpen = $state(false);
   let node: HTMLElement;
 
   afterNavigate(close);
 
-  $: {
+  $effect(() => {
     if (isActive) {
-      deferOpen(1400);
+      untrack(() => deferOpen(1400));
       // ensure in view
       ensureMenuItemVisible();
     } else {
-      deferClose();
+      untrack(deferClose);
     }
-  }
+  });
 
-  const dispatch = createEventDispatcher();
-
-  let anchor: HTMLElement;
+  let anchor: HTMLElement | null = $state(null);
+  let popoverPlace = $state('north');
 
   let openTimeoutId: ReturnType<typeof setTimeout>;
   let closeTimeoutId: ReturnType<typeof setTimeout>;
-  let popoverPlace = 'north';
 
   function ensureMenuItemVisible() {
     if (!node) return;
@@ -77,7 +87,7 @@
     deferOpen(700);
   }
   function handleItemOnMouseLeave() {
-    deferClose(750);
+    deferClose(250);
   }
   function handlePopoverOnMouseEnter() {
     deferOpen(700);
@@ -89,20 +99,20 @@
     isOpen = false;
   }
 
-  function handlePopoverPositionChange(e: CustomEvent<{ placement: string }>) {
-    const placement = e.detail.placement;
+  function handlePopoverPositionChange(e: { placement: string }) {
+    const placement = e.placement;
     popoverPlace = placement;
   }
 
   async function handleDelete() {
     if (!bookmark) return;
-    dispatch('delete', bookmark.id);
+    deleteBookmark(bookmark.id);
   }
 
   async function handleEdit() {
     if (!bookmark) return;
     closePopup();
-    dispatch('edit', bookmark);
+    editBookmark(bookmark);
   }
 
   function buildFavionUrl(bookmark: BookmarkFromDb) {
@@ -125,12 +135,11 @@
     target="_blank"
     rel="noopener noreferrer"
     bind:this={anchor}
-    on:mouseenter={handleItemOnMouseEnter}
-    on:mouseleave={handleItemOnMouseLeave}
+    onmouseenter={handleItemOnMouseEnter}
+    onmouseleave={handleItemOnMouseLeave}
   >
     <span class="favicon">
-      <!-- svelte-ignore a11y-missing-attribute -->
-      <img width="20" height="20" loading="lazy" src={`${buildFavionUrl(bookmark)}`} />
+      <img width="20" height="20" loading="lazy" alt="Bookmark Icon" src={`${buildFavionUrl(bookmark)}`} />
     </span>
     <span>{bookmark.title}</span>
   </a>
@@ -139,7 +148,7 @@
     <label class="check">
       <input type="checkbox" bind:checked={isSelected} />
       {#if isSelected}
-        <CheckSquareIcon size={16} />
+        <SquareCheckBig size={16} />
       {:else}
         <SquareIcon size={16} />
       {/if}
@@ -150,9 +159,9 @@
     bind:isOpen
     {anchor}
     close={closePopup}
-    on:mouseenter0={handlePopoverOnMouseEnter}
-    on:mouseleave0={handlePopoverOnMouseLeave}
-    on:position={handlePopoverPositionChange}
+    mouseenter0={handlePopoverOnMouseEnter}
+    mouseleave0={handlePopoverOnMouseLeave}
+    position={handlePopoverPositionChange}
   >
     <div class="popover-wrap">
       <div>
@@ -164,7 +173,7 @@
         <div><p><span class="createdAt">{formatTimestamp(bookmark.createdAt)}</span></p></div>
       {/if}
       <div class:place-top={popoverPlace === 'south'} class:place-bottom={popoverPlace === 'north'}>
-        <PopoverAction on:close={closePopup} on:delete={handleDelete} on:edit={handleEdit} />
+        <PopoverAction onclose={closePopup} ondelete={handleDelete} onedit={handleEdit} />
       </div>
     </div>
   </Popover>

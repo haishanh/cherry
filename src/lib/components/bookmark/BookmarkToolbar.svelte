@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   export enum EVENT_TYPE {
     ClickArrangeButton,
     ClickAddButton,
@@ -6,22 +6,23 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-
   import Button from '$lib/components/base/Button.svelte';
   import Tooltip from '$lib/components/base/popover/Tooltip.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { EditIcon, PlusIcon } from 'lucide-svelte';
+  import { SquarePen, PlusIcon } from 'lucide-svelte';
 
-  export let tools = ['arrange', 'add'];
+  type Props = {
+    ev0: (event: { type: EVENT_TYPE }) => void;
+    tools?: string[];
+  };
 
-  const dispatch = createEventDispatcher();
+  let { ev0, tools = ['arrange', 'add'] }: Props = $props();
 
   function handleClickArrangeBookmarksButton() {
-    dispatch('ev0', { type: EVENT_TYPE.ClickArrangeButton });
+    ev0({ type: EVENT_TYPE.ClickArrangeButton });
   }
   function handleClickAddButton() {
-    dispatch('ev0', { type: EVENT_TYPE.ClickAddButton });
+    ev0({ type: EVENT_TYPE.ClickAddButton });
   }
 </script>
 
@@ -29,19 +30,27 @@
   {#each tools as tool (tool)}
     {#if tool === 'arrange'}
       <Tooltip>
-        <Button slot="trigger" modifier={['icon']} onclick={handleClickArrangeBookmarksButton}>
-          <EditIcon size={16} />
-          <VisuallyHidden>Bulk Edit</VisuallyHidden>
-        </Button>
-        <div class="tooltip-cnt" slot="content">Bulk Edit</div>
+        {#snippet trigger()}
+          <Button modifier={['icon']} onclick={handleClickArrangeBookmarksButton}>
+            <SquarePen size={16} />
+            <VisuallyHidden>Bulk Edit</VisuallyHidden>
+          </Button>
+        {/snippet}
+        {#snippet content()}
+          <div class="tooltip-cnt">Bulk Edit</div>
+        {/snippet}
       </Tooltip>
     {:else if tool === 'add'}
       <Tooltip>
-        <Button slot="trigger" modifier={['icon']} onclick={handleClickAddButton}>
-          <PlusIcon size={16} />
-          <VisuallyHidden>Add New Bookmark</VisuallyHidden>
-        </Button>
-        <div class="tooltip-cnt" slot="content">Add New Bookmark</div>
+        {#snippet trigger()}
+          <Button modifier={['icon']} onclick={handleClickAddButton}>
+            <PlusIcon size={16} />
+            <VisuallyHidden>Add New Bookmark</VisuallyHidden>
+          </Button>
+        {/snippet}
+        {#snippet content()}
+          <div class="tooltip-cnt">Add New Bookmark</div>
+        {/snippet}
       </Tooltip>
     {/if}
   {/each}

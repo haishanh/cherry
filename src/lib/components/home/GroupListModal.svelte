@@ -1,7 +1,5 @@
 <script lang="ts">
-  export let itemAs: 'link' | 'label' = 'link';
-
-  import { createEventDispatcher, tick } from 'svelte';
+  import { tick } from 'svelte';
 
   import { beforeNavigate } from '$app/navigation';
   import { groupListLoaded, groupListSorted } from '$lib/client/group.store';
@@ -14,14 +12,17 @@
   import GroupFilterInput from './GroupFilterInput.svelte';
   import { PlusIcon } from 'lucide-svelte';
 
-  const dispatch = createEventDispatcher();
-
-  const EVENT = {
-    clickadd: 'clickadd',
+  type Group = { id: number; name: string; count?: number };
+  type Props = {
+    clickadd: () => void;
+    itemAs?: 'link' | 'label';
+    select?: (x: { group: Group }) => void;
   };
 
+  let { clickadd, itemAs = 'link', select }: Props = $props();
+
   let modal: Modal;
-  let filterText = '';
+  let filterText = $state('');
 
   function restore() {
     filterText = '';
@@ -37,23 +38,24 @@
   export const close = () => {
     modal.close();
   };
-  function handlModalEvent0(_e: CustomEvent<{ type: EVENT_TYPE }>) {
+  function handlModalEvent0(_e: { type: EVENT_TYPE }) {
     tick().then(restore, restore);
   }
 
-  let filteredGroupList = $groupListSorted;
-  $: {
+  let filteredGroupList = $derived($groupListSorted);
+
+  $effect(() => {
     filteredGroupList = $groupListSorted.filter((item) => {
       return item.name.toLowerCase().indexOf(filterText.toLowerCase()) >= 0;
     });
-  }
+  });
 
   function handleClickAdd() {
-    dispatch(EVENT.clickadd);
+    clickadd();
   }
 </script>
 
-<Modal bind:this={modal} verticalAlign="start" on:ev0={handlModalEvent0}>
+<Modal bind:this={modal} verticalAlign="start" ev0={handlModalEvent0}>
   <div class="wrap">
     <h2>Select Group</h2>
 
@@ -62,7 +64,7 @@
       {#if filteredGroupList.length > 0}
         <ul class="groups">
           {#each filteredGroupList as g (g.id)}
-            <li><GroupChip group={g} {itemAs} on:select /></li>
+            <li><GroupChip group={g} {itemAs} {select} /></li>
           {/each}
         </ul>
       {:else}
@@ -78,14 +80,16 @@
     {/if}
   </div>
 
-  <div slot="footer" class="footer">
-    <Button onclick={handleClickAdd}>
-      {#snippet icon()}
-        <PlusIcon size={16} />
-      {/snippet}
-      <span>Create New</span>
-    </Button>
-  </div>
+  {#snippet footer()}
+    <div class="footer">
+      <Button onclick={handleClickAdd}>
+        {#snippet icon()}
+          <PlusIcon size={16} />
+        {/snippet}
+        <span>Create New</span>
+      </Button>
+    </div>
+  {/snippet}
 </Modal>
 
 <style lang="scss">

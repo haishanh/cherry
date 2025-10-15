@@ -1,10 +1,4 @@
 <script lang="ts">
-  const EVENT = {
-    updatecompleted: 'updatecompleted',
-  };
-
-  import { createEventDispatcher } from 'svelte';
-
   import { updateTagClientSide } from '$lib/client/tag.store';
   import Button from '$lib/components/base/Button.svelte';
   import Field from '$lib/components/base/Field.svelte';
@@ -12,9 +6,12 @@
   import type { TagFromDb } from '$lib/type';
   import { request, RequestError } from '$lib/utils/http.util';
 
-  export let tag: TagFromDb;
+  type Props = {
+    updatecompleted: () => void;
+    tag: TagFromDb;
+  };
 
-  const dispatch = createEventDispatcher();
+  let { updatecompleted, tag }: Props = $props();
 
   async function updateTag(b: TagFromDb) {
     const id = b.id;
@@ -22,10 +19,11 @@
     return ret.data;
   }
 
-  async function onSubmit() {
+  async function onSubmit(e: Event) {
+    e.preventDefault();
     try {
       await updateTag(tag);
-      dispatch(EVENT.updatecompleted);
+      updatecompleted();
       updateTagClientSide(tag);
       addToast({ description: 'Tag renamed successfully', status: 'success' });
     } catch (err) {
@@ -42,7 +40,7 @@
   }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form onsubmit={onSubmit}>
   <h2>Edit Tag</h2>
   <Field name="Name" type="text" placeholder="" bind:value={tag.name} />
   <div class="action">

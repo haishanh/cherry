@@ -1,6 +1,7 @@
-import * as crc32Util from '@node-rs/crc32';
 import type { RequestHandler } from '@sveltejs/kit';
+import { base64ToUint8Array, stringToUint8Array } from 'uint8array-extras';
 import { fileTypeFromBuffer } from 'file-type';
+import { createHash } from 'node:crypto';
 
 import { FAVICON_CACHE_MAX_AGE_FOUND, FAVICON_CACHE_MAX_AGE_MISS } from '$lib/env';
 import { ApiError, HttpStatus } from '$lib/server/api.error';
@@ -26,13 +27,13 @@ export const GET: RequestHandler = async (event) => {
       }
 
       let type: string | undefined;
-      let buffer: Buffer;
+      let buffer: Uint8Array<ArrayBuffer>;
       if ('data' in ret) {
         type = ret.type;
         if (ret.isB64) {
-          buffer = Buffer.from(ret.data, 'base64');
+          buffer = base64ToUint8Array(ret.data);
         } else {
-          buffer = Buffer.from(decodeURIComponent(ret.data));
+          buffer = stringToUint8Array(decodeURIComponent(ret.data));
         }
         if (!type) {
           const t = await fileTypeFromBuffer(buffer);
@@ -41,14 +42,14 @@ export const GET: RequestHandler = async (event) => {
       } else {
         const tmp = await favicon.buf(ret, site);
         if (tmp.type) type = tmp.type;
-        buffer = tmp.buffer;
+        buffer = new Uint8Array(tmp.buffer);
       }
 
-      const etag = crc32Util.crc32c(buffer);
+      const etag = createHash('md5').update(buffer).digest('hex');
 
-      return new Response(buffer, {
+      return new Response(buffer.buffer, {
         headers: {
-          Etag: '' + etag,
+          Etag: etag,
           'Cache-Control': `public, max-age=${FAVICON_CACHE_MAX_AGE_FOUND}, immutable`,
           ...(type ? { 'Content-Type': type } : undefined),
         },

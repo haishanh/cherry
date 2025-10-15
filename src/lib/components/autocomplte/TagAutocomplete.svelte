@@ -1,6 +1,5 @@
 <script lang="ts">
   import { SearchIcon } from 'lucide-svelte';
-  import { createEventDispatcher } from 'svelte';
   import invariant from 'tiny-invariant';
 
   import ForwardSlash from '$lib/components/base/icons/ForwardSlash.svelte';
@@ -12,30 +11,46 @@
   import ListboxList from './ListboxList.svelte';
   import ListboxOptionTag from './ListboxOptionTag.svelte';
   import Tag from './Tag.svelte';
+  import { SvelteMap } from 'svelte/reactivity';
+  import { makeId } from '../base/tabs/tabs.ctx';
 
-  const dispatch = createEventDispatcher();
+  const noop = () => {};
+
+  let {
+    focus0 = noop,
+    blur0 = noop,
+    tags = $bindable([]),
+    options = [],
+    canCreate = true,
+    search = false,
+    inputValue = $bindable(''),
+    placeholder = 'Add tags...',
+    autoSelect = false,
+    focusWithForwardSlashKey = false,
+    // focus = () => {
+    //   if (inputRef) inputRef.focus();
+    // },
+  } = $props();
+
+  const listboxId = `lb${makeId()}`;
+
+  export function focus() {
+    if (inputRef) inputRef.focus();
+  }
+
   let inputRef: HTMLInputElement;
 
   type AllTagType = TagType | NewTagType;
 
-  export let tags: AllTagType[] = [];
-  export let options: TagType[] = [];
-  export let canCreate = true;
-  export let search = false;
-  export let inputValue = '';
-  export let placeholder = 'Add tags...';
-  export let autoSelect = false;
-  export let focusWithForwardSlashKey = false;
-  export function focus() {
-    if (inputRef) inputRef.focus();
-  }
+  // export let tags: AllTagType[] = [];
+  // export let options: TagType[] = [];
 
   const EVENT = {
     focus0: 'focus0',
     blur0: 'blur0',
   };
 
-  let filtered: AllTagType[] = [...options];
+  let filtered: AllTagType[] = $state([...options]);
 
   function resetInput() {
     inputValue = '';
@@ -43,19 +58,18 @@
 
   let tagMap: Map<string, number>;
 
-  $: {
-    tagMap = new Map();
+  $effect(() => {
+    tagMap = new SvelteMap();
     for (const t of tags) {
       if (!t || !t.name) {
-        console.log('TagAutocomplete', JSON.stringify(tags));
+        // console.log('TagAutocomplete', JSON.stringify(tags));
         continue;
       }
       tagMap.set(t.name, 1);
     }
-  }
+  });
 
-  function handleConfirmSelection(e: CustomEvent<AllTagType>) {
-    const d = e.detail;
+  function handleConfirmSelection(d: AllTagType) {
     const tag: { name: string; id?: number } = { name: d.name };
     if ('id' in d) tag.id = d.id;
     tags.push(tag);
@@ -63,7 +77,7 @@
     resetInput();
   }
 
-  $: {
+  $effect(() => {
     const prefiltered = options.filter((o) => !tagMap.get(o.name));
     if (inputValue) {
       const newTagName = inputValue.trim();
@@ -94,24 +108,24 @@
     } else {
       filtered = prefiltered;
     }
-  }
+  });
 
-  $: {
+  $effect(() => {
     if (filtered.length === 0) close();
-  }
+  });
 
-  let expanded = false;
+  let expanded = $state(false);
   const open = () => (!expanded ? (expanded = true) : undefined);
   const close = () => (expanded ? (expanded = false) : undefined);
 
-  let focused = false;
+  let focused = $state(false);
   function handleInputOnInput() {
     open();
   }
 
   function handleInputOnFocus() {
     focused = true;
-    dispatch(EVENT.focus0);
+    focus0();
     open();
   }
 
@@ -133,7 +147,7 @@
     // const tag = e.detail;
     invariant(tag, 'handleClickCloseTag: something went wrong');
     tags = tags.filter((t) => t !== tag);
-    dispatch('change', [...tags]);
+    // dispatch('change', [...tags]);
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -161,9 +175,9 @@
       bind:this={inputRef}
       {placeholder}
       bind:value={inputValue}
-      on:focus={handleInputOnFocus}
-      on:input={handleInputOnInput}
-      on:blur={handleInputOnBlur}
+      onfocus={handleInputOnFocus}
+      oninput={handleInputOnInput}
+      onblur={handleInputOnBlur}
       aria-autocomplete="list"
       aria-haspopup="listbox"
       aria-expanded={expanded}
@@ -184,7 +198,7 @@
   </div>
   <!-- listbox -->
   {#if expanded && filtered.length > 0}
-    <ListboxList {autoSelect} {filtered} on:confirm={handleConfirmSelection}>
+    <ListboxList id={listboxId} {autoSelect} {filtered} onconfirm={handleConfirmSelection}>
       {#snippet itemComp(item)}
         <ListboxOptionTag {item} />
       {/snippet}

@@ -1,75 +1,57 @@
 <script lang="ts">
   import { ChevronDownIcon } from 'lucide-svelte';
+  import { makeId } from '$lib/utils/common.util';
 
   import VisuallyHidden from '../base/VisuallyHidden.svelte';
   import { fuzzysearch } from './fuzzy';
   import ListboxList from './ListboxList.svelte';
   import ListboxOptionGroup from './ListboxOptionGroup.svelte';
+  import { untrack } from 'svelte';
 
   type OptionType = { name: string; id?: number };
 
-  export let id: string;
-  export let group: { name: string; id: number } | null = null;
-  export let options: OptionType[] = [];
-  export let canCreate = true;
-  export let inputValue = '';
+  type Props = {
+    id: string;
+    group: { name: string; id?: number } | null;
+    options: OptionType[];
+    canCreate: boolean;
+    inputValue?: string;
+  };
+  let { id, group = $bindable(null), options = [], canCreate = true, inputValue = '' }: Props = $props();
 
   let inputElement: HTMLInputElement;
 
+  const listboxId = `lb${makeId()}`;
+
   let init = false;
-  $: {
+  $effect(() => {
     if (!init && group?.name) {
       inputValue = group.name;
       init = true;
     }
-  }
+  });
 
-  let orignalOptions = [...options];
-  let filtered: OptionType[] = orignalOptions;
-  $: {
-    // ensure orignalOptions is updated after fetching groups
-    // filtered will be automatically get udpdated too (`options` is used in a $reactive block below this one)
-    orignalOptions = [...options];
-  }
+  let filtered = $derived.by(() => {
+    if (!inputValue) return options;
 
-  $: {
-    if (inputValue) {
-      const ivalue = inputValue.trim();
-      let containsInputValue = false;
-      filtered = options.filter((o) => {
-        if (!o.name) return false;
-        const t = ivalue.toLowerCase();
-        const n = o.name.toLowerCase();
-        const match = fuzzysearch(t, n);
-        if (match && t.length === o.name.length) containsInputValue = true;
-        return match;
-      });
+    const needle = inputValue.trim().toLowerCase();
+    let containsInputValue = false;
+    const ret = options.filter((o) => {
+      if (!o.name) return false;
+      const haystack = o.name.toLowerCase();
+      const match = fuzzysearch(needle, haystack);
+      if (match && needle.length === o.name.length) containsInputValue = true;
+      return match;
+    });
+    if (canCreate && !containsInputValue) ret.push({ name: inputValue });
+    return ret;
+  });
 
-      if (canCreate && !containsInputValue) {
-        const last = filtered[filtered.length - 1];
-        if (last) {
-          if ('id' in last) {
-            filtered.push({ name: ivalue });
-            filtered = filtered;
-          } else if (last.name !== ivalue) {
-            last.name = ivalue;
-            filtered = filtered;
-          }
-        } else {
-          filtered.push({ name: ivalue });
-          filtered = filtered;
-        }
-      }
-    } else if (filtered != orignalOptions) {
-      filtered = orignalOptions;
-    }
-  }
+  $effect(() => {
+    if (filtered.length === 0) untrack(close);
+  });
 
-  $: {
-    if (filtered.length === 0) close();
-  }
-
-  let expanded = false;
+  let expanded = $state(false);
   const open = () => (!expanded ? (expanded = true) : undefined);
   const close = () => (expanded ? (expanded = false) : undefined);
 
@@ -92,8 +74,7 @@
     inputElement?.focus();
   }
 
-  function handleConfirmSelection(e: CustomEvent<{ name: string; id: number }>) {
-    const d = e.detail;
+  function handleConfirmSelection<Item extends { name: string }>(d: Item) {
     // const g: { name: string; id?: number } = { name: d.name };
     // if ('id' in d) g.id = d.id;
     close();
@@ -112,6 +93,8 @@
     onfocus={onFocus}
     oninput={handleInputOnInput}
     onblur={onBlur}
+    role="combobox"
+    aria-controls={listboxId}
     aria-autocomplete="list"
     aria-haspopup="listbox"
     aria-expanded={expanded}
@@ -127,7 +110,7 @@
     <VisuallyHidden>Show suggestions</VisuallyHidden>
   </button>
   {#if expanded && filtered.length > 0}
-    <ListboxList {filtered} on:confirm={handleConfirmSelection}>
+    <ListboxList id={listboxId} {filtered} onconfirm={handleConfirmSelection}>
       {#snippet itemComp(item)}
         <ListboxOptionGroup {item} />
       {/snippet}

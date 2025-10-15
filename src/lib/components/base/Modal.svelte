@@ -1,13 +1,12 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   export enum EVENT_TYPE {
     Close,
   }
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { fly } from 'svelte/transition';
-  import { fade } from 'svelte/transition';
+  import type { Snippet } from 'svelte';
+  import { fly, fade } from 'svelte/transition';
 
   import Button from '$lib/components/base/Button.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
@@ -16,17 +15,25 @@
   import Portal from './misc/Portal.svelte';
   import { XIcon } from 'lucide-svelte';
 
-  export let closeButtonPosition: 'left' | 'right' = 'right';
-  export let verticalAlign: 'start' | 'center' | 'end' = 'center';
-  const dispatch = createEventDispatcher();
+  const noop = () => {};
 
-  let isOpen = false;
+  type Props = {
+    ev0?: (x: { type: EVENT_TYPE }) => void;
+    closeButtonPosition?: 'left' | 'right';
+    verticalAlign?: 'start' | 'center';
+    children: Snippet;
+    footer?: Snippet;
+  };
 
-  export function state() {
+  let { ev0 = noop, closeButtonPosition = 'right', verticalAlign = 'center', children, footer }: Props = $props();
+
+  let isOpen = $state(false);
+
+  export function getState() {
     return { isOpen };
   }
 
-  let zi = 1;
+  let zi = $state(1);
   export function open() {
     zi = incModalZi();
     isOpen = true;
@@ -34,11 +41,8 @@
   export function close() {
     decModalZi();
     isOpen = false;
-    dispatch('ev0', { type: EVENT_TYPE.Close });
-  }
-
-  function handleClickOverlay(__event: MouseEvent) {
-    close();
+    ev0({ type: EVENT_TYPE.Close });
+    // dispatch('ev0', { type: EVENT_TYPE.Close });
   }
 
   function naivePreventScroll() {
@@ -88,12 +92,22 @@
       }
     }
 
+    function handleWindowOnClick(e: MouseEvent) {
+      if (!(e.target instanceof HTMLElement)) return;
+      if (!('cherryModalDismiss' in e.target.dataset)) return;
+      if (!node.contains(e.target)) {
+        close();
+      }
+    }
+
     leadingFocusGuard.focus();
     window.addEventListener('keydown', handleWindowOnKeydown);
+    window.addEventListener('click', handleWindowOnClick);
     return {
       destroy: () => {
         if (tailingFocusGuard) tailingFocusGuard.removeEventListener('focus', onFocusTailingGuard);
         window.removeEventListener('keydown', handleWindowOnKeydown);
+        window.removeEventListener('click', handleWindowOnClick);
         restoreScroll();
       },
     };
@@ -108,8 +122,7 @@
       class="overlay {verticalAlign}"
       transition:fade={{ delay: 0, duration: 300 }}
     >
-      <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-      <div class="inset0" on:click={handleClickOverlay}></div>
+      <div class="inset0" data-cherry-modal-dismiss></div>
       <div class="cnt" use:focus0 transition:fly={{ delay: 0, duration: 300, y: 100 }}>
         <div class="focus-guard" data-leading-focus-guard tabindex="-1"></div>
         <div class="action" class:left={closeButtonPosition === 'left'} class:right={closeButtonPosition === 'right'}>
@@ -117,11 +130,11 @@
             <VisuallyHidden>Close</VisuallyHidden><XIcon size={20} />
           </Button>
         </div>
-        <div class="slot-wrap"><slot /></div>
-        {#if $$slots.footer}
-          <div class="footer"><slot name="footer" /></div>
+        <div class="slot-wrap">{@render children?.()}</div>
+        {#if footer}
+          <div class="footer">{@render footer()}</div>
         {/if}
-        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+        <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
         <div class="focus-guard" data-tailing-focus-guard tabindex="0"></div>
       </div>
     </div>
@@ -201,5 +214,6 @@
     position: fixed;
     top: 1px;
     left: 1px;
+    pointer-events: none;
   }
 </style>

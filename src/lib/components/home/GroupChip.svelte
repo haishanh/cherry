@@ -1,18 +1,16 @@
 <script lang="ts">
-  export let group: { id: number; name: string; count?: number };
-  export let itemAs: 'link' | 'label' = 'link';
-
-  import { createEventDispatcher } from 'svelte';
-
   import { groupAddModal, groupDeleteConfirmModal } from '$lib/client/modal.store';
   import Button from '$lib/components/base/Button.svelte';
-  import { EditIcon, TrashIcon } from 'lucide-svelte';
+  import { SquarePen, TrashIcon } from 'lucide-svelte';
 
-  const dispatch = createEventDispatcher();
-
-  const EVENT = {
-    select: 'select',
+  type Group = { id: number; name: string; count?: number };
+  type Props = {
+    select?: (x: { group: Group }) => void;
+    group: Group;
+    itemAs?: 'link' | 'label';
   };
+
+  let { select, group, itemAs = 'link' }: Props = $props();
 
   function handleClickEdit() {
     $groupAddModal?.open(group);
@@ -22,7 +20,7 @@
     $groupDeleteConfirmModal?.open(group);
   }
 
-  let isOpen = false;
+  let isOpen = $state(false);
   let openTimeoutId: ReturnType<typeof setTimeout>;
   let closeTimeoutId: ReturnType<typeof setTimeout>;
 
@@ -52,25 +50,25 @@
   }
 
   function handleClickLabel() {
-    dispatch(EVENT.select, { group });
+    select?.({ group });
   }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<span class="root" on:mouseenter={handleItemOnMouseEnter} on:mouseleave={handleItemOnMouseLeave}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<span class="root" onmouseenter={handleItemOnMouseEnter} onmouseleave={handleItemOnMouseLeave}>
   {#if itemAs === 'link'}
     <a class="link" href={'/?group=' + group.id}>
       <span>{group.name}</span><span class="count">{group.count}</span>
     </a>
   {:else}
-    <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-    <span class="link" on:click={handleClickLabel}>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <span class="link" onclick={handleClickLabel}>
       <span>{group.name}</span><span class="count">{group.count}</span>
     </span>
   {/if}
   <span class="edit" class:isOpen>
     <Button modifier={['p5']} onclick={handleClickEdit}>
-      <EditIcon size={12} />
+      <SquarePen size={12} />
     </Button>
   </span>
   <span class="delete" class:isOpen>

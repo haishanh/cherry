@@ -13,8 +13,7 @@
     { id: 8, name: '8Cyan' },
   ];
 
-  $: console.log(options);
-
+  const noop = () => {};
   let tags: TagType[] = [{ id: 100, name: 'Hello' }];
 </script>
 
@@ -23,7 +22,7 @@
     <pre>{JSON.stringify(tags, null, 2)}</pre>
   </section>
   <section>
-    <SearchForm dryrun />
+    <SearchForm dryrun focus0={noop} blur0={noop} />
   </section>
 </main>
 

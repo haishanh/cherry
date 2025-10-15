@@ -1,13 +1,18 @@
 <script lang="ts">
-  export let count = 0;
-
   import { fly } from 'svelte/transition';
 
-  import DockContent from './DockContent.svelte';
+  import DockContent, { type DockOperation } from './DockContent.svelte';
+
+  type Props = {
+    ondock: (event: { op: DockOperation }) => void;
+    count?: number;
+  };
+
+  let { ondock, count = 0 }: Props = $props();
 </script>
 
 <div class="dock" transition:fly={{ y: 50 }}>
-  <DockContent {count} on:dock />
+  <DockContent {count} {ondock} />
 </div>
 
 <style lang="scss">

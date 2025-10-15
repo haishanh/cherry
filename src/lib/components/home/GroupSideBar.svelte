@@ -77,13 +77,7 @@
     // { href: '/?group=0', label: 'Ungrouped', groupId: 0 },
   ];
 
-  // let links = fixedLinks;
   let lastViewedLinks: GroupLinkItem[] = [];
-
-  // $: {
-  //   console.log(links.map((n) => n.label).join(','));
-  //   console.log(lastViewedLinks.map((n) => n.label).join(','));
-  // }
 
   function buildGroupLinkItem(group: { id: number; name: string }) {
     return { href: '/?group=' + group.id, label: group.name, groupId: group.id };
@@ -150,19 +144,23 @@
     {/each}
     <li class="btn-wrap">
       <Tooltip>
-        <Button slot="trigger" modifier={['minimal']} style="padding:8px 10px" onclick={open}>
-          {#snippet icon()}
-            <Folder size={15} />
-          {/snippet}
-          <VisuallyHidden>Show more groups</VisuallyHidden>
-        </Button>
-        <div class="tooltip-cnt" slot="content">Show more groups</div>
+        {#snippet trigger()}
+          <Button modifier={['minimal']} style="padding:8px 10px" onclick={open}>
+            {#snippet icon()}
+              <Folder size={15} />
+            {/snippet}
+            <VisuallyHidden>Show more groups</VisuallyHidden>
+          </Button>
+        {/snippet}
+        {#snippet content()}
+          <div class="tooltip-cnt">Show more groups</div>
+        {/snippet}
       </Tooltip>
     </li>
   </ul>
 </div>
 
-<GroupListModal bind:this={groupListModal0} itemAs="link" on:clickadd={handleClickAdd} />
+<GroupListModal bind:this={groupListModal0} itemAs="link" clickadd={handleClickAdd} />
 <GroupAddModal bind:this={groupAddModal0} />
 <GroupDeleteConfirmModal bind:this={groupDeleteConfirmModal0} />
 

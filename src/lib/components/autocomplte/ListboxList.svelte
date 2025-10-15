@@ -1,17 +1,15 @@
-<script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-
-  import { makeId } from '$lib/utils/common.util';
-
-  const dispatch = createEventDispatcher();
+<script lang="ts" generics="Item extends { name: string }">
+  import type { Snippet } from 'svelte';
 
   type Props = {
     autoSelect?: boolean;
-    filtered?: { name: string }[];
-    itemComp: import('svelte').Snippet<[{ name: string }]>;
+    filtered: Item[];
+    itemComp: Snippet<[Item]>;
+    onconfirm?: (item: Item) => void;
+    id: string;
   };
 
-  let { autoSelect = false, filtered = [], itemComp }: Props = $props();
+  let { id: idPrefix, autoSelect = false, filtered = [], itemComp, onconfirm }: Props = $props();
 
   let highlightedIdx = $state(autoSelect ? 0 : -1);
 
@@ -28,8 +26,6 @@
 
     ensureItemVisible(highlightedIdx);
   });
-
-  const idPrefix = makeId();
 
   let listbox: HTMLElement;
   function highlightItemAt(idx: number | string) {
@@ -73,7 +69,7 @@
     if (idx < 0) return;
     const selected = filtered[idx];
     if (!selected) return;
-    dispatch('confirm', { ...selected });
+    onconfirm?.({ ...selected });
   }
 
   function handleClickItem(e: MouseEvent) {

@@ -1,8 +1,7 @@
-<script lang="ts">
+<script lang="ts" generics="Item extends { name: string }">
   import { FolderIcon } from 'lucide-svelte';
-  interface Props {
-    item: { name: string; id?: number };
-  }
+
+  type Props = { item: Item };
 
   let { item }: Props = $props();
 </script>

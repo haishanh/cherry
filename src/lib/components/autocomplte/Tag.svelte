@@ -1,8 +1,6 @@
 <script lang="ts">
   import { XIcon as CloseIcon } from 'lucide-svelte';
 
-  import { createEventDispatcher } from 'svelte';
-
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 
   interface Props {
@@ -13,13 +11,6 @@
   }
 
   let { color = '1', hasClose = true, tag, clickclose }: Props = $props();
-
-  const dispatch = createEventDispatcher();
-
-  const handleClickClose = () => {
-    dispatch('clickclose', tag);
-    return false;
-  };
 
   const colorMap = {
     '0': 'color:#14551B;background:#ADF29B;',
