@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
   import '@fontsource/inter/latin-400.css';
   import '@fontsource/inter/latin-800.css';
@@ -11,7 +13,9 @@
   import Header from '$lib/components/feature/Header.svelte';
   import LeafSpinner from '$lib/components/feedback/LeafSpinner.svelte';
 
-  let isLoading = false;
+  let { children } = $props();
+
+  let isLoading = $state(false);
   let deferShowLoadingTimeout: ReturnType<typeof setTimeout>;
   beforeNavigate((navigation) => {
     if (navigation.to?.url.pathname.startsWith('/api/downloads/')) return;
@@ -35,7 +39,7 @@
   <link href={inter800} rel="preload" as="font" crossorigin="" />
 </svelte:head>
 <Header />
-<slot />
+{@render children()}
 <ToastList />
 {#if isLoading}
   <div class="loading">
