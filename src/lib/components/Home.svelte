@@ -32,7 +32,6 @@
   });
 
   function handleBookmarkEditModalEv0(e: Event0) {
-    console.log(JSON.stringify(e, null, 2));
     const type = e.type;
     switch (type) {
       case BEFEvent0Type.UpdateCompleted:

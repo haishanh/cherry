@@ -1,7 +1,10 @@
 <script lang="ts">
-  export let value = 'input';
-  export let id = 'name';
-  export let placeholder = '';
+  type Props = {
+    value?: string;
+    id?: string;
+    placeholder?: string;
+  };
+  let { value = $bindable('input'), id = 'name', placeholder = '' }: Props = $props();
 </script>
 
 <textarea {id} {placeholder} rows={3} bind:value></textarea>

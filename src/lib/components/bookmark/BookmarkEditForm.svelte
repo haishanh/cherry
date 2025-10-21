@@ -54,8 +54,6 @@
   };
   type BookmarkHydrated = BookmarkRaw & { tags?: TagType[]; group?: Group };
 
-  // onev0({ type: Event0Type.UpdateFailed, payload: { bookmark: b, error: err } });
-
   type Props = {
     onev0: (x: Event0) => void;
     bookmark: BookmarkRaw;

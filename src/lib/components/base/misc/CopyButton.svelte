@@ -1,9 +1,12 @@
 <script lang="ts">
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { CheckCircleIcon, CopyIcon } from 'lucide-svelte';
+  import { CircleCheckBig, CopyIcon } from '@lucide/svelte';
 
-  let state = 'none';
-  export let provide: () => Promise<string> | string;
+  let state = $state('none');
+  type Props = {
+    provide: () => Promise<string> | string;
+  };
+  let { provide }: Props = $props();
 
   async function copy() {
     const str = await provide();
@@ -16,11 +19,11 @@
   }
 </script>
 
-<button class="btn" on:click={copy}>
+<button class="btn" onclick={copy}>
   <VisuallyHidden>Copy</VisuallyHidden>
   {#if state === 'copied'}
     <span class="ico">
-      <CheckCircleIcon size={18} />
+      <CircleCheckBig size={18} />
     </span>
   {:else}
     <span class="ico">

@@ -1,11 +1,18 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
+
   type Modifier = 'v0';
 
-  export let href: string;
-  export let modifier: Modifier[] | null = null;
+  type Props = {
+    href: string;
+    modifier?: Modifier[];
+    children?: Snippet;
+  };
+
+  let { children, href, modifier }: Props = $props();
 </script>
 
-<a class={modifier ? modifier.join(' ') : ''} {href}><slot /></a>
+<a class={modifier ? modifier.join(' ') : ''} {href}>{@render children?.()}</a>
 
 <style lang="scss">
   a {

@@ -1,21 +1,19 @@
 <script lang="ts">
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { EyeIcon, EyeOffIcon } from 'lucide-svelte';
+  import { EyeIcon, EyeOffIcon } from '@lucide/svelte';
 
-  export let show = false;
+  let { show = $bindable(false), onclick } = $props();
 </script>
 
-<button class="btn" on:click>
+<button class="btn" {onclick}>
   <VisuallyHidden>Copy</VisuallyHidden>
-  {#if !show}
-    <span class="ico">
+  <span class="ico">
+    {#if !show}
       <EyeIcon size={18} />
-    </span>
-  {:else}
-    <span class="ico">
+    {:else}
       <EyeOffIcon size={18} />
-    </span>
-  {/if}
+    {/if}
+  </span>
 </button>
 
 <style lang="scss">

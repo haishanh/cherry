@@ -5,13 +5,16 @@
 
   let id = '' + makeId();
 
-  export let label = '';
-  export let name = '';
-  export let value = '';
-  export let placeholder = '';
-  export let type = '';
+  type Props = {
+    label?: string;
+    name?: string;
+    value?: string;
+    placeholder?: string;
+    type?: string;
+    error?: string;
+  };
 
-  export let error = '';
+  let { label = '', name = '', value = $bindable(''), placeholder = '', type = '', error = '' }: Props = $props();
 
   function handleInputOnInput(e: Event) {
     const target = e.target as HTMLInputElement;
@@ -25,7 +28,7 @@
   {#if type === 'textarea'}
     <TextArea {id} {placeholder} bind:value />
   {:else}
-    <TextInput {id} {type} {name} {error} {placeholder} {value} on:input={handleInputOnInput} />
+    <TextInput {id} {type} {name} {error} {placeholder} {value} oninput={handleInputOnInput} />
   {/if}
   {#if error}
     <div class="msg error">{error}</div>

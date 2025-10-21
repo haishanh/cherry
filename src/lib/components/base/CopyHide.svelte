@@ -31,7 +31,7 @@
 <div class="wrap">
   <div class="cnt"><pre class="pre" class:show>{displayedText}</pre></div>
   <div class="btn-group">
-    <EyeButton bind:show on:click={handleClickEyeButton} />
+    <EyeButton bind:show onclick={handleClickEyeButton} />
     <CopyButton {provide} />
   </div>
 </div>

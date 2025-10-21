@@ -1,13 +1,28 @@
 <script lang="ts">
-  export let value = 'input';
-  export let name = 'name';
-  export let id = 'name';
-  export let placeholder = '';
-  export let error = '';
-  export let type = 'text';
+  import type { FormEventHandler } from 'svelte/elements';
+
+  type Props = {
+    value?: string;
+    name?: string;
+    id?: string;
+    placeholder?: string;
+    error?: string;
+    type?: string;
+    oninput?: FormEventHandler<HTMLInputElement>;
+  };
+
+  let {
+    value = $bindable('input'),
+    name = 'name',
+    id = 'name',
+    placeholder = '',
+    error = '',
+    type = 'text',
+    oninput = () => {},
+  }: Props = $props();
 </script>
 
-<input {id} {name} {type} {placeholder} class:error {value} on:input />
+<input {id} {name} {type} {placeholder} class:error {value} {oninput} />
 
 <style lang="scss">
   input {

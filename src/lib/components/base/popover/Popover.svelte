@@ -1,10 +1,4 @@
 <script lang="ts">
-  const EVENT = {
-    mouseenter0: 'mouseenter0',
-    mouseleave0: 'mouseleave0',
-    position: 'position',
-  };
-
   import { popover, type PopoverPlacement } from '$lib/components/actions/popover.action';
   import type { Snippet } from 'svelte';
 

@@ -1,9 +1,12 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
+
   type Modifier = 'success' | 'warning' | 'info' | 'error';
-  export let modifier: Modifier;
+  type Props = { modifier: Modifier; children: Snippet };
+  let { modifier, children }: Props = $props();
 </script>
 
-<span class="chip {modifier}"><slot /></span>
+<span class="chip {modifier}">{@render children()}</span>
 
 <style lang="scss">
   .chip {

@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { ExternalLink } from 'lucide-svelte';
+  import { ExternalLink } from '@lucide/svelte';
+  import type { Snippet } from 'svelte';
 
   interface Props {
     href?: string;
-    children?: import('svelte').Snippet;
+    children?: Snippet;
   }
 
   let { href = '#', children }: Props = $props();
