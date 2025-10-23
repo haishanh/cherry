@@ -1,8 +1,14 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   import type { LayoutData } from './$types';
   import SideBar from './SideBar.svelte';
 
-  export let data: LayoutData;
+  type Props = {
+    data: LayoutData;
+    children: Snippet;
+  };
+
+  let { data, children }: Props = $props();
 </script>
 
 <svelte:head>
@@ -10,7 +16,7 @@
 </svelte:head>
 <div class="root">
   <SideBar pathname={data.pathname} user={data.user} />
-  <main><slot /></main>
+  <main>{@render children()}</main>
 </div>
 
 <style lang="scss">
