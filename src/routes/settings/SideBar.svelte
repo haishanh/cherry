@@ -3,8 +3,12 @@
   import { afterNavigate } from '$app/navigation';
   import type { UserMe } from '$lib/type';
 
-  export let pathname: string;
-  export let user: UserMe;
+  type Props = {
+    pathname: string;
+    user: UserMe;
+  };
+
+  let { pathname, user }: Props = $props();
 
   afterNavigate(() => {
     pathname = location.pathname;
@@ -22,13 +26,13 @@
   const trueFn = () => true;
 
   const links = [
-    { href: '/settings/account', component: User, label: 'Account', display: trueFn },
-    { href: '/settings/settings', component: Settings, label: 'Settings', display: trueFn },
-    { href: '/settings/import', component: CloudUpload, label: 'Import', display: trueFn },
-    { href: '/settings/export', component: CloudDownload, label: 'Export', display: trueFn },
+    { href: '/settings/account', Comp0nent: User, label: 'Account', display: trueFn },
+    { href: '/settings/settings', Comp0nent: Settings, label: 'Settings', display: trueFn },
+    { href: '/settings/import', Comp0nent: CloudUpload, label: 'Import', display: trueFn },
+    { href: '/settings/export', Comp0nent: CloudDownload, label: 'Export', display: trueFn },
     {
       href: '/settings/admin',
-      component: Command,
+      Comp0nent: Command,
       label: 'Admin',
       display: (u: UserMe) => u?.attr?.admin,
       nodes: [
@@ -37,24 +41,24 @@
         { href: '/settings/admin/backup', label: 'Backup' },
       ],
     },
-    { href: '/settings/about', component: Info, label: 'About', display: trueFn },
+    { href: '/settings/about', Comp0nent: Info, label: 'About', display: trueFn },
   ].filter((l) => l.display(user));
 </script>
 
 <ul class="sidebar">
-  {#each links as link (link.href)}
-    {#if link.nodes}
-      <li class:active={link.href === pathname}>
-        <button class="link expand" on:click={() => toggleExpandable(link.href)}>
-          <svelte:component this={link.component} size={16} />
-          <span>{link.label}</span>
-          <span class="arrow" class:isOpen={expanded[link.href]}>
+  {#each links as { nodes, href, label, Comp0nent } (href)}
+    {#if nodes}
+      <li class:active={href === pathname}>
+        <button class="link expand" onclick={() => toggleExpandable(href)}>
+          <Comp0nent size={16} />
+          <span>{label}</span>
+          <span class="arrow" class:isOpen={expanded[href]}>
             <ChevronDown size={16} />
           </span>
         </button>
-        {#if expanded[link.href]}
+        {#if expanded[href]}
           <ul class="nodes">
-            {#each link.nodes as node (node.href)}
+            {#each nodes as node (node.href)}
               <li class:active={node.href === pathname}>
                 <span></span><a class="link" href={node.href}><span>{node.label}</span></a>
               </li>
@@ -63,10 +67,8 @@
         {/if}
       </li>
     {:else}
-      <li class:active={link.href === pathname}>
-        <a class="link" href={link.href}
-          ><svelte:component this={link.component} size={16} /><span>{link.label}</span></a
-        >
+      <li class:active={href === pathname}>
+        <a class="link" {href}><Comp0nent size={16} /><span>{label}</span></a>
       </li>
     {/if}
   {/each}
