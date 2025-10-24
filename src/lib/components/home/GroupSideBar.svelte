@@ -21,16 +21,26 @@
   let groupAddModal0: GroupAddModal;
   let groupListModal0: GroupListModal;
   let groupDeleteConfirmModal0: GroupDeleteConfirmModal;
-  $: groupAddModal.set(groupAddModal0);
-  $: groupListModal.set(groupListModal0);
-  $: groupDeleteConfirmModal.set(groupDeleteConfirmModal0);
+
+  $effect(() => {
+    groupAddModal.set(groupAddModal0);
+  });
+  $effect(() => {
+    groupListModal.set(groupListModal0);
+  });
+  $effect(() => {
+    groupDeleteConfirmModal.set(groupDeleteConfirmModal0);
+  });
 
   function open() {
     $groupListModal?.open();
   }
 
-  export let pathname = '/settings/about';
-  export let groupId: number | null = null;
+  type Props = {
+    pathname?: string;
+    groupId?: number | null;
+  };
+  let { pathname = '/settings/about', groupId = null }: Props = $props();
 
   afterNavigate(() => {
     loadLastViewdLinks();
@@ -72,12 +82,9 @@
   }
 
   type GroupLinkItem = { href: string; label: string; groupId: number | null };
-  const fixedLinks: GroupLinkItem[] = [
-    { href: '/', label: 'All', groupId: null },
-    // { href: '/?group=0', label: 'Ungrouped', groupId: 0 },
-  ];
+  const fixedLinks: GroupLinkItem[] = [{ href: '/', label: 'All', groupId: null }];
 
-  let lastViewedLinks: GroupLinkItem[] = [];
+  let lastViewedLinks: GroupLinkItem[] = $state([]);
 
   function buildGroupLinkItem(group: { id: number; name: string }) {
     return { href: '/?group=' + group.id, label: group.name, groupId: group.id };
@@ -114,7 +121,7 @@
 
   let activeLinkItem: GroupLinkItem;
 
-  $: {
+  $effect(() => {
     if (typeof groupId === 'number' && groupId !== 0) {
       const group = $groupMapById.get(groupId);
       if (group) {
@@ -122,7 +129,7 @@
         ensureLinkInList(activeLinkItem);
       }
     }
-  }
+  });
 
   function handleClickAdd() {
     $groupAddModal?.open();

@@ -1,6 +1,12 @@
 <script lang="ts">
-  export let idx: string | number;
-  export let active = false;
+  import type { Snippet } from 'svelte';
+
+  type Props = {
+    idx: string | number;
+    active?: boolean;
+    children: Snippet;
+  };
+  let { idx, active = false, children }: Props = $props();
 
   import { actions, get } from './tabs.ctx';
 
@@ -37,24 +43,23 @@
     };
   }
 
-  let selected = active;
-  $: {
-    selected = $store.activePanelId ? $store.activePanelId === $store.tabsId + '--panel--' + idx : active;
-  }
+  let selected = $derived($store.activePanelId ? $store.activePanelId === $store.tabsId + '--panel--' + idx : active);
 </script>
 
 <button
   use:register
   class:selected
-  on:click={handleOnClick}
+  onclick={handleOnClick}
   aria-controls="{$store.tabsId}--panel--{idx}"
   aria-selected={selected}
   role="tab"
   data-cherry-tab
   data-orientation="horizontal"
   id="{$store.tabsId}--tab--{idx}"
-  type="button"><slot>{$store.tabsId}</slot></button
+  type="button"
 >
+  {@render children()}
+</button>
 
 <style lang="scss">
   button {

@@ -14,10 +14,10 @@
     pathname = location.pathname;
   });
 
-  const expanded: Record<string, boolean> = {
+  let expanded = $state<Record<string, boolean>>({
     // if user lands on a page like "/settings/admin/users", then we should expand nodes of "/settings/admin"
     '/settings/admin': pathname.startsWith('/settings/admin'),
-  };
+  });
 
   function toggleExpandable(id: string) {
     expanded[id] = !expanded[id];

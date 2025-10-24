@@ -1,6 +1,12 @@
 <script lang="ts">
-  export let idx: string | number;
-  export let active = false;
+  import type { Snippet } from 'svelte';
+
+  type Props = {
+    idx: string | number;
+    active?: boolean;
+    children: Snippet;
+  };
+  let { idx, active = false, children }: Props = $props();
 
   import { get } from './tabs.ctx';
 
@@ -28,10 +34,7 @@
     };
   }
 
-  let hidden = !active;
-  $: {
-    hidden = $store.activePanelId ? $store.activePanelId !== $store.tabsId + '--panel--' + idx : !active;
-  }
+  let hidden = $derived($store.activePanelId ? $store.activePanelId !== $store.tabsId + '--panel--' + idx : !active);
 </script>
 
 <div
@@ -43,7 +46,7 @@
   id="{$store.tabsId}--panel--{idx}"
   {hidden}
 >
-  <slot />
+  {@render children()}
 </div>
 
 <style lang="scss">

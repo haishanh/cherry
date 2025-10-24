@@ -1,6 +1,5 @@
 <script lang="ts">
-  export let mode: string | null = null;
-  export let size = 20;
+  let { size = 20, mode = null }: { size?: number; mode?: string | null } = $props();
 </script>
 
 <span

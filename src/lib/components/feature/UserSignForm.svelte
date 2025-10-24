@@ -1,11 +1,16 @@
 <script lang="ts">
-  export let kind: 'signup' | 'signin';
+  type Props = {
+    kind: 'signup' | 'signin';
+  };
+
+  let { kind }: Props = $props();
 
   import { goto } from '$app/navigation';
   import { commonRule, validate } from '$lib/client/form.util';
   import Button from '$lib/components/base/Button.svelte';
   import Field from '$lib/components/base/Field.svelte';
   import { request, RequestError } from '$lib/utils/http.util';
+  import type { FormEventHandler } from 'svelte/elements';
 
   async function join(opts: { username: string; password: string }) {
     return await request({ url: '/api/auth/signup', method: 'POST', data: opts });
@@ -24,10 +29,10 @@
     username: [commonRule.email],
     password: [passwordRule],
   };
-  let error: Partial<{ username: string; password: string }> = {};
+  let error: Partial<{ username: string; password: string }> = $state({});
 
-  let username = '';
-  let password = '';
+  let username = $state('');
+  let password = $state('');
 
   function onSuccessSignin(_ret: { res: Response }) {
     // console.log('onSuccessSignin', ret.res?.redirected)
@@ -36,7 +41,8 @@
     });
   }
 
-  function onSubmit() {
+  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
     const valueBeforeValidation = { username, password };
     const result = validate(rule, valueBeforeValidation);
     if (result.error) {
@@ -74,14 +80,14 @@
       }
       console.log(kind + ' error', err);
     });
-  }
+  };
 
   function setError(field: keyof typeof error, msg: string) {
     error = { username: '', password: '', ...{ [field]: msg } };
   }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form onsubmit={onSubmit}>
   <Field name="Email" type="email" placeholder="hi@example.com" bind:value={username} error={error.username || ''} />
   <Field name="Password" type="password" placeholder="" bind:value={password} error={error.password || ''} />
   <div class="action">

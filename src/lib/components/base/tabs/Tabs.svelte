@@ -1,7 +1,14 @@
 <script lang="ts">
-  import { setContext } from 'svelte';
+  import { setContext, type Snippet } from 'svelte';
 
   import { actions, CONTEXT_KEY, createContext } from './tabs.ctx';
+
+  type Props = {
+    tabList: Snippet;
+    panels: Snippet;
+  };
+
+  let { tabList, panels }: Props = $props();
 
   const ctx = createContext();
   setContext(CONTEXT_KEY, ctx);
@@ -88,11 +95,11 @@
 <svelte:window on:keydown={handleKeydown} />
 <div role="tablist" aria-orientation="horizontal" data-cherry-tab-list>
   <div class="tablist-wrap">
-    <slot name="tabList" />
+    {@render tabList()}
   </div>
 </div>
 <div data-cherry-tab-panels>
-  <slot name="panels" />
+  {@render panels()}
 </div>
 
 <style lang="scss">

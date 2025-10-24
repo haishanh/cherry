@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { TagType } from '$lib/type';
 
-  export let tag: TagType;
+  type Props = {
+    tag: TagType;
+  };
+
+  let { tag }: Props = $props();
 </script>
 
 <a class="tag" href="/?tag={tag.id}">{tag.name}</a>

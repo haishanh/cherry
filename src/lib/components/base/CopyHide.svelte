@@ -1,13 +1,12 @@
 <script lang="ts">
-  export let cnt: string;
+  let { cnt }: { cnt: string } = $props();
 
   import CopyButton from '$lib/components/base/misc/CopyButton.svelte';
 
   import EyeButton from './misc/EyeButton.svelte';
 
-  let show = false;
+  let show = $state(false);
   let hiddenText = asteriskify(cnt);
-  let displayedText = hiddenText;
 
   // we want the asteriskified text the same length to avoid layout shift
   function asteriskify(input: string) {
@@ -20,7 +19,6 @@
 
   const handleClickEyeButton = () => {
     show = !show;
-    displayedText = show ? cnt : hiddenText;
   };
 
   function provide() {
@@ -29,7 +27,7 @@
 </script>
 
 <div class="wrap">
-  <div class="cnt"><pre class="pre" class:show>{displayedText}</pre></div>
+  <div class="cnt"><pre class="pre" class:show>{show ? cnt : hiddenText}</pre></div>
   <div class="btn-group">
     <EyeButton bind:show onclick={handleClickEyeButton} />
     <CopyButton {provide} />

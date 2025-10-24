@@ -4,7 +4,11 @@
 
   import SimpleTag from './SimpleTag.svelte';
 
-  export let tagIds: number[] = [];
+  type Props = {
+    tagIds: number[];
+  };
+
+  let { tagIds = [] }: Props = $props();
 
   let tags: TagType[] = hydrateTags(tagIds);
 

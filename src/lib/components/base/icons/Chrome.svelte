@@ -1,5 +1,5 @@
 <script>
-  export let size = 24;
+  let { size = 24 } = $props();
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 276 276" width={size} height={size}

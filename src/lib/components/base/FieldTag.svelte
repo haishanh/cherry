@@ -6,9 +6,13 @@
 
   let id = '' + makeId();
 
-  export let name = 'Tags';
-  export let options: TagType[] = [];
-  export let tags: TagType[] = [];
+  type Props = {
+    name?: string;
+    options: TagType[];
+    tags: TagType[];
+  };
+
+  let { name = 'Tags', options = [], tags = $bindable([]) }: Props = $props();
 </script>
 
 <div>

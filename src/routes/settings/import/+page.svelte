@@ -17,7 +17,7 @@
 </script>
 
 <Tabs>
-  <svelte:fragment slot="tabList">
+  {#snippet tabList()}
     <Tab idx="pocket" active>
       <div class="item-brand-title"><Pocket size={30} /> Pocket</div>
     </Tab>
@@ -39,8 +39,8 @@
     <Tab idx="csv">
       <div class="item-brand-title"><CsvFile size={30} /> CSV</div>
     </Tab>
-  </svelte:fragment>
-  <svelte:fragment slot="panels">
+  {/snippet}
+  {#snippet panels()}
     <TabPanel idx="pocket" active>
       <ImportFromPocket />
     </TabPanel>
@@ -56,7 +56,7 @@
     <TabPanel idx="csv">
       <ImportFromCsv />
     </TabPanel>
-  </svelte:fragment>
+  {/snippet}
 </Tabs>
 
 <style lang="scss">
