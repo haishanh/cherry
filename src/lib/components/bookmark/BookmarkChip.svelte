@@ -168,7 +168,7 @@
         <p class="clamp clamp-2">{bookmark.url}</p>
         <p class="clamp">{bookmark.desc}</p>
       </div>
-      <div><BookmarkTagsPreview tagIds={bookmark.tagIds} /></div>
+      <div><BookmarkTagsPreview tagIds={bookmark.tagIds || []} /></div>
       {#if bookmark.createdAt}
         <div><p><span class="createdAt">{formatTimestamp(bookmark.createdAt)}</span></p></div>
       {/if}

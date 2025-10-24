@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash } from 'lucide-svelte';
+  import { Trash } from '@lucide/svelte';
 
   import { deleteGroupClientSide } from '$lib/client/group.store';
   import Button from '$lib/components/base/Button.svelte';

@@ -10,7 +10,7 @@
   import Spinner from '../feedback/Spinner.svelte';
   import GroupChip from './GroupChip.svelte';
   import GroupFilterInput from './GroupFilterInput.svelte';
-  import { PlusIcon } from 'lucide-svelte';
+  import { PlusIcon } from '@lucide/svelte';
 
   type Group = { id: number; name: string; count?: number };
   type Props = {

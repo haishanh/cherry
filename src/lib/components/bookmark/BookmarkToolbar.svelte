@@ -9,7 +9,7 @@
   import Button from '$lib/components/base/Button.svelte';
   import Tooltip from '$lib/components/base/popover/Tooltip.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { SquarePen, PlusIcon } from 'lucide-svelte';
+  import { SquarePen, PlusIcon } from '@lucide/svelte';
 
   type Props = {
     ev0: (event: { type: EVENT_TYPE }) => void;
