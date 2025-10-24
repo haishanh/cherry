@@ -2,7 +2,7 @@
   import { afterNavigate } from '$app/navigation';
   import Cherry from '$lib/components/base/Cherry.svelte';
   import Dice from '$lib/components/base/icons/Dice.svelte';
-  import { SettingsIcon, TagIcon } from 'lucide-svelte';
+  import { SettingsIcon, TagIcon } from '@lucide/svelte';
 
   let randomCount = 0;
   afterNavigate(() => {

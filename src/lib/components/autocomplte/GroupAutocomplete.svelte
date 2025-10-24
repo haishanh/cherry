@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChevronDownIcon } from 'lucide-svelte';
+  import { ChevronDownIcon } from '@lucide/svelte';
   import { makeId } from '$lib/utils/common.util';
 
   import VisuallyHidden from '../base/VisuallyHidden.svelte';

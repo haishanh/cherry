@@ -1,7 +1,7 @@
 <script lang="ts">
   import { groupAddModal, groupDeleteConfirmModal } from '$lib/client/modal.store';
   import Button from '$lib/components/base/Button.svelte';
-  import { SquarePen, TrashIcon } from 'lucide-svelte';
+  import { SquarePen, TrashIcon } from '@lucide/svelte';
 
   type Group = { id: number; name: string; count?: number };
   type Props = {

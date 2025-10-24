@@ -4,7 +4,7 @@
   import Modal from '$lib/components/base/Modal.svelte';
   import { addToast } from '$lib/components/base/toast/store';
   import { request, RequestError } from '$lib/utils/http.util';
-  import { SaveIcon } from 'lucide-svelte';
+  import { SaveIcon } from '@lucide/svelte';
 
   import Field from '../base/Field.svelte';
 

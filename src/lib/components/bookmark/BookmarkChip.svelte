@@ -7,7 +7,7 @@
   import { untrack } from 'svelte';
 
   import BookmarkTagsPreview from './BookmarkTagsPreview.svelte';
-  import { SquareCheckBig, SquareIcon } from 'lucide-svelte';
+  import { SquareCheckBig, SquareIcon } from '@lucide/svelte';
 
   type Props = {
     deleteBookmark: (id: number) => void;

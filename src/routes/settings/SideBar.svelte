@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChevronDown, Command, CloudDownload, Info, Settings, CloudUpload, User } from 'lucide-svelte';
+  import { ChevronDown, Command, CloudDownload, Info, Settings, CloudUpload, User } from '@lucide/svelte';
   import { afterNavigate } from '$app/navigation';
   import type { UserMe } from '$lib/type';
 

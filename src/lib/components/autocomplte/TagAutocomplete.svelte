@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SearchIcon } from 'lucide-svelte';
+  import { SearchIcon } from '@lucide/svelte';
   import invariant from 'tiny-invariant';
 
   import ForwardSlash from '$lib/components/base/icons/ForwardSlash.svelte';

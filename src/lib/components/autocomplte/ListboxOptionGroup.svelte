@@ -1,5 +1,5 @@
 <script lang="ts" generics="Item extends { name: string }">
-  import { FolderIcon } from 'lucide-svelte';
+  import { FolderIcon } from '@lucide/svelte';
 
   type Props = { item: Item };
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import Button from '$lib/components/base/Button.svelte';
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { SquarePen, TrashIcon, XIcon } from 'lucide-svelte';
+  import { SquarePen, TrashIcon, XIcon } from '@lucide/svelte';
 
   type Props = {
     onedit: () => void;

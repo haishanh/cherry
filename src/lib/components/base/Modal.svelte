@@ -13,7 +13,7 @@
   import { decModalZi, incModalZi } from '$lib/utils/common.util';
 
   import Portal from './misc/Portal.svelte';
-  import { XIcon } from 'lucide-svelte';
+  import { XIcon } from '@lucide/svelte';
 
   const noop = () => {};
 

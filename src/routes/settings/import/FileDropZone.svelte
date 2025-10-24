@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowUpCircle, Inbox } from 'lucide-svelte';
+  import { CircleArrowUp, Inbox } from '@lucide/svelte';
   import Dropzone from 'svelte-file-dropzone';
 
   import Button from '$lib/components/base/Button.svelte';
@@ -62,7 +62,7 @@
       {#if loading}
         <Spinner size={18} />
       {:else}
-        <ArrowUpCircle size={18} />
+        <CircleArrowUp size={18} />
       {/if}
     {/snippet}
 

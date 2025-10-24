@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Lock, LogOut } from 'lucide-svelte';
+  import { Lock, LogOut } from '@lucide/svelte';
   import { onMount } from 'svelte';
 
   import Button from '$lib/components/base/Button.svelte';

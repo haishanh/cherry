@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import { Folder, Trash, XIcon } from 'lucide-svelte';
+  import { Folder, Trash, XIcon } from '@lucide/svelte';
 
   import { groupSelectModal } from '$lib/client/modal.store';
   import Button from '$lib/components/base/Button.svelte';

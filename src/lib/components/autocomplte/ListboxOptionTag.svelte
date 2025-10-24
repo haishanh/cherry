@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TagIcon } from 'lucide-svelte';
+  import { TagIcon } from '@lucide/svelte';
   interface Props {
     item: { name: string; id?: number };
   }

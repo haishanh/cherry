@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Folder } from 'lucide-svelte';
+  import { Folder } from '@lucide/svelte';
   import { onMount } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';

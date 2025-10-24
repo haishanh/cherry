@@ -7,7 +7,7 @@
     modal.close();
   };
 
-  import { Save } from 'lucide-svelte';
+  import { Save } from '@lucide/svelte';
   import { beforeNavigate } from '$app/navigation';
   import Button from '$lib/components/base/Button.svelte';
   import Field from '$lib/components/base/Field.svelte';

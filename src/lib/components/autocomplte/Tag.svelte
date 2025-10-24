@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XIcon as CloseIcon } from 'lucide-svelte';
+  import { XIcon as CloseIcon } from '@lucide/svelte';
 
   import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
 

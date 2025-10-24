@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash, XIcon } from 'lucide-svelte';
+  import { Trash, XIcon } from '@lucide/svelte';
 
   import Button from '$lib/components/base/Button.svelte';
   import Tooltip from '$lib/components/base/popover/Tooltip.svelte';

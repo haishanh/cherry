@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XIcon as CloseIcon } from 'lucide-svelte';
+  import { XIcon as CloseIcon } from '@lucide/svelte';
   import { fly } from 'svelte/transition';
   import { SvelteMap } from 'svelte/reactivity';
 

@@ -1,8 +1,6 @@
 <script>
-  import { Inbox } from 'lucide-svelte';
+  import { Inbox } from '@lucide/svelte';
   import Dropzone from 'svelte-file-dropzone';
-
-  // import { request } from '$lib/utils/http.util';
 
   let files = {
     accepted: [],
