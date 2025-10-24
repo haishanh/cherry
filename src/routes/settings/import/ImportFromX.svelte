@@ -3,13 +3,18 @@
   import { fetchTags } from '$lib/client/tag.store';
   import { addToast } from '$lib/components/base/toast/store';
   import { request } from '$lib/utils/http.util';
+  import type { Snippet } from 'svelte';
 
   import FileDropZone from './FileDropZone.svelte';
   import type { DropzoneFiles } from './import.shared';
 
   type ImportSource = 'chrome' | 'firefox' | 'safari' | 'pocket' | 'csv';
-  export let accept: string | string[];
-  export let source: ImportSource;
+  type Props = {
+    accept: string | string[];
+    source: ImportSource;
+    children?: Snippet;
+  };
+  let { accept, source, children }: Props = $props();
 
   function onSuccessImport() {
     fetchTags();
@@ -36,7 +41,7 @@
     return request({ url, method: 'POST', data });
   }
 
-  let loading = false;
+  let loading = $state(false);
   async function startImport(files: DropzoneFiles) {
     const f = files.accepted[0];
     if (!f) return;
@@ -56,5 +61,5 @@
   }
 </script>
 
-<slot />
+{@render children?.()}
 <FileDropZone {accept} {startImport} {loading} />

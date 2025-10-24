@@ -105,6 +105,9 @@ importers:
       eslint-plugin-svelte:
         specifier: ^3.12.5
         version: 3.12.5(eslint@9.38.0)(svelte@5.41.2)
+      file-selector:
+        specifier: 2.1.2
+        version: 2.1.2
       globals:
         specifier: 16.4.0
         version: 16.4.0
@@ -1841,6 +1844,10 @@ packages:
 
   file-selector@0.6.0:
     resolution: {integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==}
+    engines: {node: '>= 12'}
+
+  file-selector@2.1.2:
+    resolution: {integrity: sha512-QgXo+mXTe8ljeqUFaX3QVHc5osSItJ/Km+xpocx0aSqWGMSCf6qYs/VnzZgS864Pjn5iceMRFigeAV7AfTlaig==}
     engines: {node: '>= 12'}
 
   file-type@21.0.0:
@@ -4635,6 +4642,10 @@ snapshots:
       flat-cache: 4.0.1
 
   file-selector@0.6.0:
+    dependencies:
+      tslib: 2.8.1
+
+  file-selector@2.1.2:
     dependencies:
       tslib: 2.8.1
 

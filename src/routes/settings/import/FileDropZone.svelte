@@ -1,15 +1,20 @@
 <script lang="ts">
   import { CircleArrowUp, Inbox } from '@lucide/svelte';
-  import Dropzone from 'svelte-file-dropzone';
+  // import Dropzone from 'svelte-file-dropzone';
+  import Dropzone from '$lib/components/file-dropzone/Dropzone.svelte';
 
   import Button from '$lib/components/base/Button.svelte';
   import Spinner from '$lib/components/feedback/Spinner.svelte';
 
   import type { DropzoneFiles } from './import.shared';
 
-  export let startImport: (files: DropzoneFiles) => unknown;
-  export let loading: boolean;
-  export let accept: string | string[];
+  type Props = {
+    startImport: (files: DropzoneFiles) => unknown;
+    loading: boolean;
+    accept: string | string[];
+  };
+
+  let { startImport, loading, accept }: Props = $props();
 
   const filesInitial: DropzoneFiles = { accepted: [], rejected: [] };
   let files = filesInitial;
@@ -19,13 +24,13 @@
   }
 
   async function handleFilesSelect(e: any) {
-    const { acceptedFiles, fileRejections } = e.detail;
+    const { acceptedFiles, fileRejections } = e;
 
     files.accepted = [...acceptedFiles];
     files.rejected = [...fileRejections];
   }
 
-  let dragenter = false;
+  let dragenter = $state(false);
   function handleDragenter() {
     dragenter = true;
   }
@@ -40,10 +45,10 @@
     multiple={false}
     {accept}
     disableDefaultStyles
-    on:drop={handleFilesSelect}
-    on:dragenter={handleDragenter}
-    on:dragleave={handleDragleave}
-    on:filedropped={handleDragleave}
+    ondrop={handleFilesSelect}
+    ondragenter={handleDragenter}
+    ondragleave={handleDragleave}
+    onfiledropped={handleDragleave}
   >
     <div class="inbox-icon">
       <Inbox />

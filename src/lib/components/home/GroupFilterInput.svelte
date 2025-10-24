@@ -1,7 +1,11 @@
 <script lang="ts">
   import { Funnel } from '@lucide/svelte';
 
-  export let value = '';
+  type Props = {
+    value?: string;
+  };
+
+  let { value = $bindable('') }: Props = $props();
 </script>
 
 <div class="root">

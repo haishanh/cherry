@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   // import { amp, browser, dev, mode, prerendering } from 'app/env';
-  export let data: PageData;
+  let { data }: { data: PageData } = $props();
 </script>
 
 <h1>admin/users</h1>

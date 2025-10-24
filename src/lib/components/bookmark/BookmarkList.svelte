@@ -16,7 +16,7 @@
   type Group = { id: number; name: string; count?: number };
 
   type Props = {
-    editModal?: EditModal;
+    editModal?: EditModal | null;
     bookmarks: BookmarkFromDb[];
   };
 

@@ -1,6 +1,6 @@
 <script>
   import { Inbox } from '@lucide/svelte';
-  import Dropzone from 'svelte-file-dropzone';
+  import Dropzone from '$lib/components/file-dropzone/Dropzone.svelte';
 
   let files = {
     accepted: [],
@@ -8,7 +8,7 @@
   };
 
   async function handleFilesSelect(e) {
-    const { acceptedFiles, fileRejections } = e.detail;
+    const { acceptedFiles, fileRejections } = e;
 
     console.log('fileRejections', fileRejections);
 
@@ -40,10 +40,10 @@
     multiple={false}
     accept={['text/html']}
     disableDefaultStyles
-    on:drop={handleFilesSelect}
-    on:dragenter={handleDragenter}
-    on:dragleave={handleDragleave}
-    on:filedropped={handleDragleave}
+    ondrop={handleFilesSelect}
+    ondragenter={handleDragenter}
+    ondragleave={handleDragleave}
+    onfiledropped={handleDragleave}
   >
     <div class="inbox-icon">
       <Inbox />

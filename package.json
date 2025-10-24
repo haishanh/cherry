@@ -57,6 +57,7 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-svelte": "^3.12.5",
+    "file-selector": "2.1.2",
     "globals": "16.4.0",
     "ky": "1.13.0",
     "lucide-svelte": "0.546.0",

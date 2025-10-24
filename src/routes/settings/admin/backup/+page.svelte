@@ -6,7 +6,10 @@
 
   import type { PageData } from './$types';
 
-  export let data: PageData;
+  type Props = {
+    data: PageData;
+  };
+  let { data }: Props = $props();
 
   const requestBackup = () => request({ url: '/api/admin/backups', method: 'POST' });
 

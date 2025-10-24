@@ -9,14 +9,17 @@
   import type { PageData } from './$types';
   import ChangePasswordModal from './ChangePasswordModal.svelte';
 
-  export let data: PageData;
+  type Props = {
+    data: PageData;
+  };
+  let { data }: Props = $props();
   const token = data.token;
   const user = data.user;
 
   let changePasswordModal: ChangePasswordModal;
   const handleClickChangePassword = () => changePasswordModal.open();
 
-  let bookmarkletHref = 'javascript:void';
+  let bookmarkletHref = $state('javascript:void');
 
   onMount(() => {
     let u = new URL(window.location.href);

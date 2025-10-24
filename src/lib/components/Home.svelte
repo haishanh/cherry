@@ -17,14 +17,17 @@
   import Pagination from './pagination/Pagination.svelte';
   import { SvelteURLSearchParams } from 'svelte/reactivity';
 
-  export let bookmarks: BookmarkFromDb[] = [];
-  // TODO merge this with meta?
-  export let totalPage: number;
-  export let maybeHasMore: boolean;
-  export let meta: PageMetaBookmarks = {};
-  export let url: { pathname: string; search: string };
+  type Props = {
+    bookmarks: BookmarkFromDb[];
+    totalPage: number;
+    maybeHasMore: boolean;
+    meta: PageMetaBookmarks;
+    url: { pathname: string; search: string };
+  };
 
-  let editModal: BookmarkEditModal;
+  let { bookmarks = [], totalPage, maybeHasMore, meta, url }: Props = $props();
+
+  let editModal: BookmarkEditModal | null = $state(null);
 
   onMount(() => {
     fetchTags({ initial: true });
@@ -59,17 +62,17 @@
     // bookmarks.splice(0, 0, bookmark);
 
     bookmarks = bookmarks;
-    editModal.close();
+    editModal?.close();
   }
 
   function handleBookmarkCreateCompleted(bookmark: BookmarkFromDb) {
     bookmarks.unshift(bookmark);
     bookmarks = bookmarks;
-    editModal.close();
+    editModal?.close();
   }
 
   function handleBookmarkUpdateFailed(e: { bookmark: unknown; error: any }) {
-    editModal.close();
+    editModal?.close();
     const error = e.error;
     if (error && error instanceof RequestError) {
       const response = error.response;
@@ -85,7 +88,7 @@
     const type = e.type;
     switch (type) {
       case TOOLBAR_EVENT_TYPE.ClickAddButton:
-        editModal.openEmpty();
+        editModal?.openEmpty();
         break;
       default:
         console.log('handleToolbarEvent0 unhandled event type', type);
@@ -95,13 +98,13 @@
   // pagination
 
   let q: URLSearchParams;
-  let pageCurrent: number;
-  let pageUriTemplate: string;
-  let pageUriNext: string;
-  let pageTotal: number;
-  let groupId: number | null;
+  let pageCurrent: number = $state(1);
+  let pageUriTemplate: string = $state('');
+  let pageUriNext: string = $state('');
+  let pageTotal: number = $state(0);
+  let groupId: number | null = $state(null);
 
-  $: {
+  $effect(() => {
     q = new SvelteURLSearchParams(url.search);
     pageCurrent = q.get('p') ? parseInt(q.get('p') || '', 10) : 1;
     groupId = q.get('group') ? parseInt(q.get('group') || '', 10) : null;
@@ -114,7 +117,7 @@
       meta.after ? `after=${meta.after}&p=${pageCurrent + 1}` : `p=${pageCurrent + 1}`,
     );
     pageTotal = totalPage;
-  }
+  });
 </script>
 
 <div class="root">

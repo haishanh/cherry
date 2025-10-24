@@ -1,20 +1,30 @@
 <script lang="ts">
   import { ChevronLeftIcon, ChevronRightIcon } from '@lucide/svelte';
 
-  // current page
-  export let current = 1;
-  // total pages
-  export let total = 1;
-  export let next = '';
-  export let previous = '';
-  export let pageUriTemplate = '';
-  export let maybeHasMore: boolean;
+  type Props = {
+    current: number;
+    total: number;
+    next: string;
+    previous: string;
+    pageUriTemplate: string;
+    maybeHasMore: boolean;
+  };
+
+  let {
+    // current page
+    current = 1,
+    // total pages
+    total = 1,
+    next = '',
+    previous = '',
+    pageUriTemplate = '',
+    maybeHasMore,
+  }: Props = $props();
 
   type PaginationItem = { key: number; page: number } | { key: number; gap: boolean };
 
-  let items: PaginationItem[];
-  $: items = makeNavItems(total, current);
-  $: previous = buildLink(current - 1);
+  let items: PaginationItem[] = $state(makeNavItems(total, current));
+  previous = buildLink(current - 1);
 
   function buildLink(page: number) {
     return pageUriTemplate.replace('____=', 'p=' + page);
