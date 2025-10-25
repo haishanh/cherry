@@ -17,7 +17,7 @@
   let { startImport, loading, accept }: Props = $props();
 
   const filesInitial: DropzoneFiles = { accepted: [], rejected: [] };
-  let files = filesInitial;
+  let files = $state(filesInitial);
 
   function handleClickImport() {
     startImport(files);
@@ -31,9 +31,11 @@
   }
 
   let dragenter = $state(false);
+
   function handleDragenter() {
     dragenter = true;
   }
+
   function handleDragleave() {
     dragenter = false;
   }
@@ -50,9 +52,7 @@
     ondragleave={handleDragleave}
     onfiledropped={handleDragleave}
   >
-    <div class="inbox-icon">
-      <Inbox />
-    </div>
+    <div class="inbox-icon"><Inbox /></div>
     <p>Click or drag your file here</p>
     {#if files.accepted[0]}
       <p class="note">File: {files.accepted[0].name}</p>
