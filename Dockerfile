@@ -50,7 +50,7 @@ COPY --from=builder /app/cherry /usr/local/bin/cherry
 
 
 FROM node:${NODE_IMAGE_TAG}
-ARG S6_OVERLAY_VERSION=3.1.6.2
+ARG S6_OVERLAY_VERSION=3.2.1.0
 RUN apt-get update && \
     apt-get install -y nginx \
     libnginx-mod-http-brotli-static \
