@@ -4,7 +4,7 @@
   type Props = {
     idx: string | number;
     active?: boolean;
-    children: Snippet;
+    children?: Snippet;
   };
   let { idx, active = false, children }: Props = $props();
 
@@ -58,7 +58,7 @@
   id="{$store.tabsId}--tab--{idx}"
   type="button"
 >
-  {@render children()}
+  {@render children?.()}
 </button>
 
 <style lang="scss">
