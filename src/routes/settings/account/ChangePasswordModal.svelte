@@ -20,15 +20,11 @@
     close();
   });
 
-  let currentPassword = '';
-  let newPassword1 = '';
-  let newPassword2 = '';
+  let currentPassword = $state('');
+  let newPassword1 = $state('');
+  let newPassword2 = $state('');
 
-  let error = {
-    currentPassword: '',
-    newPassword1: '',
-    newPassword2: '',
-  };
+  let error = $state({ currentPassword: '', newPassword1: '', newPassword2: '' });
   function resetError() {
     currentPassword = '';
     newPassword1 = '';
@@ -49,7 +45,8 @@
       },
     });
   }
-  async function onSubmit() {
+  async function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
     if (newPassword1 !== newPassword2) {
       error.newPassword2 = 'New password miss match';
       return;
@@ -71,7 +68,7 @@
 
 <Modal bind:this={modal}>
   <h2>Change your password</h2>
-  <form on:submit|preventDefault={onSubmit}>
+  <form onsubmit={onSubmit}>
     <Field
       name="currentPassword"
       label="Current passowrd"

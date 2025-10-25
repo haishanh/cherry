@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onDestroy, onMount, type Snippet } from 'svelte';
 
   const browser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
+  type Props = {
+    children: Snippet;
+  };
+
+  let { children }: Props = $props();
 
   let ref: HTMLDivElement;
   let portal: HTMLDivElement;
@@ -21,7 +27,7 @@
 
 <div class="portal-clone">
   <div bind:this={ref}>
-    <slot />
+    {@render children()}
   </div>
 </div>
 

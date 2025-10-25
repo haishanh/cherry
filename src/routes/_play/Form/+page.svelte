@@ -18,13 +18,10 @@
     f1: [],
     f2: [],
   };
-  let error = {
-    f0: '',
-    f1: '',
-    f2: '',
-  };
+  let error = $state({ f0: '', f1: '', f2: '' });
 
-  function onSubmit() {
+  function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
     const result = validate(rule, value);
     // @ts-ignore
     if (result.error) error = result.error;
@@ -32,7 +29,7 @@
 </script>
 
 <main>
-  <form on:submit|preventDefault={onSubmit}>
+  <form onsubmit={onSubmit}>
     <Field name={name.f0} type="url" placeholder="https://example.com" bind:value={value.f0} error={error.f0} />
     <Field name={name.f1} bind:value={value.f1} error={error.f1} />
     <Field name={name.f2} bind:value={value.f2} />

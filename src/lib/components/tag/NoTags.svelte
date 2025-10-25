@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script lang="ts" module>
   import CherryLeaf from '$lib/components/base/CherryLeaf.svelte';
 </script>
 

@@ -10,7 +10,10 @@
   } from '$lib/components/bookmark/BookmarkEditForm.svelte';
 
   import type { PageData } from './$types';
-  export let data: PageData;
+  type Props = {
+    data: PageData;
+  };
+  let { data }: Props = $props();
 
   const bookmark = data.bookmark;
 

@@ -10,7 +10,7 @@
   type Group = { id: number; name: string };
 
   let modal: Modal;
-  let group: Group;
+  let group: Group | undefined = $state();
 
   export const open = (g: Group) => {
     group = g;
@@ -45,19 +45,23 @@
 </script>
 
 <Modal bind:this={modal}>
-  <div class="cnt">
-    <h2>Delete group "{group.name}"?</h2>
-    <p>Note, all bookmarks in this group will be kept.</p>
-    <div class="action">
-      <Button modifier={['warn']} onclick={handleClickDelete}>
-        {#snippet icon()}
-          <Trash size={16} />
-        {/snippet}
+  {#if group}
+    <div class="cnt">
+      <h2>Delete group "{group?.name}"?</h2>
+      <p>Note, all bookmarks in this group will be kept.</p>
+      <div class="action">
+        <Button modifier={['warn']} onclick={handleClickDelete}>
+          {#snippet icon()}
+            <Trash size={16} />
+          {/snippet}
 
-        <span>Delete</span>
-      </Button>
+          <span>Delete</span>
+        </Button>
+      </div>
     </div>
-  </div>
+  {:else}
+    <div class="cnt">Something went wrong</div>
+  {/if}
 </Modal>
 
 <style lang="scss">

@@ -4,7 +4,7 @@
   type Props = {
     tag: { name: string; id: number; count?: number };
     tagVariantTotal?: number;
-    editModal: TagEditModal;
+    editModal?: TagEditModal;
   };
 
   let { tag, tagVariantTotal = 4, editModal }: Props = $props();

@@ -9,18 +9,23 @@
 
   import type { PageData } from './$types';
 
-  export let data: PageData;
+  type Props = {
+    data: PageData;
+  };
+  let { data }: Props = $props();
 
-  let editModal: TagEditModal;
-  let grouped: { keys: string[]; lookup: Record<string, TagFromDb[]> };
-  let loaded = false;
+  let editModal: TagEditModal | undefined = $state();
+  let grouped: { keys: string[]; lookup: Record<string, TagFromDb[]> } | undefined = $state();
+  let loaded = $state(false);
 
   onMount(() => {
     tagList.set(data.tags);
     loaded = true;
   });
 
-  $: if (loaded) grouped = grouping($tagList);
+  $effect(() => {
+    if (loaded) grouped = grouping($tagList);
+  });
 
   type TagType = { id: number; name: string };
 
@@ -54,7 +59,7 @@
   }
 
   function handleUpdateTagCompleted() {
-    editModal.close();
+    editModal?.close();
   }
 </script>
 

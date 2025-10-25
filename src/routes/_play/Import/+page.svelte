@@ -25,7 +25,7 @@
     // console.log(ret.status);
   }
 
-  let dragenter = false;
+  let dragenter = $state(false);
   function handleDragenter() {
     dragenter = true;
   }

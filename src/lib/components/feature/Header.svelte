@@ -4,7 +4,7 @@
   import Dice from '$lib/components/base/icons/Dice.svelte';
   import { SettingsIcon, TagIcon } from '@lucide/svelte';
 
-  let randomCount = 0;
+  let randomCount = $state(0);
   afterNavigate(() => {
     if (window.URL) {
       const u = new URL(location.href);

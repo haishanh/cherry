@@ -13,7 +13,7 @@
   type Group = { id: number; name: string };
   type NewGroup = { name: string };
 
-  let group: Group | NewGroup;
+  let group: Group | NewGroup | undefined = $state();
 
   async function updateGroup(d: Group) {
     await updateGroupServerSide(d);
@@ -34,7 +34,10 @@
     group = { name: '' };
     modal.close();
   };
-  async function onSubmit() {
+
+  async function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
+
     if (!group?.name) return;
 
     try {
@@ -63,23 +66,27 @@
 </script>
 
 <Modal bind:this={modal}>
-  <form on:submit|preventDefault={onSubmit}>
-    {#if group && 'id' in group}
-      <h2>Edit Group</h2>
-    {:else}
-      <h2>Add New Group</h2>
-    {/if}
-    <Field name="Name" placeholder="" bind:value={group.name} />
-    <div class="action">
-      <Button type="submit">
-        {#snippet icon()}
-          <SaveIcon size={16} />
-        {/snippet}
+  {#if group}
+    <form onsubmit={onSubmit}>
+      {#if group && 'id' in group}
+        <h2>Edit Group</h2>
+      {:else}
+        <h2>Add New Group</h2>
+      {/if}
+      <Field name="Name" placeholder="" bind:value={group.name} />
+      <div class="action">
+        <Button type="submit">
+          {#snippet icon()}
+            <SaveIcon size={16} />
+          {/snippet}
 
-        <span>Save</span>
-      </Button>
-    </div>
-  </form>
+          <span>Save</span>
+        </Button>
+      </div>
+    </form>
+  {:else}
+    <div>Something went wrong</div>
+  {/if}
 </Modal>
 
 <style lang="scss">

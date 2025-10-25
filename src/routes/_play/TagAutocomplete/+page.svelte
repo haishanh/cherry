@@ -13,13 +13,13 @@
     { id: 8, name: '8Cyan' },
   ];
 
-  let tags: TagType[] = [{ id: 100, name: 'Hello' }];
-  let tags2: TagType[] = [];
-  let tags3: TagType[] = [];
+  let tags: TagType[] = $state([{ id: 100, name: 'Hello' }]);
+  let tags2: TagType[] = $state([]);
+  let tags3: TagType[] = $state([]);
 
-  let inputValue = '';
-  let inputValue2 = '';
-  let inputValue3 = '';
+  let inputValue = $state('');
+  let inputValue2 = $state('');
+  let inputValue3 = $state('');
 </script>
 
 <main>
