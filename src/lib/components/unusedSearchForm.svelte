@@ -1,16 +1,17 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  let searchText = '';
+  let searchText = $state('');
 
-  function onSubmit() {
+  function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
     const text = (searchText || '').trim();
     const url = `/search?q=${encodeURIComponent(text)}`;
     goto(url);
   }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form onsubmit={onSubmit}>
   <input type="text" placeholder="Search bookmarks" bind:value={searchText} />
 </form>
 

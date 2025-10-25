@@ -6,7 +6,7 @@
     total: number;
     next: string;
     previous: string;
-    pageUriTemplate: string;
+    pageUriTemplate?: string;
     maybeHasMore: boolean;
   };
 

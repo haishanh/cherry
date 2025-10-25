@@ -8,12 +8,12 @@
   <section>
     <h1>hdd</h1>
     <Tabs>
-      <svelte:fragment slot="tabList">
+      {#snippet tabList()}
         <Tab idx="0" active />
         <Tab idx="1" />
         <Tab idx="2" />
-      </svelte:fragment>
-      <svelte:fragment slot="panels">
+      {/snippet}
+      {#snippet panels()}
         <TabPanel idx="0" active>
           <h1>0</h1>
         </TabPanel>
@@ -23,7 +23,7 @@
         <TabPanel idx="2">
           <h1>2</h1>
         </TabPanel>
-      </svelte:fragment>
+      {/snippet}
     </Tabs>
   </section>
 </main>

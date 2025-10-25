@@ -29,7 +29,7 @@
 
   function openEditModal() {
     closePopup();
-    editModal.open({ tag });
+    editModal?.open({ tag });
   }
 
   function deferOpen(delay = 700) {

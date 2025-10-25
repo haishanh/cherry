@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { ToastItem } from './type';
 
-  export let toast: ToastItem;
+  type Props = {
+    toast: ToastItem;
+  };
+  let { toast }: Props = $props();
 
   function handleMouseEnter() {
     //
@@ -11,8 +14,8 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="toast" on:mouseenter={handleMouseEnter} on:mouseleave={handleMouseLeave}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="toast" onmouseenter={handleMouseEnter} onmouseleave={handleMouseLeave}>
   <p>{toast.description}</p>
 </div>
 
