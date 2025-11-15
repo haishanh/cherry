@@ -1,0 +1,1 @@
+export const PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY = '____';

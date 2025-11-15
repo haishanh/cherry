@@ -15,7 +15,7 @@
 
   import Empty from './home/Empty.svelte';
   import Pagination from './pagination/Pagination.svelte';
-  import { SvelteURLSearchParams } from 'svelte/reactivity';
+  import { PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY } from './pagination/mod';
 
   type Props = {
     bookmarks: BookmarkFromDb[];
@@ -96,27 +96,18 @@
   }
 
   // pagination
-
-  let q: URLSearchParams;
-  let pageCurrent: number = $state(1);
-  let pageUriTemplate: string = $state('');
-  let pageUriNext: string = $state('');
-  let pageTotal: number = $state(0);
-  let groupId: number | null = $state(null);
-
-  $effect(() => {
-    q = new SvelteURLSearchParams(url.search);
-    pageCurrent = q.get('p') ? parseInt(q.get('p') || '', 10) : 1;
-    groupId = q.get('group') ? parseInt(q.get('group') || '', 10) : null;
+  const q = $derived(new URLSearchParams(url.search));
+  const pageCurrent = $derived(q.get('p') ? parseInt(q.get('p') || '', 10) : 1);
+  const groupId = $derived(q.get('group') ? parseInt(q.get('group') || '', 10) : null);
+  const pageUriTemplate = $derived.by(() => {
     q.delete('p');
     q.delete('after');
-    q.set('____', '');
-    pageUriTemplate = `${url.pathname}?${q}`;
-    pageUriNext = pageUriTemplate.replace(
-      '____=',
-      meta.after ? `after=${meta.after}&p=${pageCurrent + 1}` : `p=${pageCurrent + 1}`,
-    );
-    pageTotal = totalPage;
+    q.set(PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY, '');
+    return `${url.pathname}?${q}`;
+  });
+  const pageUriNext = $derived.by(() => {
+    const pageSp = meta.after ? `after=${meta.after}&p=${pageCurrent + 1}` : `p=${pageCurrent + 1}`;
+    return pageUriTemplate.replace(`${PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY}=`, pageSp);
   });
 </script>
 
@@ -142,7 +133,7 @@
       previous=""
       next={pageUriNext}
       current={pageCurrent}
-      total={pageTotal}
+      total={totalPage}
       {maybeHasMore}
     />
   </div>

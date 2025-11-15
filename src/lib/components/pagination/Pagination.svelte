@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ChevronLeftIcon, ChevronRightIcon } from '@lucide/svelte';
+  import { PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY } from './mod';
 
   type Props = {
     current: number;
@@ -27,7 +28,7 @@
   previous = buildLink(current - 1);
 
   function buildLink(page: number) {
-    return pageUriTemplate.replace('____=', 'p=' + page);
+    return pageUriTemplate.replace(`${PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY}=`, 'p=' + page);
   }
 
   // 1 2 3 4 5 6 ... 100
