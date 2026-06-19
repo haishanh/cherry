@@ -249,7 +249,9 @@
   const composeDragHandler = (fn) => (noDrag ? null : composeHandler(fn));
 
   const defaultPlaceholderString = $derived(
-    multiple ? "Drag 'n' drop some files here, or click to select files" : "Drag 'n' drop a file here, or click to select a file"
+    multiple
+      ? "Drag 'n' drop some files here, or click to select files"
+      : "Drag 'n' drop a file here, or click to select a file",
   );
 
   function stopPropagation(event) {

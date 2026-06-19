@@ -8,11 +8,7 @@
 
   type Props = { data: PageData };
   let { data }: Props = $props();
-  let stripTrackingParameters = $state(false);
-
-  $effect(() => {
-    stripTrackingParameters = data?.user.ff.strip_tracking_parameters ?? false;
-  });
+  let stripTrackingParameters = $derived(data?.user.ff.strip_tracking_parameters ?? false);
 
   async function updateUserSettingsServer(data: { strip_tracking_parameters: boolean }) {
     return await request({ url: '/settings/settings', method: 'POST', data });
