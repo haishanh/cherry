@@ -30,7 +30,7 @@ ARG COMMIT_SHA
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json tsconfig.json svelte.config.js vite.config.js ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json svelte.config.js vite.config.js postcss.config.mjs ./
 COPY ./static ./static
 COPY ./src ./src
 COPY --from=modules /app/src ./src
