@@ -11,7 +11,7 @@
 
   let { id: idPrefix, autoSelect = false, filtered = [], itemComp, onconfirm }: Props = $props();
 
-  let highlightedIdx = $state(autoSelect ? 0 : -1);
+  let highlightedIdx = $state(-1);
 
   $effect(() => {
     const highlighted = filtered[highlightedIdx];

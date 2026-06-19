@@ -10,7 +10,7 @@
 
   let { tagIds = [] }: Props = $props();
 
-  let tags: TagType[] = hydrateTags(tagIds);
+  let tags: TagType[] = $derived(hydrateTags(tagIds));
 
   function hydrateTags(ids: number[]) {
     if (ids && ids.length > 0 && typeof ids[0] === 'number') {

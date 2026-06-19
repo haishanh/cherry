@@ -15,8 +15,6 @@
   };
   let { data }: Props = $props();
 
-  const bookmark = data.bookmark;
-
   onMount(() => {
     fetchTags({ initial: true });
     fetchGroups({ initial: true });
@@ -36,10 +34,10 @@
 </script>
 
 <main>
-  {#if bookmark}
+  {#if data.bookmark}
     <h1>Edit</h1>
     <section>
-      <BookmarkEditForm {bookmark} onev0={handleBookmarkEditFormEv0} />
+      <BookmarkEditForm bookmark={data.bookmark} onev0={handleBookmarkEditFormEv0} />
     </section>
   {:else}
     <h2>Bookmark Not Found</h2>

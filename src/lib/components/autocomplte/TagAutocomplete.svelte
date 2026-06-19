@@ -50,7 +50,7 @@
     blur0: 'blur0',
   };
 
-  let filtered: AllTagType[] = $state([...options]);
+  let filtered: AllTagType[] = $state([]);
 
   function resetInput() {
     inputValue = '';

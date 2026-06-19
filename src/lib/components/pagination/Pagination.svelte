@@ -17,15 +17,15 @@
     // total pages
     total = 1,
     next = '',
-    previous = '',
+    previous: _previous = '',
     pageUriTemplate = '',
     maybeHasMore,
   }: Props = $props();
 
   type PaginationItem = { key: number; page: number } | { key: number; gap: boolean };
 
-  let items: PaginationItem[] = $state(makeNavItems(total, current));
-  previous = buildLink(current - 1);
+  let items: PaginationItem[] = $derived(makeNavItems(total, current));
+  let previousHref = $derived(buildLink(current - 1));
 
   function buildLink(page: number) {
     return pageUriTemplate.replace(`${PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY}=`, 'p=' + page);
@@ -71,7 +71,7 @@
     {#if current === 1}
       <span class="item disabled"><ChevronLeftIcon size={20} /><span>Previous</span></span>
     {:else}
-      <a class="item" rel="prev" href={previous}><ChevronLeftIcon size={20} /><span>Previous</span></a>
+      <a class="item" rel="prev" href={previousHref}><ChevronLeftIcon size={20} /><span>Previous</span></a>
     {/if}
 
     {#each items as item (item.key)}
