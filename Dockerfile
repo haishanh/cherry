@@ -3,7 +3,7 @@ ARG COMMIT_SHA=""
 ARG NODE_IMAGE_TAG="24-trixie-slim"
 
 FROM node:${NODE_IMAGE_TAG} AS init
-RUN corepack enable && pnpm version
+RUN corepack enable && pnpm --version
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
