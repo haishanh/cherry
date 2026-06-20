@@ -15,11 +15,7 @@
     data: PageData;
   };
   let { data }: Props = $props();
-  let bookmark = $state<PageData['bookmark']>(undefined);
-
-  $effect(() => {
-    bookmark = data.bookmark;
-  });
+  let bookmark = $derived<PageData['bookmark']>(data.bookmark);
 
   onMount(() => {
     fetchTags({ initial: true });

@@ -61,7 +61,7 @@
     server?: { apiBase: string; pat: string };
   };
   let { onev0, bookmark, server = { apiBase: '', pat: '' } }: Props = $props();
-  let draft = $state<BookmarkRaw>({ url: '', title: '', desc: '' });
+  let draft = $derived<BookmarkRaw>(cloneBookmark(bookmark));
 
   let tags: TagType[] = $state([]);
   let group: Group | null = $state(null);
@@ -82,10 +82,6 @@
   onMount(() => {
     fetchTags({ initial: true, server }).catch(logError);
     fetchGroups({ initial: true, server }).catch(logError);
-  });
-
-  $effect(() => {
-    draft = cloneBookmark(bookmark);
   });
 
   function cloneBookmark(input: BookmarkRaw): BookmarkRaw {
