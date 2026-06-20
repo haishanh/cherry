@@ -9,7 +9,7 @@ import type { UserMe } from '$lib/type';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
-    const userId = ensureAdminUser(event).id;
+    const userId = (await ensureAdminUser(event)).id;
     // const userSrv = getUserService();
     // const user0 = userSrv.getUserByIdWithHydratedFeature({ id: userId });
     // const { token } = await genPat({ id: user0.id, username: user0.username, feature: user0.feature });

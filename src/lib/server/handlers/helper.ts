@@ -1,15 +1,15 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import * as z from 'zod';
 
-import { dev } from '$app/environment';
-import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
 import { logger } from '$lib/server/logger';
 import { isEmail } from '$lib/utils/common.util';
-import * as cookieUtil from '$lib/utils/cookie.util';
-import * as jwtUtil from '$lib/utils/jwt.util';
 
-import { ApiError, ApiErrorCode, HttpStatus, ValidationErrorBuilder } from '../api.error';
-import { getUserService } from '../services/registry';
+import { ApiError, ApiErrorCode, HttpStatus } from '../api.error';
+import { signInUser } from '../session';
+import { getUserService } from '../services/user.registry';
+import { ValidationErrorBuilder } from '../validation.error';
+
+export { genPat, signInUser } from '../session';
 
 type Event = Parameters<RequestHandler>[0];
 
@@ -44,7 +44,7 @@ export function ensureUser(event: Event): { userId: number; feature: number } {
   return user;
 }
 
-export function ensureAdminUser(event: Event) {
+export async function ensureAdminUser(event: Event) {
   const user = event.locals?.user;
   const id = user?.id || user?.userId;
   if (!id) throw unauthorizedError();
@@ -68,29 +68,9 @@ export async function createUser(input: { username: string; password: string; op
   if (!username) return v.add('username', 'Invalid username').response();
   if (!isEmail(username)) return v.add('username', 'Username must be an email').response();
   if (!password) return v.add('password', 'Invalid password').response();
-  const user = await getUserService().createUser({ username, password, options });
+  const userSrv = getUserService();
+  const user = await userSrv.createUser({ username, password, options });
   return signInUser(user);
-}
-
-export async function genPat(user: { id: number; username: string; feature: number }) {
-  const { id, username, feature } = user;
-  const token = await jwtUtil.generate({ userId: id, username, feature }, JWT_SECRET);
-  const maxAge = 30 * 24 * 3600;
-  return { token, maxAge };
-}
-
-export async function signInUser(user: { id: number; username: string; feature: number }, redirect?: string) {
-  const { token, maxAge } = await genPat(user);
-  const headers = new Headers();
-  // https://web.dev/first-party-cookie-recipes/
-  headers.append(
-    'set-cookie',
-    cookieUtil.gen(COOKIE_KEY_TOKEN, token, { maxAge, insecure: USE_INSECURE_COOKIE || dev }),
-  );
-  // remove oauthstate cookie
-  // `oauthstate=deleted; Path=/; SameSite=Lax; Max-Age=0; HttpOnly`,
-  if (redirect) headers.append('location', redirect);
-  return new Response(undefined, { status: redirect ? 303 : 204, headers });
 }
 
 export function zalidate<

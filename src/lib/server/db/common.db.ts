@@ -6,23 +6,23 @@ import Sqlite from 'better-sqlite3';
 import { DATABASE_PATH } from '$lib/env';
 import { logger } from '$lib/server/logger';
 
-import * as v1 from './migrations/v01.migration';
-import * as v2 from './migrations/v02.migration';
-import * as v4 from './migrations/v04.migration';
-import * as v5 from './migrations/v05.migration';
-import * as v6 from './migrations/v06.migration';
-import * as v7 from './migrations/v07.migration';
+import { up as up1, version as version1 } from './migrations/v01.migration';
+import { up as up2, version as version2 } from './migrations/v02.migration';
+import { up as up4, version as version4 } from './migrations/v04.migration';
+import { up as up5, version as version5 } from './migrations/v05.migration';
+import { up as up6, version as version6 } from './migrations/v06.migration';
+import { up as up7, version as version7 } from './migrations/v07.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
 
 const migrations = [
-  { version: 1, mod: v1 },
-  { version: 2, mod: v2 },
-  { version: 4, mod: v4 },
-  { version: 5, mod: v5 },
+  { version: version1, mod: { up: up1, version: version1 } },
+  { version: version2, mod: { up: up2, version: version2 } },
+  { version: version4, mod: { up: up4, version: version4 } },
+  { version: version5, mod: { up: up5, version: version5 } },
   // Active v6 is teardown-only. The historical `simple` tokenizer migration is preserved in v06.legacy.migration.ts.
-  { version: 6, mod: v6 },
-  { version: 7, mod: v7 },
+  { version: version6, mod: { up: up6, version: version6 } },
+  { version: version7, mod: { up: up7, version: version7 } },
 ];
 
 export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = false) => {

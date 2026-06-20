@@ -18,7 +18,9 @@ import { group } from './group.service';
 import { JobService } from './job.service';
 import { S3Service } from './s3.service';
 import { tag } from './tag.service';
-import { UserService } from './user.service';
+import { getUserService } from './user.registry';
+
+export { getUserService } from './user.registry';
 
 export const registry = {
   getExportService,
@@ -28,12 +30,6 @@ export const registry = {
 };
 
 export type Registry = typeof registry;
-
-let userSrv: UserService;
-export function getUserService() {
-  if (!userSrv) userSrv = new UserService(lite());
-  return userSrv;
-}
 
 let s3Srv: S3Service;
 export function getS3Service() {

@@ -9,9 +9,9 @@ import {
   USE_INSECURE_COOKIE,
 } from '$lib/env';
 import { HttpStatus } from '$lib/server/api.error';
-import { genPat } from '$lib/server/handlers/helper';
 import { logger } from '$lib/server/logger';
-import { getUserService } from '$lib/server/services/registry';
+import { genPat } from '$lib/server/session';
+import { getUserService } from '$lib/server/services/user.registry';
 import { isPublic } from '$lib/utils/access.util';
 import * as cookieUtil from '$lib/utils/cookie.util';
 import * as jwtUtil from '$lib/utils/jwt.util';

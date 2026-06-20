@@ -1,9 +1,9 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { ValidationErrorBuilder } from '$lib/server/api.error';
 import { requestBody, signInUser } from '$lib/server/handlers/helper';
 import { wrap } from '$lib/server/handlers/wrap';
 import { getUserService } from '$lib/server/services/registry';
+import { ValidationErrorBuilder } from '$lib/server/validation.error';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
