@@ -10,7 +10,6 @@ export const up = (db: Database) => {
   ).run();
   db.prepare(`insert into bookmark_fts_v3(bookmark_fts_v3) values('rebuild')`).run();
 
-  db.prepare(`drop trigger if exists bookmark_insert_trigger`).run();
   db.prepare(`drop trigger if exists bookmark_insert_trigger_6_1`).run();
   db.prepare(`drop trigger if exists bookmark_insert_trigger_6_2`).run();
   db.prepare(
@@ -32,7 +31,6 @@ export const up = (db: Database) => {
     }),
   ).run();
 
-  db.prepare(`drop trigger if exists bookmark_delete_trigger`).run();
   db.prepare(`drop trigger if exists bookmark_delete_trigger_6_1`).run();
   db.prepare(`drop trigger if exists bookmark_delete_trigger_6_2`).run();
   db.prepare(`drop trigger if exists bookmark_delete_trigger_6_3`).run();
@@ -66,7 +64,6 @@ export const up = (db: Database) => {
     }),
   ).run();
 
-  db.prepare(`drop trigger if exists bookmark_update_trigger`).run();
   db.prepare(`drop trigger if exists bookmark_update_trigger_6_0`).run();
   db.prepare(
     trigger.create({
@@ -81,6 +78,5 @@ export const up = (db: Database) => {
     }),
   ).run();
 
-  db.prepare(`drop table if exists bookmark_fts`).run();
   db.prepare(`drop table if exists bookmark_fts_v2`).run();
 };

@@ -10,6 +10,7 @@ import * as v1 from './migrations/v01.migration';
 import * as v2 from './migrations/v02.migration';
 import * as v4 from './migrations/v04.migration';
 import * as v5 from './migrations/v05.migration';
+import * as v6 from './migrations/v06.migration';
 import * as v7 from './migrations/v07.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
@@ -19,7 +20,8 @@ const migrations = [
   { version: 2, mod: v2 },
   { version: 4, mod: v4 },
   { version: 5, mod: v5 },
-  // v6 depended on the old `simple` tokenizer. v7 replaces both the legacy and v6 FTS layouts.
+  // Active v6 is teardown-only. The historical `simple` tokenizer migration is preserved in v06.legacy.migration.ts.
+  { version: 6, mod: v6 },
   { version: 7, mod: v7 },
 ];
 
