@@ -26,10 +26,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm sync
       - run: pnpm check
-      - run: |
-          wget 'https://github.com/wangfenjin/simple/releases/download/v0.5.2/libsimple-linux-ubuntu-latest.zip'
-          unzip libsimple-linux-ubuntu-latest.zip
-          cp libsimple-linux-ubuntu-latest/libsimple.so ./db/
+      - run: pnpm fetch:signal-tokenizer
       - run: pnpm test
       - run: pnpm build
 
