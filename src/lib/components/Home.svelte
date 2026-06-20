@@ -55,19 +55,16 @@
     if (idx < 0) return;
 
     // do no change the order of the list
-    bookmarks.splice(idx, 1, bookmark);
+    bookmarks = [...bookmarks.slice(0, idx), bookmark, ...bookmarks.slice(idx + 1)];
 
     // or if we want to put newly udpated item to top, we can:
     // bookmarks.splice(idx, 1);
     // bookmarks.splice(0, 0, bookmark);
-
-    bookmarks = bookmarks;
     editModal?.close();
   }
 
   function handleBookmarkCreateCompleted(bookmark: BookmarkFromDb) {
-    bookmarks.unshift(bookmark);
-    bookmarks = bookmarks;
+    bookmarks = [bookmark, ...bookmarks];
     editModal?.close();
   }
 

@@ -6,6 +6,7 @@
   import CherryLeaf from '$lib/components/base/CherryLeaf.svelte';
   import { addToast } from '$lib/components/base/toast/store';
   import BookmarkEditForm, {
+    type Event0 as BookmarkEditFormEvent0,
     Event0Type as BookmarkEditFormEvent,
   } from '$lib/components/bookmark/BookmarkEditForm.svelte';
 
@@ -14,16 +15,22 @@
     data: PageData;
   };
   let { data }: Props = $props();
+  let bookmark = $state<PageData['bookmark']>(undefined);
+
+  $effect(() => {
+    bookmark = data.bookmark;
+  });
 
   onMount(() => {
     fetchTags({ initial: true });
     fetchGroups({ initial: true });
   });
 
-  function handleBookmarkEditFormEv0(e: { type: BookmarkEditFormEvent }) {
+  function handleBookmarkEditFormEv0(e: BookmarkEditFormEvent0) {
     const type = e.type;
     switch (type) {
       case BookmarkEditFormEvent.UpdateCompleted:
+        bookmark = e.payload;
         addToast({ description: 'Saved', status: 'success' });
         break;
       case BookmarkEditFormEvent.UpdateFailed:
@@ -34,10 +41,10 @@
 </script>
 
 <main>
-  {#if data.bookmark}
+  {#if bookmark}
     <h1>Edit</h1>
     <section>
-      <BookmarkEditForm bookmark={data.bookmark} onev0={handleBookmarkEditFormEv0} />
+      <BookmarkEditForm {bookmark} onev0={handleBookmarkEditFormEv0} />
     </section>
   {:else}
     <h2>Bookmark Not Found</h2>

@@ -29,6 +29,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "bundle:cli": "esbuild src/cli/index.ts --bundle --minify --platform=node --target=node24 --outfile=cherry",
+    "fetch:signal-tokenizer": "node scripts/fetch-signal-tokenizer.mjs",
     "cherry": "tsx src/cli/index.ts",
     "lint": "prettier --check src scripts && eslint --cache src",
     "lint:fix": "eslint --cache --fix src",

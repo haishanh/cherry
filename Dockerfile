@@ -51,8 +51,11 @@ COPY --from=builder /app/cherry /usr/local/bin/cherry
 
 FROM node:${NODE_IMAGE_TAG}
 ARG S6_OVERLAY_VERSION=3.2.1.0
+ARG SIGNAL_TOKENIZER_VERSION=0.2.2
+ARG TARGETARCH
 RUN apt-get update && \
-    apt-get install -y nginx \
+    apt-get install -y curl \
+    nginx \
     libnginx-mod-http-brotli-static \
     libnginx-mod-http-brotli-filter \
     xz-utils \
@@ -75,7 +78,19 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=base --chown=nodejs:nodejs /app/ /app/
 COPY --from=base /usr/local/bin/cherry /usr/local/bin/cherry
-COPY --from=ghcr.io/haishanh/sqlite-simple-tokenizer:main --chown=nodejs:nodejs /libsimple.so /app/db/libsimple.so
+RUN set -eux; \
+    case "${TARGETARCH}" in \
+      amd64) signal_target="x86_64-unknown-linux-gnu" ;; \
+      arm64) signal_target="aarch64-unknown-linux-gnu" ;; \
+      *) echo "Unsupported TARGETARCH: ${TARGETARCH}. Build haishanh/Signal-FTS5-Extension from source for this architecture." >&2; exit 1 ;; \
+    esac; \
+    archive="signal-tokenizer-v${SIGNAL_TOKENIZER_VERSION}-${signal_target}.tar.gz"; \
+    curl -fL "https://github.com/haishanh/Signal-FTS5-Extension/releases/download/v${SIGNAL_TOKENIZER_VERSION}/${archive}" -o "/tmp/${archive}"; \
+    mkdir -p /tmp/signal-tokenizer /app/db; \
+    tar -xzf "/tmp/${archive}" -C /tmp/signal-tokenizer; \
+    libpath="$(find /tmp/signal-tokenizer -type f -name 'libsignal_tokenizer.so' -print -quit)"; \
+    test -n "${libpath}"; \
+    cp "${libpath}" /app/db/libsignal_tokenizer.so
 EXPOSE 8000
 VOLUME [ "/data" ]
 ENTRYPOINT [ "/init" ]

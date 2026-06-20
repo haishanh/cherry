@@ -73,12 +73,9 @@
   }
 
   function groupBookmarksClient(ids: number[], groupId: number) {
-    for (let i = 0; i < bookmarks.length; i++) {
-      if (ids.indexOf(bookmarks[i].id) >= 0) {
-        bookmarks[i].groupId = groupId;
-      }
-    }
-    bookmarks = bookmarks;
+    bookmarks = bookmarks.map((bookmark) =>
+      ids.indexOf(bookmark.id) >= 0 ? { ...bookmark, groupId } : bookmark
+    );
   }
 
   function restoreBookmarksClient() {

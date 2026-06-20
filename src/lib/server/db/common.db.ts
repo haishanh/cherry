@@ -10,7 +10,7 @@ import * as v1 from './migrations/v01.migration';
 import * as v2 from './migrations/v02.migration';
 import * as v4 from './migrations/v04.migration';
 import * as v5 from './migrations/v05.migration';
-import * as v6 from './migrations/v06.migration';
+import * as v7 from './migrations/v07.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
 
@@ -19,7 +19,8 @@ const migrations = [
   { version: 2, mod: v2 },
   { version: 4, mod: v4 },
   { version: 5, mod: v5 },
-  { version: 6, mod: v6 },
+  // v6 depended on the old `simple` tokenizer. v7 replaces both the legacy and v6 FTS layouts.
+  { version: 7, mod: v7 },
 ];
 
 export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = false) => {
@@ -28,7 +29,20 @@ export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = f
     ...(verbose ? { verbose: console.log } : undefined),
   });
 
-  db.loadExtension(path.join('db', 'libsimple'));
+  const extensionPath = path.join('db', 'libsignal_tokenizer');
+  try {
+    // better-sqlite3 supports the optional init symbol at runtime, but its TS types only expose the path-only overload.
+    (db.loadExtension as unknown as (path: string, entryPoint: string) => Sqlite.Database)(
+      extensionPath,
+      'signal_fts5_tokenizer_init',
+    );
+  } catch (error) {
+    const message = [
+      `Failed to load SQLite extension from ${extensionPath}.`,
+      'Run `pnpm fetch:signal-tokenizer` to download the release artifact, or build haishanh/Signal-FTS5-Extension from source and place the library in db/.',
+    ].join(' ');
+    throw new Error(message, { cause: error });
+  }
 
   DATABASE_STATE[filepath] = { db };
   if (shouldMigrate && !DATABASE_STATE[filepath].migrated) {

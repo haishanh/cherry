@@ -1,0 +1,86 @@
+import type { Database } from 'better-sqlite3';
+
+import { trigger } from '../builder';
+
+export const version = 7;
+
+export const up = (db: Database) => {
+  db.prepare(
+    `create virtual table if not exists bookmark_fts_v3 USING fts5 (title,desc,url,content=bookmark,content_rowid=id,tokenize='signal_tokenizer')`,
+  ).run();
+  db.prepare(`insert into bookmark_fts_v3(bookmark_fts_v3) values('rebuild')`).run();
+
+  db.prepare(`drop trigger if exists bookmark_insert_trigger`).run();
+  db.prepare(`drop trigger if exists bookmark_insert_trigger_6_1`).run();
+  db.prepare(`drop trigger if exists bookmark_insert_trigger_6_2`).run();
+  db.prepare(
+    trigger.create({
+      name: 'bookmark_insert_trigger_7_1',
+      ifNotExists: true,
+      event: 'after insert',
+      table: 'bookmark',
+      statements: [`update user set bookmarkCount = bookmarkCount + 1 where id = new.userId`],
+    }),
+  ).run();
+  db.prepare(
+    trigger.create({
+      name: 'bookmark_insert_trigger_7_2',
+      ifNotExists: true,
+      event: 'after insert',
+      table: 'bookmark',
+      statements: [`insert into bookmark_fts_v3(rowid,title,desc,url) values (new.id,new.title,new.desc,new.url)`],
+    }),
+  ).run();
+
+  db.prepare(`drop trigger if exists bookmark_delete_trigger`).run();
+  db.prepare(`drop trigger if exists bookmark_delete_trigger_6_1`).run();
+  db.prepare(`drop trigger if exists bookmark_delete_trigger_6_2`).run();
+  db.prepare(`drop trigger if exists bookmark_delete_trigger_6_3`).run();
+  db.prepare(
+    trigger.create({
+      name: 'bookmark_delete_trigger_7_1',
+      ifNotExists: true,
+      event: 'after delete',
+      table: 'bookmark',
+      statements: [
+        `insert into bookmark_fts_v3 (bookmark_fts_v3,rowid,title,desc,url) values ('delete',old.id,old.title,old.desc,old.url)`,
+      ],
+    }),
+  ).run();
+  db.prepare(
+    trigger.create({
+      name: 'bookmark_delete_trigger_7_2',
+      ifNotExists: true,
+      event: 'after delete',
+      table: 'bookmark',
+      statements: [`delete from bookmark_tag where bookmarkId = old.id`],
+    }),
+  ).run();
+  db.prepare(
+    trigger.create({
+      name: 'bookmark_delete_trigger_7_3',
+      ifNotExists: true,
+      event: 'after delete',
+      table: 'bookmark',
+      statements: [`update user set bookmarkCount = bookmarkCount - 1 where id = old.userId`],
+    }),
+  ).run();
+
+  db.prepare(`drop trigger if exists bookmark_update_trigger`).run();
+  db.prepare(`drop trigger if exists bookmark_update_trigger_6_0`).run();
+  db.prepare(
+    trigger.create({
+      name: 'bookmark_update_trigger_7_0',
+      ifNotExists: true,
+      event: 'after update',
+      table: 'bookmark',
+      statements: [
+        `insert into bookmark_fts_v3 (bookmark_fts_v3,rowid,title,desc,url) values ('delete',old.id,old.title,old.desc,old.url)`,
+        `insert into bookmark_fts_v3(rowid,title,desc,url) values (new.id,new.title,new.desc,new.url)`,
+      ],
+    }),
+  ).run();
+
+  db.prepare(`drop table if exists bookmark_fts`).run();
+  db.prepare(`drop table if exists bookmark_fts_v2`).run();
+};
