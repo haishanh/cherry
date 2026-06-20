@@ -34,7 +34,7 @@ jobs:
       - run: pnpm build
 
       - name: Send Notification
-        uses: haishanh/actions-telegram-notification@v2
+        uses: haishanh/actions-telegram-notification@aff3b256bb3442512e91f888532ab6f2857c06ef
         if: ${{ always() }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}
@@ -139,7 +139,7 @@ jobs:
             core.summary.write();
 
       - name: Send Notification
-        uses: haishanh/actions-telegram-notification@v2
+        uses: haishanh/actions-telegram-notification@aff3b256bb3442512e91f888532ab6f2857c06ef
         if: ${{ always() }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}

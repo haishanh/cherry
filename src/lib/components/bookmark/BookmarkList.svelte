@@ -73,9 +73,7 @@
   }
 
   function groupBookmarksClient(ids: number[], groupId: number) {
-    bookmarks = bookmarks.map((bookmark) =>
-      ids.indexOf(bookmark.id) >= 0 ? { ...bookmark, groupId } : bookmark
-    );
+    bookmarks = bookmarks.map((bookmark) => (ids.indexOf(bookmark.id) >= 0 ? { ...bookmark, groupId } : bookmark));
   }
 
   function restoreBookmarksClient() {
