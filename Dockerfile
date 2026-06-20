@@ -56,7 +56,8 @@ ARG TARGETARCH
 ARG APP_UID=1001
 ARG APP_GID=1001
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl \
+    apt-get install -y --no-install-recommends ca-certificates \
+    curl \
     nginx \
     libnginx-mod-http-brotli-static \
     libnginx-mod-http-brotli-filter \
