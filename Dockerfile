@@ -53,26 +53,36 @@ FROM node:${NODE_IMAGE_TAG}
 ARG S6_OVERLAY_VERSION=3.2.1.0
 ARG SIGNAL_TOKENIZER_VERSION=0.2.2
 ARG TARGETARCH
+ARG APP_UID=1001
+ARG APP_GID=1001
 RUN apt-get update && \
-    apt-get install -y curl \
+    apt-get install -y --no-install-recommends curl \
     nginx \
     libnginx-mod-http-brotli-static \
     libnginx-mod-http-brotli-filter \
     xz-utils \
     procps \
-    sqlite3
+    sqlite3 && \
+    rm -rf /var/lib/apt/lists/*
 
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
+RUN set -eux; \
+    case "${TARGETARCH}" in \
+      amd64) s6_arch="x86_64" ;; \
+      arm64) s6_arch="aarch64" ;; \
+      *) echo "Unsupported TARGETARCH for s6-overlay: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac; \
+    curl -fL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" -o /tmp/s6-overlay-noarch.tar.xz; \
+    curl -fL "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${s6_arch}.tar.xz" -o /tmp/s6-overlay-${s6_arch}.tar.xz; \
+    tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz; \
+    tar -C / -Jxpf /tmp/s6-overlay-${s6_arch}.tar.xz; \
+    rm -f /tmp/s6-overlay-noarch.tar.xz /tmp/s6-overlay-${s6_arch}.tar.xz
 
 COPY docker/rootfs /
 
-ENV PUID="1001" PGID="1001" PORT="5173" BODY_SIZE_LIMIT="52428800"
+ENV PORT="5173" BODY_SIZE_LIMIT="52428800"
 
-RUN addgroup --gid ${PGID} nodejs
-RUN adduser --uid ${PUID} --gid ${PGID} --home /home/nodejs --shell /bin/bash nodejs
+RUN addgroup --gid ${APP_GID} nodejs
+RUN adduser --uid ${APP_UID} --gid ${APP_GID} --home /home/nodejs --shell /bin/bash nodejs
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -90,7 +100,8 @@ RUN set -eux; \
     tar -xzf "/tmp/${archive}" -C /tmp/signal-tokenizer; \
     libpath="$(find /tmp/signal-tokenizer -type f -name 'libsignal_tokenizer.so' -print -quit)"; \
     test -n "${libpath}"; \
-    cp "${libpath}" /app/db/libsignal_tokenizer.so
+    cp "${libpath}" /app/db/libsignal_tokenizer.so; \
+    rm -rf /tmp/signal-tokenizer "/tmp/${archive}"
 EXPOSE 8000
 VOLUME [ "/data" ]
 ENTRYPOINT [ "/init" ]
