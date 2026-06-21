@@ -2,6 +2,7 @@ const publicEndpoints = [
   '/signin',
   '/signup',
   '/api/ping',
+  { type: 'startsWith', value: '/favicon/' },
   { type: 'startsWith', value: '/api/favicon/' },
   { type: 'startsWith', value: '/_play' },
   { type: 'startsWith', value: '/api/auth/' },
