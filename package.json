@@ -21,7 +21,6 @@
   "scripts": {
     "dev": "vite dev",
     "test": "vitest",
-    "do": "NODE_OPTIONS='--import tsx' node",
     "build": "vite build",
     "preview": "vite preview",
     "package": "svelte-package",
