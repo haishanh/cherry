@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import * as fs from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
 import { it, beforeEach, afterEach, describe, expect } from 'vitest';
 
@@ -12,12 +14,18 @@ describe('user.db', () => {
   let db: Sqlite.Database | undefined;
 
   beforeEach(() => {
-    dbFile = '_.' + randomUUID() + '.sqlite';
+    dbFile = path.join(tmpdir(), '_.' + randomUUID() + '.sqlite');
     db = lite(dbFile);
   });
 
   afterEach(async () => {
-    if (db && dbFile) await fs.unlink(dbFile);
+    if (dbFile) {
+      await Promise.all([
+        fs.rm(dbFile, { force: true }),
+        fs.rm(`${dbFile}-wal`, { force: true }),
+        fs.rm(`${dbFile}-shm`, { force: true }),
+      ]);
+    }
   });
 
   it('getUserByUsername', async () => {

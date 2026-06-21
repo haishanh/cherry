@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import * as fs from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
 import type Sqlite from 'better-sqlite3';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -13,13 +15,17 @@ describe('admin cli commands', () => {
   let commands: ReturnType<typeof createCliAdminCommands>;
 
   beforeEach(() => {
-    dbFile = '_.' + randomUUID() + '.sqlite';
+    dbFile = path.join(tmpdir(), '_.' + randomUUID() + '.sqlite');
     db = lite(dbFile);
     commands = createCliAdminCommands(db);
   });
 
   afterEach(async () => {
-    await fs.rm(dbFile, { force: true });
+    await Promise.all([
+      fs.rm(dbFile, { force: true }),
+      fs.rm(`${dbFile}-wal`, { force: true }),
+      fs.rm(`${dbFile}-shm`, { force: true }),
+    ]);
   });
 
   it('lists existing users without passwords', async () => {
@@ -102,7 +108,7 @@ describe('admin cli commands', () => {
 
   it('migrates into a new database file', async () => {
     await commands.createUser('migrate@example.com', 'secret', { admin: false });
-    const toFile = '_.' + randomUUID() + '.sqlite';
+    const toFile = path.join(tmpdir(), '_.' + randomUUID() + '.sqlite');
 
     try {
       const res = await commands.migration(toFile);
@@ -110,7 +116,11 @@ describe('admin cli commands', () => {
       const migrated = lite(toFile, false);
       expect(migrated.prepare('select count(*) as count from user').get()).toEqual({ count: 1 });
     } finally {
-      await fs.rm(toFile, { force: true });
+      await Promise.all([
+        fs.rm(toFile, { force: true }),
+        fs.rm(`${toFile}-wal`, { force: true }),
+        fs.rm(`${toFile}-shm`, { force: true }),
+      ]);
     }
   });
 });
