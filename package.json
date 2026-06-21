@@ -48,7 +48,6 @@
     "@types/debug": "4.1.13",
     "@types/estree": "1.0.9",
     "autoprefixer": "10.5.0",
-    "axios": "1.18.0",
     "date-fns": "4.4.0",
     "domhandler": "6.0.1",
     "esbuild": "0.28.1",
