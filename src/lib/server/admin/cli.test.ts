@@ -63,9 +63,9 @@ describe('admin cli commands', () => {
     db.prepare(
       "insert into bookmark (userId, url, title, desc, createdAt, updatedAt) values (?, 'https://example.com', 't', 'd', strftime('%s','now'), strftime('%s','now'))",
     ).run([user.id]);
-    db.prepare("insert into bookmark_stash (key, userId, data, createdAt) values ('stash', ?, '[]', strftime('%s','now'))").run([
-      user.id,
-    ]);
+    db.prepare(
+      "insert into bookmark_stash (key, userId, data, createdAt) values ('stash', ?, '[]', strftime('%s','now'))",
+    ).run([user.id]);
     db.prepare(
       "insert into job (userId, op, status, exp, input, output, error, createdAt) values (?, 'export', 'FINISHED', 0, '{}', '{}', '', strftime('%s','now'))",
     ).run([user.id]);
@@ -76,8 +76,12 @@ describe('admin cli commands', () => {
     expect(db.prepare('select count(*) as count from user where id = ?').get([user.id])).toEqual({ count: 0 });
     expect(db.prepare('select count(*) as count from bookmark where userId = ?').get([user.id])).toEqual({ count: 0 });
     expect(db.prepare('select count(*) as count from tag where userId = ?').get([user.id])).toEqual({ count: 0 });
-    expect(db.prepare('select count(*) as count from cherry_group where userId = ?').get([user.id])).toEqual({ count: 0 });
-    expect(db.prepare('select count(*) as count from bookmark_stash where userId = ?').get([user.id])).toEqual({ count: 0 });
+    expect(db.prepare('select count(*) as count from cherry_group where userId = ?').get([user.id])).toEqual({
+      count: 0,
+    });
+    expect(db.prepare('select count(*) as count from bookmark_stash where userId = ?').get([user.id])).toEqual({
+      count: 0,
+    });
     expect(db.prepare('select count(*) as count from job where userId = ?').get([user.id])).toEqual({ count: 0 });
   });
 

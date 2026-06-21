@@ -96,7 +96,8 @@ export function createCliAdminCommands(db: Database = lite()) {
         if (!username) throw new ApiError(HttpStatus.BAD_REQUEST, undefined, 'Missing username');
         const user = userDb.getUserById(db, { id: userId });
         if (!user) throw new ApiError(HttpStatus.NOT_FOUND, undefined, 'User not found');
-        if (user.username !== username) throw new ApiError(HttpStatus.BAD_REQUEST, undefined, 'Username and Id mismatch');
+        if (user.username !== username)
+          throw new ApiError(HttpStatus.BAD_REQUEST, undefined, 'Username and Id mismatch');
 
         const transact = db.transaction(() => {
           bookmarkDb.deleteBookmarksByUserId(db, { userId });
