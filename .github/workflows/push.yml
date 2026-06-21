@@ -65,6 +65,14 @@ jobs:
             return images.join('\n');
           result-encoding: string
 
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        id: set-build-options
+        with:
+          script: |
+            const isMultiArchTarget = context.ref.startsWith('refs/tags/') || context.ref.startsWith('refs/heads/v');
+            core.setOutput('platforms', isMultiArchTarget ? 'linux/amd64,linux/arm64' : 'linux/amd64');
+            core.setOutput('cache_to', isMultiArchTarget ? 'type=gha,mode=max' : 'type=gha,mode=min');
+
       - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
@@ -72,6 +80,7 @@ jobs:
           images: ${{ steps.set-images.outputs.result }}
 
       - name: Set up QEMU
+        if: contains(steps.set-build-options.outputs.platforms, 'arm64')
         uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
 
       - name: Set git commit sha
@@ -114,14 +123,14 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ steps.set-build-options.outputs.platforms }}
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           build-args: |
             COMMIT_SHA=${{ env.sha_short }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: ${{ steps.set-build-options.outputs.cache_to }}
 
       - name: Generate summary
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0

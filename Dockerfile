@@ -17,12 +17,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 
-FROM init AS modules
-WORKDIR /app
-RUN mkdir -p src/assets
-COPY ./scripts ./scripts
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+FROM deps AS modules
+RUN pnpm prune --prod
 
 
 FROM init AS builder
@@ -43,7 +39,6 @@ FROM init AS base
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=modules --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/.svelte-kit ./.svelte-kit
 COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
 COPY --from=builder --chown=nodejs:nodejs /app/build ./build
 COPY --from=builder /app/cherry /usr/local/bin/cherry

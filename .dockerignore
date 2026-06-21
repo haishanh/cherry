@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.eslintcache
+.git
+.github
+.pnpm-store
+.svelte-kit
+build
+db
+docs
+node_modules
+tmp
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
