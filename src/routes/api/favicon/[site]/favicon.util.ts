@@ -13,7 +13,7 @@ import * as datauriUtil from './datauri.util';
 const TIMEOUT = 5000;
 const REQUEST_TIMEOUT = 6000;
 const MAX_REDIRECTS = 5;
-const MAX_HTML_BYTES = 512 * 1024;
+const MAX_HTML_BYTES = 128 * 1024;
 const MAX_ICON_BYTES = 256 * 1024;
 const MAX_DATA_URI_BYTES = 256 * 1024;
 
@@ -69,6 +69,43 @@ async function readArrayBufferLimited(res: UndiciResponse, maxBytes: number) {
 async function readTextLimited(res: UndiciResponse, maxBytes: number) {
   const buffer = await readArrayBufferLimited(res, maxBytes);
   return new TextDecoder().decode(buffer);
+}
+
+async function readHeadHtmlLimited(res: UndiciResponse, maxBytes: number) {
+  assertMaxContentLength(res, maxBytes);
+  if (!res.body) return await readTextLimited(res, maxBytes);
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  let text = '';
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      total += value.byteLength;
+      if (total > maxBytes) throw new FaviconError(FaviconErrorCode.ResponseTooLarge);
+      chunks.push(value);
+      text += decoder.decode(value, { stream: true });
+
+      if (text.toLowerCase().includes('</head>')) {
+        return text;
+      }
+    }
+  } finally {
+    try {
+      await reader.cancel();
+    } catch {
+      // ignore cancellation errors after an early head match
+    }
+    reader.releaseLock();
+  }
+
+  text += decoder.decode();
+  return text;
 }
 
 function isIpv4Blocked(address: string) {
@@ -177,7 +214,7 @@ async function request(site: string): Promise<{ html: string; base: string }> {
       continue;
     }
 
-    const html = await readTextLimited(res, MAX_HTML_BYTES);
+    const html = await readHeadHtmlLimited(res, MAX_HTML_BYTES);
     return { html, base: current.toString() };
   }
 

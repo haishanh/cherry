@@ -87,4 +87,28 @@ describe('favicon hardening', () => {
       code: faviconLib.FaviconErrorCode.ResponseTooLarge,
     });
   });
+
+  test('parses favicon from head without buffering a huge body', async () => {
+    const body = new ReadableStream({
+      start(controller) {
+        controller.enqueue(
+          new TextEncoder().encode(
+            '<html><head><link rel="icon" href="/favicon.svg" type="image/svg+xml"></head><body>',
+          ),
+        );
+        controller.enqueue(new Uint8Array(200 * 1024));
+        controller.close();
+      },
+    });
+
+    fetchMock.mockResolvedValueOnce(
+      new Response(body, {
+        status: 200,
+        headers: { 'content-type': 'text/html' },
+      }),
+    );
+
+    const ret = await faviconLib.favicon('https://example.com');
+    expect(ret).toEqual({ type: 'image/svg+xml', url: 'https://example.com/favicon.svg' });
+  });
 });
