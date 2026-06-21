@@ -13,6 +13,14 @@ export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
     const site = event.params.site;
     if (!site) throw new ApiError(HttpStatus.BAD_REQUEST);
+    try {
+      favicon.normalizeSite(site);
+    } catch (e) {
+      if (e instanceof favicon.FaviconError && e.code === favicon.FaviconErrorCode.InvalidSite) {
+        throw new ApiError(HttpStatus.BAD_REQUEST);
+      }
+      throw e;
+    }
 
     try {
       let ret: { type?: string; url: string } | { type: string; isB64: boolean; data: string };
@@ -47,7 +55,7 @@ export const GET: RequestHandler = async (event) => {
 
       const etag = createHash('md5').update(buffer).digest('hex');
 
-      return new Response(buffer.buffer, {
+      return new Response(buffer, {
         headers: {
           Etag: etag,
           'Cache-Control': `public, max-age=${FAVICON_CACHE_MAX_AGE_FOUND}, immutable`,
