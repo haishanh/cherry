@@ -41,7 +41,7 @@ ENV NODE_ENV=production
 COPY --from=modules --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
 COPY --from=builder --chown=nodejs:nodejs /app/build ./build
-COPY --from=builder /app/cherry /usr/local/bin/cherry
+COPY --from=builder --chown=nodejs:nodejs /app/cherry /app/cherry
 
 
 FROM node:${NODE_IMAGE_TAG}
@@ -83,7 +83,7 @@ RUN adduser --uid ${APP_UID} --gid ${APP_GID} --home /home/nodejs --shell /bin/b
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=base --chown=nodejs:nodejs /app/ /app/
-COPY --from=base /usr/local/bin/cherry /usr/local/bin/cherry
+RUN ln -sf /app/cherry /usr/local/bin/cherry
 RUN set -eux; \
     case "${TARGETARCH}" in \
       amd64) signal_target="x86_64-unknown-linux-gnu" ;; \
