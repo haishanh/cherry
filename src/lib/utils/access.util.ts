@@ -6,9 +6,6 @@ const publicEndpoints = [
   { type: 'startsWith', value: '/_play' },
   { type: 'startsWith', value: '/api/auth/' },
   { type: 'startsWith', value: '/api/public/' },
-  // _internal endpoints are regarded as public endpoints
-  // since they are not exposed via Nginx
-  { type: 'startsWith', value: '/api/_internal/' },
   { type: 'startsWith', value: '/error/' },
 ];
 const protectedEndpoints = [
