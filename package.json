@@ -28,7 +28,7 @@
     "sync": "svelte-kit sync",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "bundle:cli": "esbuild src/cli/index.ts --bundle --minify --platform=node --target=node24 --outfile=cherry",
+    "bundle:cli": "esbuild src/cli/index.ts --bundle --minify --platform=node --target=node24 --outfile=cherry --external:@node-rs/argon2 --external:@node-rs/* --external:better-sqlite3",
     "fetch:signal-tokenizer": "node scripts/fetch-signal-tokenizer.mjs",
     "cherry": "tsx src/cli/index.ts",
     "lint": "prettier --check src scripts && eslint --cache src",
