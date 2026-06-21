@@ -22,6 +22,21 @@ describe('admin cli commands', () => {
     await fs.rm(dbFile, { force: true });
   });
 
+  it('lists existing users without passwords', async () => {
+    await commands.createUser('admin@example.com', 'secret-1', { admin: true });
+    await commands.createUser('user@example.com', 'secret-2', { admin: false });
+
+    const res = await commands.listUsers();
+    expect(res.status).toBe(200);
+
+    const body = (await res.json()) as {
+      items: Array<{ id: number; username: string; feature: number; attr: number }>;
+    };
+    expect(body.items).toHaveLength(2);
+    expect(body.items.map((item) => item.username).sort()).toEqual(['admin@example.com', 'user@example.com']);
+    expect(body.items.every((item) => !('password' in item))).toBe(true);
+  });
+
   it('creates an admin user', async () => {
     const res = await commands.createUser('admin@example.com', 'P@ssw0rd', { admin: true });
     expect(res.status).toBe(204);

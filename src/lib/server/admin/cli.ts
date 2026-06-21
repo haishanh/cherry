@@ -55,6 +55,12 @@ export function createCliAdminCommands(db: Database = lite()) {
   };
 
   return {
+    listUsers: () =>
+      run(() => {
+        const items = userDb.getUsers(db);
+        return jsonResponse({ items });
+      }),
+
     createUser: (username: string, password: string, options: InputCreateUser['options']) =>
       run(async () => {
         if (!username) return validationError('username', 'Invalid username');

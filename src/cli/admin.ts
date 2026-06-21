@@ -21,6 +21,11 @@ async function report(res: Response) {
 
 const admin = createCliAdminCommands();
 
+export async function list_users() {
+  const res = await admin.listUsers();
+  await report(res);
+}
+
 export async function create_user(username: string, password: string, options: { admin: boolean }) {
   const res = await admin.createUser(username, password, options);
   await report(res);

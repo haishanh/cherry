@@ -17,6 +17,13 @@ export function getUserByUsername(db: Sqlite.Database, input: { username: string
   return stmt.get(params) as Omit<UserFromDb, 'password'>;
 }
 
+export function getUsers(db: Sqlite.Database) {
+  const cols = Column.User;
+  const { source, params } = select_from(Table.User, [cols.Id, cols.Username, cols.Feature, cols.Attr]).build();
+  const stmt = db.prepare(source);
+  return stmt.all(params) as Array<Omit<UserFromDb, 'password'>>;
+}
+
 export function getUserPaswordByUsername(db: Sqlite.Database, input: { username: string }) {
   const cols = Column.User;
   const { source, params } = select_from(Table.User, [cols.Id, cols.Username, cols.Password, cols.Feature, cols.Attr])

@@ -9,6 +9,9 @@ import * as admin from './admin';
 
 sade('cherry')
   .version('0.0.1')
+  .command('list-users')
+  .describe('List existing users')
+  .action(admin.list_users)
   .command('update-user-password <username> <newPassword>')
   .describe('Update password of an existing user')
   .action(admin.update_user_password)
