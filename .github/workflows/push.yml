@@ -11,13 +11,13 @@ jobs:
         node-version: [24.x]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         name: Install pnpm
         with:
           run_install: false
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -26,15 +26,12 @@ jobs:
       - run: pnpm lint
       - run: pnpm sync
       - run: pnpm check
-      - run: |
-          wget 'https://github.com/wangfenjin/simple/releases/download/v0.5.2/libsimple-linux-ubuntu-latest.zip'
-          unzip libsimple-linux-ubuntu-latest.zip
-          cp libsimple-linux-ubuntu-latest/libsimple.so ./db/
+      - run: pnpm fetch:signal-tokenizer
       - run: pnpm test
       - run: pnpm build
 
       - name: Send Notification
-        uses: haishanh/actions-telegram-notification@v2
+        uses: haishanh/actions-telegram-notification@aff3b256bb3442512e91f888532ab6f2857c06ef
         if: ${{ always() }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}
@@ -51,9 +48,9 @@ jobs:
         github.event.ref == 'refs/heads/test'
       )
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         id: set-images
         with:
           script: |
@@ -68,14 +65,23 @@ jobs:
             return images.join('\n');
           result-encoding: string
 
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        id: set-build-options
+        with:
+          script: |
+            const isMultiArchTarget = context.ref.startsWith('refs/tags/') || context.ref.startsWith('refs/heads/v');
+            core.setOutput('platforms', isMultiArchTarget ? 'linux/amd64,linux/arm64' : 'linux/amd64');
+            core.setOutput('cache_to', isMultiArchTarget ? 'type=gha,mode=max' : 'type=gha,mode=min');
+
       - name: Docker meta
         id: docker_meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
           images: ${{ steps.set-images.outputs.result }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        if: contains(steps.set-build-options.outputs.platforms, 'arm64')
+        uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
 
       - name: Set git commit sha
         id: revparse
@@ -84,7 +90,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
         with:
           version: latest
 
@@ -94,18 +100,18 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
 
       - name: Login to r0.haishan.me
-        uses: docker/login-action@v3
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: r0.haishan.me
           username: ${{ github.actor }}
           password: ${{ secrets.R_HAISHAN_ME_PASSWORD }}
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Login to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -113,21 +119,21 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ steps.set-build-options.outputs.platforms }}
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           build-args: |
             COMMIT_SHA=${{ env.sha_short }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: ${{ steps.set-build-options.outputs.cache_to }}
 
       - name: Generate summary
-        uses: actions/github-script@v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
         with:
@@ -139,7 +145,7 @@ jobs:
             core.summary.write();
 
       - name: Send Notification
-        uses: haishanh/actions-telegram-notification@v2
+        uses: haishanh/actions-telegram-notification@aff3b256bb3442512e91f888532ab6f2857c06ef
         if: ${{ always() }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}

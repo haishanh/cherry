@@ -1,7 +1,9 @@
 <script lang="ts" module>
-  export enum EVENT_TYPE {
-    Close,
-  }
+  export const EVENT_TYPE = {
+    Close: 'close',
+  } as const;
+
+  export type EventType = (typeof EVENT_TYPE)[keyof typeof EVENT_TYPE];
 </script>
 
 <script lang="ts">
@@ -18,7 +20,7 @@
   const noop = () => {};
 
   type Props = {
-    ev0?: (x: { type: EVENT_TYPE }) => void;
+    ev0?: (x: { type: EventType }) => void;
     closeButtonPosition?: 'left' | 'right';
     verticalAlign?: 'start' | 'center';
     children: Snippet;

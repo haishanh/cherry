@@ -13,8 +13,6 @@
     data: PageData;
   };
   let { data }: Props = $props();
-  const token = data.token;
-  const user = data.user;
 
   let changePasswordModal: ChangePasswordModal;
   const handleClickChangePassword = () => changePasswordModal.open();
@@ -37,13 +35,13 @@ function dismiss(d,e,a,x){
   e.style.background=a?'rgb(56,161,105)':'rgb(228, 62, 62)';
   setTimeout(() => {e.style.transform='translateY(150%)';setTimeout(()=>d.body.removeChild(e),600);}, 2000);
 }
-fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.href)+'&pat='+'${token}',{credentials:'omit'}).then(res=> {if(res.ok){dismiss(d,e,1)}else{throw new Error(res.statusText)}}).catch((er)=>dismiss(d,e,0,er))})()`;
+fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.href)+'&pat='+'${data.token}',{credentials:'omit'}).then(res=> {if(res.ok){dismiss(d,e,1)}else{throw new Error(res.statusText)}}).catch((er)=>dismiss(d,e,0,er))})()`;
   });
 </script>
 
 <section>
   <h3>Personal Access Token</h3>
-  <CopyHide cnt={token} />
+  <CopyHide cnt={data.token} />
 </section>
 <section>
   <h3>Bookmarklet</h3>
@@ -52,7 +50,7 @@ fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.h
     Drag this link to your browser bookmarks bar. Simply click it in your bookmarks bar to save a web page to Cherry.
   </p>
 </section>
-{#if user.passwordless !== true}
+{#if data.user.passwordless !== true}
   <section>
     <h3>Password</h3>
     {#snippet icon()}
@@ -63,7 +61,7 @@ fetch('${u.origin}/api/bookmarklet/v1?url='+encodeURIComponent(window.location.h
 {/if}
 <section class="signout">
   <h3>Sign Out</h3>
-  <p>Signed in as {user.username}</p>
+  <p>Signed in as {data.user.username}</p>
   <ButtonishLink href="/api/auth/signout"><LogOut size={20} /><span class="signout-text">Sign out</span></ButtonishLink>
 </section>
 

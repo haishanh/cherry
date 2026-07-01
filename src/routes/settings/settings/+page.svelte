@@ -8,19 +8,16 @@
 
   type Props = { data: PageData };
   let { data }: Props = $props();
+  let stripTrackingParameters = $derived(data?.user.ff.strip_tracking_parameters ?? false);
 
   async function updateUserSettingsServer(data: { strip_tracking_parameters: boolean }) {
     return await request({ url: '/settings/settings', method: 'POST', data });
   }
 
-  const field = {
-    strip_tracking_parameters: data?.user.ff.strip_tracking_parameters,
-  };
-
   const onSubmit: EventHandler<SubmitEvent> = (e) => {
     e.preventDefault();
     updateUserSettingsServer({
-      strip_tracking_parameters: field.strip_tracking_parameters,
+      strip_tracking_parameters: stripTrackingParameters,
     }).catch((err) => {
       addToast({ description: 'Something went wrong', status: 'error' });
       console.log('Error', err);
@@ -32,7 +29,7 @@
   <form onsubmit={onSubmit}>
     <h3>Preference</h3>
     <label>
-      <input type="checkbox" name="strip_tracking_parameters" bind:checked={field.strip_tracking_parameters} />
+      <input type="checkbox" name="strip_tracking_parameters" bind:checked={stripTrackingParameters} />
       <span>Strip tracking parameters in URL when saving</span>
     </label>
     <div class="action">

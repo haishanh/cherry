@@ -6,7 +6,7 @@
   import EyeButton from './misc/EyeButton.svelte';
 
   let show = $state(false);
-  let hiddenText = asteriskify(cnt);
+  let hiddenText = $derived(asteriskify(cnt));
 
   // we want the asteriskified text the same length to avoid layout shift
   function asteriskify(input: string) {

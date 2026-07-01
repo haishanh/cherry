@@ -1,6 +1,6 @@
 import type { AnyNode, ChildNode, Element } from 'domhandler';
 import * as htmlparser2 from 'htmlparser2';
-import axios from 'axios';
+import ky from 'ky';
 
 export async function fetchMeta(url: string) {
   let title = '';
@@ -22,12 +22,11 @@ function findOneElement(nodes: ChildNode[], predicate: (elem: AnyNode) => boolea
 }
 
 async function grabHtml(url: string) {
-  const { data } = await axios(url, {
+  return ky(url, {
     headers: {
       Accept: 'text/html,application/xhtml+xml,application/xml',
     },
-  });
-  return data;
+  }).text();
 }
 
 function retrieveTitle(nodes: ChildNode[]) {

@@ -14,7 +14,8 @@
     pathname = location.pathname;
   });
 
-  let expanded = $state<Record<string, boolean>>({
+  let expanded = $state<Record<string, boolean>>({});
+  let initiallyExpanded = $derived<Record<string, boolean>>({
     // if user lands on a page like "/settings/admin/users", then we should expand nodes of "/settings/admin"
     '/settings/admin': pathname.startsWith('/settings/admin'),
   });
@@ -52,11 +53,11 @@
         <button class="link expand" onclick={() => toggleExpandable(href)}>
           <Comp0nent size={16} />
           <span>{label}</span>
-          <span class="arrow" class:isOpen={expanded[href]}>
+          <span class="arrow" class:isOpen={expanded[href] ?? initiallyExpanded[href]}>
             <ChevronDown size={16} />
           </span>
         </button>
-        {#if expanded[href]}
+        {#if expanded[href] ?? initiallyExpanded[href]}
           <ul class="nodes">
             {#each nodes as node (node.href)}
               <li class:active={node.href === pathname}>

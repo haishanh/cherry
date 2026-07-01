@@ -7,7 +7,10 @@
   import { Event0Type as BEFEvent0Type, type Event0 } from '$lib/components/bookmark/BookmarkEditForm.svelte';
   import BookmarkEditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
   import BookmarkList from '$lib/components/bookmark/BookmarkList.svelte';
-  import BookmarkToolbar, { EVENT_TYPE as TOOLBAR_EVENT_TYPE } from '$lib/components/bookmark/BookmarkToolbar.svelte';
+  import BookmarkToolbar, {
+    EVENT_TYPE as TOOLBAR_EVENT_TYPE,
+    type EventType as ToolbarEventType,
+  } from '$lib/components/bookmark/BookmarkToolbar.svelte';
   import GroupSideBar from '$lib/components/home/GroupSideBar.svelte';
   import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb, PageMetaBookmarks } from '$lib/type';
@@ -55,19 +58,16 @@
     if (idx < 0) return;
 
     // do no change the order of the list
-    bookmarks.splice(idx, 1, bookmark);
+    bookmarks = [...bookmarks.slice(0, idx), bookmark, ...bookmarks.slice(idx + 1)];
 
     // or if we want to put newly udpated item to top, we can:
     // bookmarks.splice(idx, 1);
     // bookmarks.splice(0, 0, bookmark);
-
-    bookmarks = bookmarks;
     editModal?.close();
   }
 
   function handleBookmarkCreateCompleted(bookmark: BookmarkFromDb) {
-    bookmarks.unshift(bookmark);
-    bookmarks = bookmarks;
+    bookmarks = [bookmark, ...bookmarks];
     editModal?.close();
   }
 
@@ -84,7 +84,7 @@
     addToast({ description: 'Something went wrong.', status: 'error' });
   }
 
-  function handleToolbarEvent0(e: { type: TOOLBAR_EVENT_TYPE }) {
+  function handleToolbarEvent0(e: { type: ToolbarEventType }) {
     const type = e.type;
     switch (type) {
       case TOOLBAR_EVENT_TYPE.ClickAddButton:

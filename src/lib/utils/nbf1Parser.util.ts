@@ -22,21 +22,21 @@ export class Parser {
   // expect cursor here or before
   parseTagTextContent() {
     let open: number | undefined;
-    let close: number | undefined;
+    let close: number | undefined = undefined;
 
     for (let i = this.idx; i < this.len; i++) {
       this.idx = i;
       const c = this.input[this.idx];
       if (typeof c !== 'string') break;
-      if (!open && c === '>') {
+      if (open === undefined && c === '>') {
         open = this.idx + 1;
-      } else if (open && !close && c === '<' && this.input[this.idx + 1] === '/') {
+      } else if (open !== undefined && close === undefined && c === '<' && this.input[this.idx + 1] === '/') {
         close = this.idx;
         break;
       }
     }
 
-    return { text: open && close ? this.input.substring(open, close) : '' };
+    return { text: open !== undefined && close !== undefined ? this.input.substring(open, close) : '' };
   }
 
   isWorldChar(c: string) {
@@ -44,37 +44,35 @@ export class Parser {
   }
 
   parseAttr() {
-    let open = 0;
-    let close = 0;
+    let open = -1;
+    let close = -1;
 
     for (let i = this.idx; i < this.len; i++) {
       this.idx = i;
       const c = this.input[this.idx];
       if (c === '<' || c === '>') break;
-      if (!open && this.isWorldChar(c)) {
+      if (open < 0 && this.isWorldChar(c)) {
         open = this.idx;
-      } else if (open && !close && !this.isWorldChar(c)) {
+      } else if (open >= 0 && close < 0 && !this.isWorldChar(c)) {
         close = this.idx;
         break;
       }
     }
 
-    if (open === 0 || close === 0 || close < open) return;
+    if (open < 0 || close < 0 || close < open) return;
 
     const name = this.input.substring(open, close);
 
-    open = 0;
-    close = 0;
     this.scanToChar('"');
     this.idx += 1;
-    open = this.idx;
+    const valueOpen = this.idx;
     this.scanToChar('"');
-    close = this.idx;
+    const valueClose = this.idx;
     this.idx += 1;
 
     let value = '';
-    if (open && close) {
-      value = this.input.substring(open, close);
+    if (valueOpen >= 0 && valueClose >= 0) {
+      value = this.input.substring(valueOpen, valueClose);
     }
 
     return { name, value };
@@ -89,7 +87,7 @@ export class Parser {
   // idx stop at the index of "<" of next tag
   // could be close tag
   scanToNextTag() {
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       this.scanToChar('<');
       break;
     }
@@ -126,7 +124,7 @@ export class Parser {
   parseDl(group: string[]) {
     if (this.idx >= this.len) return;
 
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       this.scanToNextTag();
       if (this.input[this.idx] !== '<') break;
       const tag0 = this.peekNextOpenTag();
@@ -197,7 +195,7 @@ export class Parser {
       this.idx += 3;
       const cnt = this.parseTagTextContent();
       const groupNext = [...group, cnt.text];
-      for (; this.idx < this.len; ) {
+      for (; this.idx < this.len;) {
         this.scanToNextTag();
         if (this.input[this.idx] !== '<') break;
         const tag1 = this.peekNextOpenTag();
@@ -213,7 +211,7 @@ export class Parser {
       this.idx += 2;
       const attributes = [];
 
-      for (; this.idx < this.len; ) {
+      for (; this.idx < this.len;) {
         // this.idx = i;
         const ret = this.parseAttr();
         if (ret) {
@@ -265,7 +263,7 @@ export class Parser {
       throw new Error('E001');
     }
 
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       if (this.input[this.idx] === '<') {
         if (this.input.substring(this.idx, this.idx + 4) === '<DT>') {
           this.idx += 4;

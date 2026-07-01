@@ -1,14 +1,14 @@
 <script lang="ts" module>
-  export enum Event0Type {
-    UpdateStart,
-    UpdateFailed,
-    UpdateCompleted,
-    CreateCompleted,
-  }
+  export const Event0Type = {
+    UpdateStart: 'update-start',
+    UpdateFailed: 'update-failed',
+    UpdateCompleted: 'update-completed',
+    CreateCompleted: 'create-completed',
+  } as const;
 
   export type Event0 =
     | {
-        type: Event0Type.UpdateStart;
+        type: typeof Event0Type.UpdateStart;
         payload: {
           url: string;
           title: string;
@@ -17,11 +17,11 @@
         };
       }
     | {
-        type: Event0Type.CreateCompleted | Event0Type.UpdateCompleted;
+        type: typeof Event0Type.CreateCompleted | typeof Event0Type.UpdateCompleted;
         payload: BookmarkFromDb;
       }
     | {
-        type: Event0Type.UpdateFailed;
+        type: typeof Event0Type.UpdateFailed;
         payload: {
           bookmark: {
             url: string;
@@ -61,6 +61,7 @@
     server?: { apiBase: string; pat: string };
   };
   let { onev0, bookmark, server = { apiBase: '', pat: '' } }: Props = $props();
+  let draft = $derived<BookmarkRaw>(cloneBookmark(bookmark));
 
   let tags: TagType[] = $state([]);
   let group: Group | null = $state(null);
@@ -83,8 +84,15 @@
     fetchGroups({ initial: true, server }).catch(logError);
   });
 
+  function cloneBookmark(input: BookmarkRaw): BookmarkRaw {
+    return {
+      ...input,
+      tagIds: input.tagIds ? [...input.tagIds] : input.tagIds,
+    };
+  }
+
   function hydrateTags() {
-    const tagIds = bookmark.tagIds;
+    const tagIds = draft.tagIds;
     // const tagMapById
     if ($tagListLoaded && tagIds && tagIds.length > 0 && typeof tagIds[0] === 'number') {
       const byId = $tagMapById;
@@ -93,7 +101,7 @@
   }
 
   function hydrateGroup() {
-    const groupId = bookmark.groupId;
+    const groupId = draft.groupId;
     if (typeof groupId === 'number') {
       const byId = $groupMapById;
       const g = byId.get(groupId);
@@ -148,7 +156,7 @@
 
   async function onSubmit(e: Event) {
     e.preventDefault();
-    const result = validate(rule, { url: bookmark.url });
+    const result = validate(rule, { url: draft.url });
     if (result.error) {
       // @ts-ignore
       error = result.error;
@@ -156,7 +164,7 @@
     }
     // make a copy
     const b: BookmarkHydrated = {
-      ...bookmark,
+      ...draft,
       ...result.value,
       // checking $tagListLoaded here, since we need to make sure tags have been loaded
       // or we may accidentally remove/replace all tags of this bookmark
@@ -193,11 +201,11 @@
 </script>
 
 <form onsubmit={onSubmit}>
-  <Field name="Link" type="url" placeholder="https://example.com" bind:value={bookmark.url} error={error.url} />
+  <Field name="Link" type="url" placeholder="https://example.com" bind:value={draft.url} error={error.url} />
   <FieldTag options={$tagList} bind:tags />
   <FieldGroup options={$groupListSorted} bind:group />
-  <Field name="Title" placeholder="" bind:value={bookmark.title} />
-  <Field name="Description" bind:value={bookmark.desc} type="textarea" placeholder="" />
+  <Field name="Title" placeholder="" bind:value={draft.title} />
+  <Field name="Description" bind:value={draft.desc} type="textarea" placeholder="" />
   <div class="action">
     <Button type="submit">
       <span>Save</span>

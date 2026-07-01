@@ -1,5 +1,9 @@
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@sveltejs/kit'
-  - better-sqlite3
-  - esbuild
+engineStrict: true
+allowBuilds:
+  '@parcel/watcher': true
+  '@sveltejs/kit': true
+  better-sqlite3: true
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@sveltejs/adapter-node@5.5.5'
+  - '@sveltejs/kit@2.66.0'

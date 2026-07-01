@@ -7,8 +7,8 @@ function positionPopover(node: HTMLDivElement, anchor: HTMLElement, vOffset: num
   const t = anchor.getBoundingClientRect();
 
   let placement: PopoverPlacement;
-  let top = 0;
-  let left = 0;
+  let top: number;
+  let left: number;
   const dimension: { height?: number } = {};
 
   if (t.bottom + vOffset + p.height <= window.innerHeight) {

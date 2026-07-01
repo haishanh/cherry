@@ -104,3 +104,9 @@ export function deleteMany(db: Database, input: InputDeleteManyJobs) {
   const transact = db.transaction(() => input.ids.map((id) => stmt.run([id])));
   transact();
 }
+
+export function deleteManyOfUser(db: Database, input: { userId: number }) {
+  const cols = Column.Job;
+  const { source, params } = delete_from(Table.Job).where(Eq(cols.UserId, input.userId)).build();
+  return db.prepare(source).run(params);
+}

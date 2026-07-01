@@ -1,6 +1,9 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
+import adapter from '@sveltejs/adapter-node';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
 import * as pkg from './package.json';
 
 export default defineConfig(async () => {
@@ -18,7 +21,21 @@ export default defineConfig(async () => {
         },
       },
     },
-    plugins: [sveltekit()],
+    plugins: [
+      sveltekit({
+        preprocess: vitePreprocess(),
+        adapter: adapter(),
+        experimental: {
+          remoteFunctions: true,
+        },
+        compilerOptions: {
+          runes: true,
+          experimental: {
+            async: true,
+          },
+        },
+      }),
+    ],
     test: {
       include: ['src/**/*.{test,spec}.{js,ts}'],
     },

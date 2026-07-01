@@ -7,9 +7,9 @@ import { pipeline } from 'node:stream/promises';
 import { stringify } from 'csv-stringify';
 
 import { DATA_DIR } from '$lib/env';
-import { forbidden, notFound } from '$lib/server/handlers/helper';
 import { sleep } from '$lib/utils/common.util';
 
+import { HttpStatus } from '../api.error';
 import type { BookmarkService } from './bookmark.service';
 import type { GroupService } from './group.service';
 import type { TagService } from './tag.service';
@@ -62,9 +62,9 @@ export class ExportService {
       await writeFile(filepath, ' ', 'utf8');
     } catch (e) {
       if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
-        return notFound();
+        throw new Response(undefined, { status: HttpStatus.NOT_FOUND });
       } else if ((e as NodeJS.ErrnoException).code === 'EACCES') {
-        return forbidden();
+        throw new Response(undefined, { status: HttpStatus.FORBIDDEN });
       }
       throw e;
     }

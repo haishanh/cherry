@@ -17,15 +17,15 @@
     // total pages
     total = 1,
     next = '',
-    previous = '',
+    previous: _previous = '',
     pageUriTemplate = '',
     maybeHasMore,
   }: Props = $props();
 
   type PaginationItem = { key: number; page: number } | { key: number; gap: boolean };
 
-  let items: PaginationItem[] = $state(makeNavItems(total, current));
-  previous = buildLink(current - 1);
+  let items: PaginationItem[] = $derived(makeNavItems(total, current));
+  let previousHref = $derived(buildLink(current - 1));
 
   function buildLink(page: number) {
     return pageUriTemplate.replace(`${PAGINATION_SEARCH_PARAM_PLACEHOLDER_KEY}=`, 'p=' + page);
@@ -39,28 +39,33 @@
   function makeNavItems(total: number, current: number) {
     if (total <= 0 || typeof total !== 'number') return [];
     let key = 0;
+    const nextKey = () => key++;
     let items: PaginationItem[] = [];
     const maxNumberOfItems = 7;
     if (total <= maxNumberOfItems) {
       for (let i = 1; i <= total; i++) {
-        items.push({ page: i, key: key++ });
+        items.push({ page: i, key: nextKey() });
       }
     } else if (current - 1 <= maxNumberOfItems - 2) {
       for (let i = 1; i <= maxNumberOfItems - 1; i++) {
-        items.push({ page: i, key: key++ });
+        items.push({ page: i, key: nextKey() });
       }
-      items.push({ gap: true, key: key++ }, { page: total, key: key++ });
+      items.push({ gap: true, key: nextKey() });
+      items.push({ page: total, key: nextKey() });
     } else if (total - current <= maxNumberOfItems - 2) {
-      items.push({ page: 1, key: key++ }, { gap: true, key: key++ });
+      items.push({ page: 1, key: nextKey() });
+      items.push({ gap: true, key: nextKey() });
       for (let i = total - (maxNumberOfItems - 2); i <= total; i++) {
-        items.push({ page: i, key: key++ });
+        items.push({ page: i, key: nextKey() });
       }
     } else {
-      items.push({ page: 1, key: key++ }, { gap: true, key: key++ });
+      items.push({ page: 1, key: nextKey() });
+      items.push({ gap: true, key: nextKey() });
       for (let i = current - 2; i <= current + 2; i++) {
-        items.push({ page: i, key: key++ });
+        items.push({ page: i, key: nextKey() });
       }
-      items.push({ gap: true, key: key++ }, { page: total, key: key++ });
+      items.push({ gap: true, key: nextKey() });
+      items.push({ page: total, key: nextKey() });
     }
     return items;
   }
@@ -71,7 +76,7 @@
     {#if current === 1}
       <span class="item disabled"><ChevronLeftIcon size={20} /><span>Previous</span></span>
     {:else}
-      <a class="item" rel="prev" href={previous}><ChevronLeftIcon size={20} /><span>Previous</span></a>
+      <a class="item" rel="prev" href={previousHref}><ChevronLeftIcon size={20} /><span>Previous</span></a>
     {/if}
 
     {#each items as item (item.key)}
