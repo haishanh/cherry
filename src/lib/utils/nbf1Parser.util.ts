@@ -87,7 +87,7 @@ export class Parser {
   // idx stop at the index of "<" of next tag
   // could be close tag
   scanToNextTag() {
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       this.scanToChar('<');
       break;
     }
@@ -124,7 +124,7 @@ export class Parser {
   parseDl(group: string[]) {
     if (this.idx >= this.len) return;
 
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       this.scanToNextTag();
       if (this.input[this.idx] !== '<') break;
       const tag0 = this.peekNextOpenTag();
@@ -195,7 +195,7 @@ export class Parser {
       this.idx += 3;
       const cnt = this.parseTagTextContent();
       const groupNext = [...group, cnt.text];
-      for (; this.idx < this.len; ) {
+      for (; this.idx < this.len;) {
         this.scanToNextTag();
         if (this.input[this.idx] !== '<') break;
         const tag1 = this.peekNextOpenTag();
@@ -211,7 +211,7 @@ export class Parser {
       this.idx += 2;
       const attributes = [];
 
-      for (; this.idx < this.len; ) {
+      for (; this.idx < this.len;) {
         // this.idx = i;
         const ret = this.parseAttr();
         if (ret) {
@@ -263,7 +263,7 @@ export class Parser {
       throw new Error('E001');
     }
 
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       if (this.input[this.idx] === '<') {
         if (this.input.substring(this.idx, this.idx + 4) === '<DT>') {
           this.idx += 4;

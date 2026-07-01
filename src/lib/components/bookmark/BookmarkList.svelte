@@ -6,7 +6,10 @@
   import { addToast, removeToast } from '$lib/components/base/toast/store';
   import BookmarkChip from '$lib/components/bookmark/BookmarkChip.svelte';
   import type EditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
-  import BookmarkToolbar, { EVENT_TYPE as TOOLBAR_EVENT_TYPE } from '$lib/components/bookmark/BookmarkToolbar.svelte';
+  import BookmarkToolbar, {
+    EVENT_TYPE as TOOLBAR_EVENT_TYPE,
+    type EventType as ToolbarEventType,
+  } from '$lib/components/bookmark/BookmarkToolbar.svelte';
   import GroupListModal from '$lib/components/home/GroupListModal.svelte';
   import Dock from '$lib/components/selection-dock/Dock.svelte';
   import type { BookmarkFromDb } from '$lib/type';
@@ -248,7 +251,7 @@
     await groupBookmarks(ids, groupId);
   }
 
-  function handleToolbarEvent0(e: { type: TOOLBAR_EVENT_TYPE }) {
+  function handleToolbarEvent0(e: { type: ToolbarEventType }) {
     const type = e.type;
     switch (type) {
       case TOOLBAR_EVENT_TYPE.ClickAddButton:

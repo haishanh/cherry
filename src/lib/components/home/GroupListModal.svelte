@@ -3,7 +3,7 @@
 
   import { beforeNavigate } from '$app/navigation';
   import { groupListLoaded, groupListSorted } from '$lib/client/group.store';
-  import Modal, { EVENT_TYPE } from '$lib/components/base/Modal.svelte';
+  import Modal, { EVENT_TYPE, type EventType as ModalEventType } from '$lib/components/base/Modal.svelte';
 
   import Button from '../base/Button.svelte';
   import CherryLeaf from '../base/CherryLeaf.svelte';
@@ -38,7 +38,7 @@
   export const close = () => {
     modal.close();
   };
-  function handlModalEvent0(_e: { type: EVENT_TYPE }) {
+  function handlModalEvent0(_e: { type: ModalEventType }) {
     tick().then(restore, restore);
   }
 

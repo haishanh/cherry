@@ -1,14 +1,14 @@
 <script lang="ts" module>
-  export enum Event0Type {
-    UpdateStart,
-    UpdateFailed,
-    UpdateCompleted,
-    CreateCompleted,
-  }
+  export const Event0Type = {
+    UpdateStart: 'update-start',
+    UpdateFailed: 'update-failed',
+    UpdateCompleted: 'update-completed',
+    CreateCompleted: 'create-completed',
+  } as const;
 
   export type Event0 =
     | {
-        type: Event0Type.UpdateStart;
+        type: typeof Event0Type.UpdateStart;
         payload: {
           url: string;
           title: string;
@@ -17,11 +17,11 @@
         };
       }
     | {
-        type: Event0Type.CreateCompleted | Event0Type.UpdateCompleted;
+        type: typeof Event0Type.CreateCompleted | typeof Event0Type.UpdateCompleted;
         payload: BookmarkFromDb;
       }
     | {
-        type: Event0Type.UpdateFailed;
+        type: typeof Event0Type.UpdateFailed;
         payload: {
           bookmark: {
             url: string;

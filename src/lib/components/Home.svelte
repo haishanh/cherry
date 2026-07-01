@@ -7,7 +7,10 @@
   import { Event0Type as BEFEvent0Type, type Event0 } from '$lib/components/bookmark/BookmarkEditForm.svelte';
   import BookmarkEditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
   import BookmarkList from '$lib/components/bookmark/BookmarkList.svelte';
-  import BookmarkToolbar, { EVENT_TYPE as TOOLBAR_EVENT_TYPE } from '$lib/components/bookmark/BookmarkToolbar.svelte';
+  import BookmarkToolbar, {
+    EVENT_TYPE as TOOLBAR_EVENT_TYPE,
+    type EventType as ToolbarEventType,
+  } from '$lib/components/bookmark/BookmarkToolbar.svelte';
   import GroupSideBar from '$lib/components/home/GroupSideBar.svelte';
   import SearchForm from '$lib/components/SearchForm.svelte';
   import type { BookmarkFromDb, PageMetaBookmarks } from '$lib/type';
@@ -81,7 +84,7 @@
     addToast({ description: 'Something went wrong.', status: 'error' });
   }
 
-  function handleToolbarEvent0(e: { type: TOOLBAR_EVENT_TYPE }) {
+  function handleToolbarEvent0(e: { type: ToolbarEventType }) {
     const type = e.type;
     switch (type) {
       case TOOLBAR_EVENT_TYPE.ClickAddButton:

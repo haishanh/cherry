@@ -1,8 +1,10 @@
 <script lang="ts" module>
-  export enum EVENT_TYPE {
-    ClickArrangeButton,
-    ClickAddButton,
-  }
+  export const EVENT_TYPE = {
+    ClickArrangeButton: 'click-arrange-button',
+    ClickAddButton: 'click-add-button',
+  } as const;
+
+  export type EventType = (typeof EVENT_TYPE)[keyof typeof EVENT_TYPE];
 </script>
 
 <script lang="ts">
@@ -12,7 +14,7 @@
   import { SquarePen, PlusIcon } from '@lucide/svelte';
 
   type Props = {
-    ev0: (event: { type: EVENT_TYPE }) => void;
+    ev0: (event: { type: EventType }) => void;
     tools?: string[];
   };
 

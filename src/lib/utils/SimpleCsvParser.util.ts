@@ -74,7 +74,7 @@ export class Parser {
 
   parseHeader() {
     const header: string[] = [];
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       const c = this.input[this.idx];
       if (c === '"') {
         header.push(this.parseString());
@@ -92,7 +92,7 @@ export class Parser {
   }
 
   parse() {
-    for (; this.idx < this.len; ) {
+    for (; this.idx < this.len;) {
       this.parseHeader();
     }
   }
