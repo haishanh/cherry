@@ -58,11 +58,17 @@ describe('favicon hardening', () => {
           status: 200,
           headers: { 'content-type': 'text/html' },
         }),
+      )
+      .mockResolvedValueOnce(
+        new Response(new Uint8Array([137, 80, 78, 71]), {
+          status: 200,
+          headers: { 'content-type': 'image/png' },
+        }),
       );
 
     const ret = await faviconLib.favicon('https://example.com');
     expect(ret).toEqual({ type: 'image/png', url: 'https://example.com/dir/favicon.png' });
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 
   test('caps redirect chains', async () => {
@@ -107,8 +113,79 @@ describe('favicon hardening', () => {
         headers: { 'content-type': 'text/html' },
       }),
     );
+    fetchMock.mockResolvedValueOnce(
+      new Response(new Uint8Array([60, 115, 118, 103, 62]), {
+        status: 200,
+        headers: { 'content-type': 'image/svg+xml' },
+      }),
+    );
 
     const ret = await faviconLib.favicon('https://example.com');
     expect(ret).toEqual({ type: 'image/svg+xml', url: 'https://example.com/favicon.svg' });
+  });
+
+  test('falls back to apple-touch-icon when favicon.ico misses', async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        new Response('<html><head></head></html>', {
+          status: 200,
+          headers: { 'content-type': 'text/html' },
+        }),
+      )
+      .mockResolvedValueOnce(new Response('missing', { status: 404 }))
+      .mockResolvedValueOnce(
+        new Response(new Uint8Array([137, 80, 78, 71]), {
+          status: 200,
+          headers: { 'content-type': 'image/png' },
+        }),
+      );
+
+    const ret = await faviconLib.favicon('https://example.com');
+    expect(ret).toEqual({ url: 'https://example.com/apple-touch-icon.png' });
+  });
+
+  test('tries base-domain and www fallbacks before external fallback', async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        new Response('<html><head></head></html>', {
+          status: 200,
+          headers: { 'content-type': 'text/html' },
+        }),
+      )
+      .mockResolvedValueOnce(new Response('missing', { status: 404 }))
+      .mockResolvedValueOnce(new Response('missing', { status: 404 }))
+      .mockResolvedValueOnce(
+        new Response('<html><head></head></html>', {
+          status: 200,
+          headers: { 'content-type': 'text/html' },
+        }),
+      )
+      .mockResolvedValueOnce(new Response('missing', { status: 404 }))
+      .mockResolvedValueOnce(new Response('missing', { status: 404 }))
+      .mockResolvedValueOnce(
+        new Response('<html><head><link rel="icon" href="/icon.png" type="image/png"></head></html>', {
+          status: 200,
+          headers: { 'content-type': 'text/html' },
+        }),
+      )
+      .mockResolvedValueOnce(
+        new Response(new Uint8Array([137, 80, 78, 71]), {
+          status: 200,
+          headers: { 'content-type': 'image/png' },
+        }),
+      );
+
+    const ret = await faviconLib.favicon('https://sub.example.com');
+    expect(ret).toEqual({ type: 'image/png', url: 'https://www.example.com/icon.png' });
+    expect(fetchMock.mock.calls.map((call) => String(call[0]))).toEqual([
+      'https://sub.example.com/',
+      'https://sub.example.com/favicon.ico',
+      'https://sub.example.com/apple-touch-icon.png',
+      'https://example.com/',
+      'https://example.com/favicon.ico',
+      'https://example.com/apple-touch-icon.png',
+      'https://www.example.com/',
+      'https://www.example.com/icon.png',
+    ]);
   });
 });

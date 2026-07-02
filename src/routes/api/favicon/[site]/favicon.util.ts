@@ -30,6 +30,18 @@ function makeAbsUrl(base: string, uri: string) {
   return new URL(uri, base).toString();
 }
 
+function dedupe<T>(items: T[], key: (item: T) => string) {
+  const seen = new Set<string>();
+  const result: T[] = [];
+  for (const item of items) {
+    const k = key(item);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    result.push(item);
+  }
+  return result;
+}
+
 function assertMaxContentLength(res: UndiciResponse, maxBytes: number) {
   const len = res.headers.get('content-length');
   if (len && Number.parseInt(len, 10) > maxBytes) {
@@ -162,6 +174,39 @@ export function normalizeSite(site: string) {
   }
 
   return url;
+}
+
+function buildSiteVariants(site: string) {
+  const original = typeof site === 'string' ? new URL(site) : site;
+  const candidates: string[] = [];
+
+  const addHost = (hostname: string) => {
+    const next = new URL(original);
+    next.hostname = hostname;
+    candidates.push(next.toString());
+  };
+
+  addHost(original.hostname);
+
+  const hostnameNoWww = original.hostname.startsWith('www.') ? original.hostname.slice(4) : original.hostname;
+  if (hostnameNoWww !== original.hostname) {
+    addHost(hostnameNoWww);
+  }
+
+  const parts = hostnameNoWww.split('.');
+  let stripped = parts;
+  while (stripped.length > 2) {
+    stripped = stripped.slice(1);
+    const host = stripped.join('.');
+    addHost(host);
+    addHost(`www.${host}`);
+  }
+
+  if (!hostnameNoWww.startsWith('www.')) {
+    addHost(`www.${hostnameNoWww}`);
+  }
+
+  return dedupe(candidates, (x) => x);
 }
 
 export async function assertPublicUrl(input: string | URL) {
@@ -349,6 +394,13 @@ function filetype(attrType: string, href: string) {
 }
 
 export function findFaviconInHtml(s: string, site: string) {
+  const candidates = findFaviconCandidatesInHtml(s, site);
+  const item0 = candidates[0];
+  if (item0) return item0;
+  return { href: '/favicon.ico' };
+}
+
+export function findFaviconCandidatesInHtml(s: string, site: string) {
   const icons = findIconRelLinks(s);
 
   if (icons.length > 0) {
@@ -421,33 +473,90 @@ export function findFaviconInHtml(s: string, site: string) {
 
     // big to small
     items.sort((a, b) => b.weight - a.weight);
-
-    const item0 = items[0];
-    if (item0) {
-      return { href: item0.href, type: item0.type };
-    } else {
-      // something went wrong
-      return { href: '/favicon.ico' };
-    }
+    return items.map((item) => ({ href: item.href, type: item.type }));
   }
-  return { href: '/favicon.ico' };
+  return [];
 }
 
-export async function favicon(site: string) {
-  const { html, base } = await request(site);
-  const { type, href } = findFaviconInHtml(html, site);
+type FaviconCandidate = {
+  href: string;
+  type?: string;
+};
 
-  if (href.substring(0, 5) === 'data:') {
-    const ret = datauriUtil.parse(href);
-    const maxDataLength = ret.isB64 ? Math.ceil(MAX_DATA_URI_BYTES / 3) * 4 : MAX_DATA_URI_BYTES * 3;
-    if (ret.data.length > maxDataLength) {
-      throw new FaviconError(FaviconErrorCode.ResponseTooLarge);
+export async function favicon(site: string) {
+  const normalizedSite = typeof site === 'string' ? new URL(site) : site;
+  let sawAbort = false;
+  let lastError: unknown;
+  const rememberError = (error: unknown) => {
+    if (lastError instanceof FaviconError && lastError.code === FaviconErrorCode.TooManyRedirects) return;
+    lastError = error;
+  };
+
+  for (const siteVariant of buildSiteVariants(normalizedSite.toString())) {
+    let html: string;
+    let base: string;
+    try {
+      const page = await request(siteVariant);
+      html = page.html;
+      base = page.base;
+    } catch (e) {
+      if ((e as Error).name === 'AbortError') {
+        sawAbort = true;
+        continue;
+      }
+      rememberError(e);
+      continue;
     }
-    if (!ret.type && type) ret.type = type;
-    return ret;
+
+    const candidates = dedupe<FaviconCandidate>(
+      [
+        ...findFaviconCandidatesInHtml(html, siteVariant),
+        { href: '/favicon.ico' },
+        { href: '/apple-touch-icon.png' },
+      ],
+      (item) => {
+        if (item.href.startsWith('data:')) return item.href;
+        return makeAbsUrl(base, item.href);
+      },
+    );
+
+    for (const candidate of candidates) {
+      const { type, href } = candidate;
+      if (href.startsWith('data:')) {
+        const ret = datauriUtil.parse(href);
+        const maxDataLength = ret.isB64 ? Math.ceil(MAX_DATA_URI_BYTES / 3) * 4 : MAX_DATA_URI_BYTES * 3;
+        if (ret.data.length > maxDataLength) {
+          continue;
+        }
+        if (!ret.type && type) ret.type = type;
+        return ret;
+      }
+
+      const url = makeAbsUrl(base, href);
+      try {
+        await buf({ type, url });
+        return { type, url };
+      } catch (e) {
+        rememberError(e);
+        continue;
+      }
+    }
   }
 
-  return { type, url: makeAbsUrl(base, href) };
+  if (lastError instanceof FaviconError && lastError.code === FaviconErrorCode.TooManyRedirects) {
+    throw lastError;
+  }
+
+  const fallbackUrl = `https://icons.duckduckgo.com/ip3/${normalizedSite.hostname}.ico`;
+  try {
+    await buf({ url: fallbackUrl });
+    return { url: fallbackUrl };
+  } catch (e) {
+    if ((e as Error).name === 'AbortError' || sawAbort) {
+      throw new FaviconError(FaviconErrorCode.FaviconNotFound);
+    }
+    throw e;
+  }
 }
 
 export enum FaviconErrorCode {
@@ -466,7 +575,6 @@ export class FaviconError extends Error {
 
 export async function buf(
   input: { type?: string; url: string },
-  site?: string,
 ): Promise<{ buffer: ArrayBuffer; type?: string }> {
   await assertPublicUrl(input.url);
 
@@ -483,13 +591,8 @@ export async function buf(
     clearTimeout(id);
   }
 
-  if ((res.status === 403 || res.status === 401) && !input.url.startsWith('https://icons.duckduckgo.com/ip3/')) {
-    // we are likely blocked by Cloudflare etc.
-    return buf({ url: `https://icons.duckduckgo.com/ip3/${site}.ico` });
-  }
-
-  if (res.status === 404 && !input.url.startsWith('https://icons.duckduckgo.com/ip3/')) {
-    return buf({ url: `https://icons.duckduckgo.com/ip3/${site}.ico` });
+  if (!res.ok) {
+    throw new FaviconError(FaviconErrorCode.FaviconNotFound);
   }
 
   const ct = res.headers.get('content-type');
