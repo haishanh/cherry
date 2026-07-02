@@ -509,11 +509,7 @@ export async function favicon(site: string) {
     }
 
     const candidates = dedupe<FaviconCandidate>(
-      [
-        ...findFaviconCandidatesInHtml(html, siteVariant),
-        { href: '/favicon.ico' },
-        { href: '/apple-touch-icon.png' },
-      ],
+      [...findFaviconCandidatesInHtml(html, siteVariant), { href: '/favicon.ico' }, { href: '/apple-touch-icon.png' }],
       (item) => {
         if (item.href.startsWith('data:')) return item.href;
         return makeAbsUrl(base, item.href);
@@ -573,9 +569,7 @@ export class FaviconError extends Error {
   }
 }
 
-export async function buf(
-  input: { type?: string; url: string },
-): Promise<{ buffer: ArrayBuffer; type?: string }> {
+export async function buf(input: { type?: string; url: string }): Promise<{ buffer: ArrayBuffer; type?: string }> {
   await assertPublicUrl(input.url);
 
   const controller = new AbortController();

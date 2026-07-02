@@ -6,7 +6,7 @@
     "node": ">=24",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@11.8.0",
+  "packageManager": "pnpm@11.9.0",
   "license": "UNLICENSED",
   "prettier": {
     "printWidth": 120,
@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "dev": "vite dev",
-    "test": "vitest",
+    "test": "LOG_LEVEL=error vitest",
     "build": "vite build",
     "preview": "vite preview",
     "package": "svelte-package",
