@@ -9,6 +9,17 @@ import { wrap } from '$lib/server/handlers/wrap';
 
 import * as favicon from './favicon.util';
 
+function matchesIfNoneMatch(header: string | null, etag: string) {
+  if (!header) return false;
+  return header.split(',').some((part) => {
+    const token = part.trim();
+    if (!token) return false;
+    if (token === '*') return true;
+    const normalized = token.startsWith('W/') ? token.slice(2) : token;
+    return normalized === etag || normalized === `"${etag}"`;
+  });
+}
+
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
     const site = event.params.site;
@@ -23,16 +34,7 @@ export const GET: RequestHandler = async (event) => {
     }
 
     try {
-      let ret: { type?: string; url: string } | { type: string; isB64: boolean; data: string };
-      try {
-        ret = await favicon.favicon('https://' + site);
-      } catch (e) {
-        if ((e as Error).name === 'AbortError') {
-          ret = { url: `https://icons.duckduckgo.com/ip3/${site}.ico` };
-        } else {
-          throw e;
-        }
-      }
+      const ret = await favicon.favicon('https://' + site);
 
       let type: string | undefined;
       let buffer: Uint8Array<ArrayBuffer>;
@@ -48,17 +50,27 @@ export const GET: RequestHandler = async (event) => {
           if (t) type = t.mime;
         }
       } else {
-        const tmp = await favicon.buf(ret, site);
+        const tmp = await favicon.buf(ret);
         if (tmp.type) type = tmp.type;
         buffer = new Uint8Array(tmp.buffer);
       }
 
       const etag = createHash('md5').update(buffer).digest('hex');
+      const cacheControl = `public, max-age=${FAVICON_CACHE_MAX_AGE_FOUND}, immutable`;
+      if (matchesIfNoneMatch(event.request.headers.get('if-none-match'), etag)) {
+        return new Response(undefined, {
+          status: 304,
+          headers: {
+            Etag: etag,
+            'Cache-Control': cacheControl,
+          },
+        });
+      }
 
       return new Response(buffer, {
         headers: {
           Etag: etag,
-          'Cache-Control': `public, max-age=${FAVICON_CACHE_MAX_AGE_FOUND}, immutable`,
+          'Cache-Control': cacheControl,
           ...(type ? { 'Content-Type': type } : undefined),
         },
       });

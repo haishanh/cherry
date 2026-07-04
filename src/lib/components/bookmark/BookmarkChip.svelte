@@ -28,6 +28,7 @@
   }: Props = $props();
 
   let isOpen = $state(false);
+  let faviconFailed = $state(false);
   let node: HTMLElement;
 
   afterNavigate(close);
@@ -119,6 +120,10 @@
     let template = env.PUBLIC_ICON_SERVICE || '/api/favicon/{}';
     return template.replace('{}', new URL(bookmark.url).hostname);
   }
+  function buildFaviconFallback(bookmark: BookmarkFromDb) {
+    const hostname = new URL(bookmark.url).hostname.replace(/^www\./, '');
+    return hostname[0]?.toUpperCase() || '?';
+  }
   function formatTimestamp(a: number) {
     const t = new Date(a * 1000);
     const month = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
@@ -139,7 +144,22 @@
     onmouseleave={handleItemOnMouseLeave}
   >
     <span class="favicon">
-      <img width="20" height="20" loading="lazy" alt="Bookmark Icon" src={`${buildFavionUrl(bookmark)}`} />
+      {#if faviconFailed}
+        <span class="favicon-fallback" aria-label="Favicon unavailable">
+          {buildFaviconFallback(bookmark)}
+        </span>
+      {:else}
+        <img
+          width="20"
+          height="20"
+          loading="lazy"
+          alt="Bookmark Icon"
+          src={`${buildFavionUrl(bookmark)}`}
+          onerror={() => {
+            faviconFailed = true;
+          }}
+        />
+      {/if}
     </span>
     <span>{bookmark.title}</span>
   </a>
@@ -220,9 +240,6 @@
       height: 0;
       width: 0;
     }
-    // input:checked ~ .checkmark {
-    //   background-color: #2196f3;
-    // }
   }
   a {
     text-decoration: none;
@@ -279,9 +296,28 @@
   .favicon {
     width: 20px;
     height: 20px;
+    flex: 0 0 20px;
+
     img {
+      display: block;
+      width: 20px;
       height: auto;
     }
+  }
+
+  .favicon-fallback {
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 24%, var(--bg-card));
+    color: var(--color-text);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
   .popover-wrap {

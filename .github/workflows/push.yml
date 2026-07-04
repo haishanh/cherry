@@ -69,7 +69,11 @@ jobs:
         id: set-build-options
         with:
           script: |
-            const isMultiArchTarget = context.ref.startsWith('refs/tags/') || context.ref.startsWith('refs/heads/v');
+            const isMultiArchTarget =
+              context.ref.startsWith('refs/tags/') ||
+              context.ref.startsWith('refs/heads/v') ||
+              context.ref === 'refs/heads/main' ||
+              context.ref === 'refs/heads/test';
             core.setOutput('platforms', isMultiArchTarget ? 'linux/amd64,linux/arm64' : 'linux/amd64');
             core.setOutput('cache_to', isMultiArchTarget ? 'type=gha,mode=max' : 'type=gha,mode=min');
 
