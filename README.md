@@ -3,19 +3,22 @@
 ## Development
 
 ```bash
-# install dependencies
+# Install dependencies
 pnpm i
 
-# create a .env file
+# Pull required SQLite tokenizer extension
+pnpm fetch:signal-tokenizer
+
+# Create a .env file
 cp env.example .env
 
-# generate typing files
+# Generate typing files
 pnpm sync
 
-# run the app in dev mode
+# Run the app in dev mode
 pnpm dev
 
-# you may want to create an user
+# You may want to create an user
 pnpm cherry create-user "foo@example.com" "P@ssw0rd" --admin
 pnpm cherry set-admin "foo@example.com"
 ```
