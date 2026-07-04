@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // bundle this
-// pnpm esbuild src/cli/index.ts --bundle --minify --platform=node --target=node18 --outfile=cli
+// pnpm esbuild src/cli/index.ts --bundle --minify --platform=node --format=cjs --target=node24 --outfile=cherry.cjs
 
 import sade from 'sade';
 
