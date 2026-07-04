@@ -21,4 +21,12 @@ pnpm dev
 # You may want to create an user
 pnpm cherry create-user "foo@example.com" "P@ssw0rd" --admin
 pnpm cherry set-admin "foo@example.com"
+
+# You can grab the zipped CSV from
+# https://cherry.haishan.me/cherries.csv.zip
+# Unzip it and import it into Cherry. Steps:
+# 1/ Click "Setttings" on the top right corner
+# 2/ Click "Import" on the left side bar
+# 3/ Select "CSV" in the tabs
+# 4/ Click or drag your file into the upload area and click the "Import" button below.
 ```
