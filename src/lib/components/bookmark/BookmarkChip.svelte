@@ -116,6 +116,12 @@
     editBookmark(bookmark);
   }
 
+  function handleBookmarkClick(event: MouseEvent) {
+    if (!isSelectable) return;
+    event.preventDefault();
+    isSelected = !isSelected;
+  }
+
   function buildFavionUrl(bookmark: BookmarkFromDb) {
     let template = env.PUBLIC_ICON_SERVICE || '/api/favicon/{}';
     return template.replace('{}', new URL(bookmark.url).hostname);
@@ -142,6 +148,7 @@
     bind:this={anchor}
     onmouseenter={handleItemOnMouseEnter}
     onmouseleave={handleItemOnMouseLeave}
+    onclick={handleBookmarkClick}
   >
     <span class="favicon">
       {#if faviconFailed}
