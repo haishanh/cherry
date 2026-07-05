@@ -52,15 +52,22 @@
   }
 
   function handleKeydown(e: KeyboardEvent) {
-    switch (e.key) {
-      case '/':
-        e.preventDefault();
-        if (tagAutocomplete) {
-          tagAutocomplete.focus();
-        }
-        return;
-      default:
-    }
+    if (e.key !== '/') return;
+    if (e.metaKey || e.ctrlKey || e.altKey || e.isComposing) return;
+
+    const active = document.activeElement as HTMLElement | null;
+    const isEditable =
+      !!active &&
+      (active.tagName === 'INPUT' ||
+        active.tagName === 'TEXTAREA' ||
+        active.isContentEditable ||
+        active.getAttribute('role') === 'textbox');
+
+    if (isEditable) return;
+    if (document.querySelector('[data-cherry-modal-overlay]')) return;
+
+    e.preventDefault();
+    tagAutocomplete?.focus();
   }
 </script>
 
