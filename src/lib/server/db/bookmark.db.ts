@@ -169,6 +169,8 @@ export function groupBookmarks(db: Sqlite.Database, input: InputGroupMultiBookma
   return { success, failed };
 }
 
+const BOOKMARK_STASH_TTL_SECONDS = 24 * 60 * 60;
+
 export function stashBookmarks(db: Sqlite.Database, input: InputStashMultiBookmarks) {
   const user = input.user;
   const key = input.key;
@@ -182,8 +184,10 @@ export function stashBookmarks(db: Sqlite.Database, input: InputStashMultiBookma
     `insert into bookmark_stash (key, userId, data, createdAt) values (?, ?, ?, strftime('%s','now'))`,
   );
   const stmt3 = db.prepare('delete from bookmark where id = @id and userId = @userId');
+  const stmt4 = db.prepare('delete from bookmark_stash where createdAt < ?');
 
   const run = db.transaction(() => {
+    stmt4.run([Math.floor(Date.now() / 1000) - BOOKMARK_STASH_TTL_SECONDS]);
     for (const idList of idListList) {
       const data = [];
       for (const id of idList) {
@@ -210,15 +214,15 @@ export function restoreBookmarks(db: Sqlite.Database, input: InputRestoreMultiBo
 
   const stmt0 = db.prepare('select data from bookmark_stash where key = ? and userId = ?');
   const stmt1 = db.prepare(
-    `insert into bookmark (id, title, desc, url, userId, createdAt, updatedAt)
-     values (@id, @title, @desc, @url, @userId, @createdAt, @updatedAt) RETURNING id`,
+    `insert into bookmark (id, title, desc, url, userId, groupId, createdAt, updatedAt)
+     values (@id, @title, @desc, @url, @userId, @groupId, @createdAt, @updatedAt) RETURNING id`,
   );
   const stmt2 = db.prepare('delete from bookmark_stash where key = ? and userId = ?');
 
   const run = db.transaction(() => {
     // XXX probably should consider pagination here to vaoid pulling too much data
     const ret0 = stmt0.all([key, userId]) as { data: string }[];
-    if (!ret0) throw new DataError(DataErrorCode.BookmarkNotFound);
+    if (ret0.length === 0) throw new DataError(DataErrorCode.BookmarkNotFound);
     ret0.forEach((batch) => {
       const list: { bookmark: BookmarkFromDb; bookmark_tag: BookmarkTagFromDb[] }[] = JSON.parse(batch.data);
       list.forEach((item) => {

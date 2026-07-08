@@ -30,8 +30,17 @@
     groupSelectModal.set(groupSelectModal0);
   });
 
+  type PendingDeleteState = {
+    // The bookmarks removed by one delete action, keyed by stash/undo key.
+    deleted: BookmarkFromDb[];
+    // Original list position of each bookmark id at delete time.
+    // Used to put restored bookmarks back near their previous place
+    // instead of restoring the whole old list snapshot.
+    positions: Record<number, number>;
+  };
+
   let isArranging = $state(false);
-  let bookmarkListSnapshot: typeof bookmarks = [];
+  let pendingDeleteLookup: Record<string, PendingDeleteState> = $state({});
   let selectedBookmarkLookup: Record<number, boolean> = $state({});
   let selectedBookmarkCount = $derived(countTruthyValues(selectedBookmarkLookup));
 
@@ -58,15 +67,21 @@
 
   type BookmarkId = number | string;
 
-  function snapshotBookmarkList() {
-    bookmarkListSnapshot = bookmarks.map((x) => x);
-  }
-  function restoreBookmarkList() {
-    bookmarks = bookmarkListSnapshot;
+  function snapshotPendingDelete(key: string, ids: number[]) {
+    const idSet = new Set(ids);
+    const deleted: BookmarkFromDb[] = [];
+    const positions: Record<number, number> = {};
+    bookmarks.forEach((bookmark, idx) => {
+      // Save every bookmark's current position so undo can merge the deleted
+      // items back into roughly the same visual order.
+      positions[bookmark.id] = idx;
+      if (idSet.has(bookmark.id)) deleted.push(bookmark);
+    });
+    pendingDeleteLookup = { ...pendingDeleteLookup, [key]: { deleted, positions } };
   }
 
-  function deleteBookmarksClient(ids: number[]) {
-    snapshotBookmarkList();
+  function deleteBookmarksClient(key: string, ids: number[]) {
+    snapshotPendingDelete(key, ids);
     let tmp: typeof bookmarks = [];
     for (const b of bookmarks) {
       if (ids.indexOf(b.id) >= 0) continue;
@@ -79,8 +94,28 @@
     bookmarks = bookmarks.map((bookmark) => (ids.indexOf(bookmark.id) >= 0 ? { ...bookmark, groupId } : bookmark));
   }
 
-  function restoreBookmarksClient() {
-    restoreBookmarkList();
+  function restoreBookmarksClient(key: string) {
+    const pending = pendingDeleteLookup[key];
+    if (!pending) return;
+
+    const existingIds = new Set(bookmarks.map((bookmark) => bookmark.id));
+    const merged = [...bookmarks];
+    for (const bookmark of pending.deleted) {
+      // Avoid duplicating an item if something else already put it back.
+      if (!existingIds.has(bookmark.id)) merged.push(bookmark);
+    }
+    merged.sort((a, b) => {
+      const pa = pending.positions[a.id];
+      const pb = pending.positions[b.id];
+      if (typeof pa === 'number' && typeof pb === 'number') return pa - pb;
+      // If only one item has a known old position, prefer that one first.
+      if (typeof pa === 'number') return -1;
+      if (typeof pb === 'number') return 1;
+      return 0;
+    });
+    bookmarks = merged;
+    const { [key]: _removed, ...rest } = pendingDeleteLookup;
+    pendingDeleteLookup = rest;
   }
 
   function handleEditBookmark(bookmark: BookmarkFromDb) {
@@ -108,12 +143,12 @@
 
   async function deleteBookmarks(ids: number[]) {
     const { key } = await deleteBookmarksServer(ids);
-    deleteBookmarksClient(ids);
+    deleteBookmarksClient(key, ids);
 
     const restore = async () => {
       await restoreBookmarksServer(key);
-      // optimistically restore first
-      restoreBookmarksClient();
+      // optimistically restore only the deleted items for this undo operation
+      restoreBookmarksClient(key);
       // reload page to make sure restored bookmarks have correct id
       await invalidate((url) => {
         // avoid reload ?random page
@@ -127,9 +162,12 @@
     const undo = () => {
       return restore().then(
         () => {
-          if (typeof toastId === 'number') removeToast(toastId);
+          if (typeof toastId === 'string') removeToast(toastId);
         },
-        (e) => console.log(e),
+        (e) => {
+          console.log(e);
+          addToast({ description: 'Undo failed.', status: 'error' });
+        },
       );
     };
 

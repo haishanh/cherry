@@ -12,6 +12,7 @@ import { up as up4, version as version4 } from './migrations/v04.migration';
 import { up as up5, version as version5 } from './migrations/v05.migration';
 import { up as up6, version as version6 } from './migrations/v06.migration';
 import { up as up7, version as version7 } from './migrations/v07.migration';
+import { up as up8, version as version8 } from './migrations/v08.migration';
 
 const DATABASE_STATE: Record<string, { db: Sqlite.Database; migrated?: boolean }> = {};
 
@@ -23,6 +24,7 @@ const migrations = [
   // Active v6 is teardown-only. The historical `simple` tokenizer migration is preserved in v06.legacy.migration.ts.
   { version: version6, mod: { up: up6, version: version6 } },
   { version: version7, mod: { up: up7, version: version7 } },
+  { version: version8, mod: { up: up8, version: version8 } },
 ];
 
 export const lite = (filepath = DATABASE_PATH, shouldMigrate = true, verbose = false) => {
