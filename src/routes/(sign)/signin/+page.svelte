@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import ButtonishLink from '$lib/components/base/ButtonishLink.svelte';
   import UserSignForm from '$lib/components/feature/UserSignForm.svelte';
 
@@ -28,11 +29,11 @@
 
 {#if data.registration}
   <section class="signup">
-    <a href="/signup">Sign up now</a>
+    <a href={resolve('/signup')}>Sign up now</a>
   </section>
 {/if}
 
-<style lang="scss">
+<style>
   h1 {
     margin-top: 0;
   }
@@ -46,21 +47,23 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    &:before,
-    &:after {
-      content: '';
-      top: 50%;
-      transform: translateY(-50%);
-      width: 45%;
-      max-width: 100px;
-      height: 1px;
-      background-color: currentColor;
-    }
+  }
+
+  .divider:before,
+  .divider:after {
+    content: '';
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    max-width: 100px;
+    height: 1px;
+    background-color: currentColor;
   }
 
   section {
     margin: 16px 0;
   }
+
   .signup {
     margin-top: 26px;
     margin-bottom: 6px;

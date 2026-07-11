@@ -8,7 +8,7 @@
 <h1>Sign up</h1>
 <UserSignForm kind="signup" />
 
-<style lang="scss">
+<style>
   h1 {
     margin-top: 0;
   }
