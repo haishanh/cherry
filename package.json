@@ -6,7 +6,7 @@
     "node": ">=24",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@12.4.1",
+  "packageManager": "pnpm@12.16.1",
   "license": "UNLICENSED",
   "prettier": {
     "printWidth": 120,
