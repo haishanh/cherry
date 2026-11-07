@@ -144,14 +144,12 @@ export const bookmark = {
     const { tags, id, user, group, ...updateProps } = opts;
     const bookmarkId = id;
 
-    type K = keyof typeof updateProps;
+    const params: (string | number)[] = [];
 
-    const params: any[] = [];
-
-    for (const field in updateProps) {
-      if (!updateProps[field as K]) continue;
+    for (const field of ['url', 'title', 'desc'] as const) {
+      if (updateProps[field] === undefined) continue;
       updates.push(`${field}=?`);
-      params.push(updateProps[field as K]);
+      params.push(updateProps[field]);
     }
     if (group && group.id) {
       updates.push('groupId=?');
@@ -161,22 +159,24 @@ export const bookmark = {
     }
     updates.push("updatedAt = strftime('%s', 'now')");
     const updateStr = updates.join(',');
-    const stmt = db.prepare(`update bookmark set ${updateStr} where id = ? and userId = ? returning *`);
     params.push(id, user.userId);
-    let bookmark: BookmarkFromDb;
     try {
-      bookmark = stmt.get(params) as BookmarkFromDb;
-      if (!bookmark) throw new ApiError(HttpStatus.NOT_FOUND);
+      return db.transaction(() => {
+        const stmt = db.prepare(`update bookmark set ${updateStr} where id = ? and userId = ? returning *`);
+        const bookmark = stmt.get(params) as BookmarkFromDb | undefined;
+        if (!bookmark) throw new ApiError(HttpStatus.NOT_FOUND);
+        if (Array.isArray(tags)) {
+          // An empty array explicitly removes all tags.
+          bookmarkDb.updateBookmarkTags(db, { bookmarkId, userId: user.userId, tags });
+        }
+        bookmark.tagIds = bookmarkDb.getBookmarkTagIds(db, { bookmarkId });
+        return bookmark;
+      })();
     } catch (e) {
+      if (e instanceof ApiError) throw e;
       logger.error({ error: e });
       throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    if (typeof tags !== 'undefined' && Array.isArray(tags)) {
-      // even if tags is empty we still should run this
-      bookmarkDb.updateBookmarkTags(db, { bookmarkId, userId: user.userId, tags });
-    }
-    bookmark.tagIds = bookmarkDb.getBookmarkTagIds(db, { bookmarkId: bookmark.id });
-    return bookmark;
   },
 
   getBookmark: (opts: InputGetBookmark) => {
