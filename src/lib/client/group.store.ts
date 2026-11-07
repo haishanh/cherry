@@ -1,7 +1,7 @@
 import { derived, writable } from 'svelte/store';
 
-import { sortAlphabetically } from '$lib/utils/common.util';
-import { request } from '$lib/utils/http.util';
+import { sortAlphabetically } from '#lib/utils/common.util.js';
+import { request } from '#lib/utils/http.util.js';
 
 import { type Backend, coalesceBase, genAuthHeader } from './backend.util';
 

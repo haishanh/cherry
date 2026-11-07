@@ -6,8 +6,8 @@ import { pipeline } from 'node:stream/promises';
 
 import { stringify } from 'csv-stringify';
 
-import { DATA_DIR } from '$lib/env';
-import { sleep } from '$lib/utils/common.util';
+import { DATA_DIR } from '#lib/env.js';
+import { sleep } from '#lib/utils/common.util.js';
 
 import { HttpStatus } from '../api.error';
 import type { BookmarkService } from './bookmark.service';

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { Trash } from '@lucide/svelte';
 
-  import { deleteGroupClientSide } from '$lib/client/group.store';
-  import Button from '$lib/components/base/Button.svelte';
-  import Modal from '$lib/components/base/Modal.svelte';
-  import { addToast } from '$lib/components/base/toast/store';
-  import { request } from '$lib/utils/http.util';
+  import { deleteGroupClientSide } from '#lib/client/group.store.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import Modal from '#lib/components/base/Modal.svelte';
+  import { addToast } from '#lib/components/base/toast/store.js';
+  import { request } from '#lib/utils/http.util.js';
 
   type Group = { id: number; name: string };
 

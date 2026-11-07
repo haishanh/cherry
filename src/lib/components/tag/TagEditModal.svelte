@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Modal from '$lib/components/base/Modal.svelte';
-  import TagEditForm from '$lib/components/tag/TagEditForm.svelte';
-  import type { TagFromDb } from '$lib/type';
+  import Modal from '#lib/components/base/Modal.svelte';
+  import TagEditForm from '#lib/components/tag/TagEditForm.svelte';
+  import type { TagFromDb } from '#lib/type.js';
 
   type Props = {
     onopen?: () => void;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TagType } from '$lib/type';
+  import type { TagType } from '#lib/type.js';
 
   type Props = {
     tag: TagType;

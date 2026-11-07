@@ -1,8 +1,8 @@
 import type Sqlite from 'better-sqlite3';
 import type { Database } from 'better-sqlite3';
 
-import type { UserFromDb } from '$lib/type';
-import * as passwordUtil from '$lib/utils/password.util';
+import type { UserFromDb } from '#lib/type.js';
+import * as passwordUtil from '#lib/utils/password.util.js';
 
 import { DEFAULT_USER_FEATURE } from '../services/user.service';
 import { delete_from, Eq, insert_into, select_from, update_table, ValueToken } from './builder2';

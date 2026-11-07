@@ -4,9 +4,9 @@ import {
   BACKUP_S3_ENDPOINT,
   BACKUP_S3_REGION,
   BACKUP_S3_SECRET_ACCESS_KEY,
-} from '$lib/env';
-import * as bookmarkStashDb from '$lib/server/db/bookmarkStash.db';
-import * as jobDb from '$lib/server/db/job.db';
+} from '#lib/env.js';
+import * as bookmarkStashDb from '#lib/server/db/bookmarkStash.db.js';
+import * as jobDb from '#lib/server/db/job.db.js';
 
 import { lite } from '../db/common.db';
 import { AdminService } from './admin.service';

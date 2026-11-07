@@ -1,5 +1,5 @@
-import * as bookmarkTagDb from '$lib/server/db/bookmarkTag.db';
-import type { InputBatchUpsertBookmarkTag } from '$lib/type';
+import * as bookmarkTagDb from '#lib/server/db/bookmarkTag.db.js';
+import type { InputBatchUpsertBookmarkTag } from '#lib/type.js';
 
 import { lite } from '../db/common.db';
 

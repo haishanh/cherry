@@ -1,7 +1,7 @@
 import assert from 'assert';
 import type Sqlite from 'better-sqlite3';
 
-import { PAGE_BOOKMARK_LIMIT } from '$lib/env';
+import { PAGE_BOOKMARK_LIMIT } from '#lib/env.js';
 import type {
   BookmarkFromDb,
   BookmarkTagFromDb,
@@ -19,8 +19,8 @@ import type {
   InputRestoreMultiBookmarks,
   InputStashMultiBookmarks,
   NewTagType,
-} from '$lib/type';
-import { breakupList } from '$lib/utils/common.util';
+} from '#lib/type.js';
+import { breakupList } from '#lib/utils/common.util.js';
 
 import { logger } from '../logger';
 import { buildSelect } from './builder';

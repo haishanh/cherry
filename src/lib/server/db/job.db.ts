@@ -8,7 +8,7 @@ import {
   type InputUpdateJobOutput,
   type JobFromDb,
   JobStatus,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import { delete_from, Eq, insert_into, OrderByDir, select_from, update_table, ValueToken } from './builder2';
 import { Column, Table } from './identifier';

@@ -3,8 +3,8 @@ import path from 'node:path';
 import assert from 'assert';
 import Sqlite from 'better-sqlite3';
 
-import { DATABASE_PATH } from '$lib/env';
-import { logger } from '$lib/server/logger';
+import { DATABASE_PATH } from '#lib/env.js';
+import { logger } from '#lib/server/logger.js';
 
 import { up as up1, version as version1 } from './migrations/v01.migration';
 import { up as up2, version as version2 } from './migrations/v02.migration';

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import Cherry from '$lib/components/base/Cherry.svelte';
+  import Cherry from '#lib/components/base/Cherry.svelte';
   const status = page.status;
   const error = page.error;
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { TagType } from '$lib/type';
-  import { makeId } from '$lib/utils/common.util';
+  import type { TagType } from '#lib/type.js';
+  import { makeId } from '#lib/utils/common.util.js';
 
   import TagAutocomplete from '../autocomplte/TagAutocomplete.svelte';
 

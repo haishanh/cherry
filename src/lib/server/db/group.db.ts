@@ -7,7 +7,7 @@ import type {
   InputDeleteGroup,
   InputGetAllGroups,
   InputUpdateGroup,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import { logger } from '../logger';
 import { Eq, OrderByDir, select_from } from './builder2';

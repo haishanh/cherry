@@ -2,9 +2,9 @@
   import { Lock, LogOut } from '@lucide/svelte';
   import { onMount } from 'svelte';
 
-  import Button from '$lib/components/base/Button.svelte';
-  import ButtonishLink from '$lib/components/base/ButtonishLink.svelte';
-  import CopyHide from '$lib/components/base/CopyHide.svelte';
+  import Button from '#lib/components/base/Button.svelte';
+  import ButtonishLink from '#lib/components/base/ButtonishLink.svelte';
+  import CopyHide from '#lib/components/base/CopyHide.svelte';
 
   import type { PageData } from './$types';
   import ChangePasswordModal from './ChangePasswordModal.svelte';

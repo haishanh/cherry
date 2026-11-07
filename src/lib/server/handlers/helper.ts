@@ -1,8 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import * as z from 'zod';
 
-import { logger } from '$lib/server/logger';
-import { isEmail } from '$lib/utils/common.util';
+import { logger } from '#lib/server/logger.js';
+import { isEmail } from '#lib/utils/common.util.js';
 
 import { ApiError, ApiErrorCode, HttpStatus } from '../api.error';
 import { signInUser } from '../session';

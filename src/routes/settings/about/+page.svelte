@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Cherry from '$lib/components/base/Cherry.svelte';
-  import ExternalLink from '$lib/components/base/ExternalLink.svelte';
+  import Cherry from '#lib/components/base/Cherry.svelte';
+  import ExternalLink from '#lib/components/base/ExternalLink.svelte';
   /* global __VERSION__:false */
   const version = __VERSION__;
   /* global __COMMIT_SHA__:false */

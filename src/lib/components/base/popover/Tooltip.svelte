@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Popover from '$lib/components/base/popover/Popover.svelte';
+  import Popover from '#lib/components/base/popover/Popover.svelte';
   import type { Snippet } from 'svelte';
 
   type Props = {

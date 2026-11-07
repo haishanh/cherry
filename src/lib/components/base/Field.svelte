@@ -1,7 +1,7 @@
 <script lang="ts">
-  import TextArea from '$lib/components/base/TextArea.svelte';
-  import TextInput from '$lib/components/base/TextInput.svelte';
-  import { makeId } from '$lib/utils/common.util';
+  import TextArea from '#lib/components/base/TextArea.svelte';
+  import TextInput from '#lib/components/base/TextInput.svelte';
+  import { makeId } from '#lib/utils/common.util.js';
 
   let id = '' + makeId();
 

@@ -1,15 +1,15 @@
 import type { Database } from 'better-sqlite3';
 
-import * as bookmarkDb from '$lib/server/db/bookmark.db';
-import * as stashDb from '$lib/server/db/bookmarkStash.db';
-import { lite } from '$lib/server/db/common.db';
-import * as groupDb from '$lib/server/db/group.db';
-import * as jobDb from '$lib/server/db/job.db';
-import * as tagDb from '$lib/server/db/tag.db';
-import * as userDb from '$lib/server/db/user.db';
-import { UserService } from '$lib/server/services/user.service';
-import type { InputCreateUser } from '$lib/type';
-import { isEmail } from '$lib/utils/common.util';
+import * as bookmarkDb from '#lib/server/db/bookmark.db.js';
+import * as stashDb from '#lib/server/db/bookmarkStash.db.js';
+import { lite } from '#lib/server/db/common.db.js';
+import * as groupDb from '#lib/server/db/group.db.js';
+import * as jobDb from '#lib/server/db/job.db.js';
+import * as tagDb from '#lib/server/db/tag.db.js';
+import * as userDb from '#lib/server/db/user.db.js';
+import { UserService } from '#lib/server/services/user.service.js';
+import type { InputCreateUser } from '#lib/type.js';
+import { isEmail } from '#lib/utils/common.util.js';
 
 import { ApiError, HttpStatus } from '../api.error';
 import { migrateData } from './data-migrate';

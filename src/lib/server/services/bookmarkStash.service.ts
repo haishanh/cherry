@@ -1,6 +1,6 @@
 import type { Database } from 'better-sqlite3';
 
-import type * as bookmarkStashDb from '$lib/server/db/bookmarkStash.db';
+import type * as bookmarkStashDb from '#lib/server/db/bookmarkStash.db.js';
 
 const ONE_DAY_SEC = 24 * 60 * 60;
 

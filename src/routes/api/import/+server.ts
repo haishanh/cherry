@@ -1,11 +1,11 @@
-import { json, type RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from '@sveltejs/kit';
 
-import { ensureUser } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { bookmark as bookmarkSvc } from '$lib/server/services/bookmark.service';
-import { bookmarkTagSvc } from '$lib/server/services/bookmarkTag.service';
-import { tag as tagSvc } from '$lib/server/services/tag.service';
-import * as importUtil from '$lib/utils/import.util';
+import { ensureUser } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { bookmark as bookmarkSvc } from '#lib/server/services/bookmark.service.js';
+import { bookmarkTagSvc } from '#lib/server/services/bookmarkTag.service.js';
+import { tag as tagSvc } from '#lib/server/services/tag.service.js';
+import * as importUtil from '#lib/utils/import.util.js';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async (event) => {
     const items = importUtil.parsePocketExportHtml(cnt);
     const count = doImport({ items, userId: user.userId });
     console.log('The import took', Date.now() - t0);
-    return json({ count });
+    return Response.json({ count });
   });
 };
 

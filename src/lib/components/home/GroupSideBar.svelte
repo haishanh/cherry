@@ -3,13 +3,13 @@
   import { onMount } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';
-  import { fetchGroups, fetchPromise as groupFetched, groupMapById } from '$lib/client/group.store';
-  import { groupAddModal, groupDeleteConfirmModal, groupListModal } from '$lib/client/modal.store';
-  import Button from '$lib/components/base/Button.svelte';
-  import GroupAddModal from '$lib/components/home/GroupAddModal.svelte';
-  import GroupDeleteConfirmModal from '$lib/components/home/GroupDeleteConfirmModal.svelte';
-  import GroupListModal from '$lib/components/home/GroupListModal.svelte';
-  import { findFirstInList } from '$lib/utils/common.util';
+  import { fetchGroups, fetchPromise as groupFetched, groupMapById } from '#lib/client/group.store.js';
+  import { groupAddModal, groupDeleteConfirmModal, groupListModal } from '#lib/client/modal.store.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import GroupAddModal from '#lib/components/home/GroupAddModal.svelte';
+  import GroupDeleteConfirmModal from '#lib/components/home/GroupDeleteConfirmModal.svelte';
+  import GroupListModal from '#lib/components/home/GroupListModal.svelte';
+  import { findFirstInList } from '#lib/utils/common.util.js';
 
   import Tooltip from '../base/popover/Tooltip.svelte';
   import VisuallyHidden from '../base/VisuallyHidden.svelte';
@@ -42,9 +42,10 @@
   };
   let { pathname = '/settings/about', groupId = null }: Props = $props();
 
-  afterNavigate(() => {
-    loadLastViewdLinks();
+  afterNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
 
+    loadLastViewdLinks();
     pathname = location.pathname;
     const u = new URL(location.href);
     const g = u.searchParams.get('group');

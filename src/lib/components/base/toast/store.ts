@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import { makeId } from '$lib/utils/common.util';
+import { makeId } from '#lib/utils/common.util.js';
 
 import type { ToastItem, ToastItemInput } from './type';
 

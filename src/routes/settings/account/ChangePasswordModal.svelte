@@ -9,14 +9,17 @@
 
   import { Save } from '@lucide/svelte';
   import { beforeNavigate } from '$app/navigation';
-  import Button from '$lib/components/base/Button.svelte';
-  import Field from '$lib/components/base/Field.svelte';
-  import Modal from '$lib/components/base/Modal.svelte';
-  import { addToast } from '$lib/components/base/toast/store';
-  import { request, RequestError } from '$lib/utils/http.util';
+  import Button from '#lib/components/base/Button.svelte';
+  import Field from '#lib/components/base/Field.svelte';
+  import Modal from '#lib/components/base/Modal.svelte';
+  import { addToast } from '#lib/components/base/toast/store.js';
+  import { request, RequestError } from '#lib/utils/http.util.js';
 
   let modal: Modal;
-  beforeNavigate(() => {
+
+  beforeNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
+
     close();
   });
 
@@ -98,9 +101,7 @@
         <Save size={16} />
       {/snippet}
 
-      <Button type="submit" {icon}>
-        <span>Save</span>
-      </Button>
+      <Button type="submit" {icon}><span>Save</span></Button>
     </div>
   </form>
 </Modal>

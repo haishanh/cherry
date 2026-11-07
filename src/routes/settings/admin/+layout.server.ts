@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-import { getUserService } from '$lib/server/services/registry';
+import { getUserService } from '#lib/server/services/registry.js';
 
 import type { LayoutServerLoad } from './$types';
 

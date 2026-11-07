@@ -2,7 +2,7 @@
 
 import type { Database } from 'better-sqlite3';
 
-import type { BookmarkStashFromDb, InputAllBookmarkStash } from '$lib/type';
+import type { BookmarkStashFromDb, InputAllBookmarkStash } from '#lib/type.js';
 
 import { delete_from, Eq, OrderByDir, select_from } from './builder2';
 import { Column, Table } from './identifier';

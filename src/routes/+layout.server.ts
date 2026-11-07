@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-import { isProtected } from '$lib/utils/access.util';
+import { isProtected } from '#lib/utils/access.util.js';
 
 import type { LayoutServerLoad } from './$types';
 

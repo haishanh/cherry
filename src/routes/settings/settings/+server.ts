@@ -1,11 +1,11 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { COOKIE_KEY_TOKEN } from '$lib/env';
-import { HttpStatus } from '$lib/server/api.error';
-import { ensureUser, genPat, requestBody } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { getUserService } from '$lib/server/services/registry';
-import { UserFeatureFlag } from '$lib/server/services/user.service';
+import { COOKIE_KEY_TOKEN } from '#lib/env.js';
+import { HttpStatus } from '#lib/server/api.error.js';
+import { ensureUser, genPat, requestBody } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { getUserService } from '#lib/server/services/registry.js';
+import { UserFeatureFlag } from '#lib/server/services/user.service.js';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {

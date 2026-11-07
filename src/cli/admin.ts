@@ -1,4 +1,4 @@
-import { createCliAdminCommands } from '$lib/server/admin/cli';
+import { createCliAdminCommands } from '#lib/server/admin/cli.js';
 
 async function report(res: Response) {
   if (res.ok) {

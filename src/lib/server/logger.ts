@@ -1,6 +1,6 @@
 import dbg from 'debug';
 
-import { LOG_LEVEL } from '$lib/env';
+import { LOG_LEVEL } from '#lib/env.js';
 
 const debug = dbg('cherry:debug');
 const info = dbg('cherry:info');

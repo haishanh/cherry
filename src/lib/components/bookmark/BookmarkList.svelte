@@ -2,18 +2,18 @@
   import { nanoid } from 'nanoid';
 
   import { afterNavigate, invalidate } from '$app/navigation';
-  import { groupAddModal, groupSelectModal } from '$lib/client/modal.store';
-  import { addToast, removeToast } from '$lib/components/base/toast/store';
-  import BookmarkChip from '$lib/components/bookmark/BookmarkChip.svelte';
-  import type EditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
+  import { groupAddModal, groupSelectModal } from '#lib/client/modal.store.js';
+  import { addToast, removeToast } from '#lib/components/base/toast/store.js';
+  import BookmarkChip from '#lib/components/bookmark/BookmarkChip.svelte';
+  import type EditModal from '#lib/components/bookmark/BookmarkEditModal.svelte';
   import BookmarkToolbar, {
     EVENT_TYPE as TOOLBAR_EVENT_TYPE,
     type EventType as ToolbarEventType,
-  } from '$lib/components/bookmark/BookmarkToolbar.svelte';
-  import GroupListModal from '$lib/components/home/GroupListModal.svelte';
-  import Dock from '$lib/components/selection-dock/Dock.svelte';
-  import type { BookmarkFromDb } from '$lib/type';
-  import * as httpUtil from '$lib/utils/http.util';
+  } from '#lib/components/bookmark/BookmarkToolbar.svelte';
+  import GroupListModal from '#lib/components/home/GroupListModal.svelte';
+  import Dock from '#lib/components/selection-dock/Dock.svelte';
+  import type { BookmarkFromDb } from '#lib/type.js';
+  import * as httpUtil from '#lib/utils/http.util.js';
   import type { DockOperation } from '../selection-dock/DockContent.svelte';
 
   type Group = { id: number; name: string; count?: number };
@@ -188,7 +188,10 @@
   }
 
   let activeIdx: number | null = $state(null);
-  afterNavigate(() => {
+
+  afterNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
+
     // disallow cross-page selection
     // tho we can keep this state after user navigate to next page
     // but UX can be hard to get right

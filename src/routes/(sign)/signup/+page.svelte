@@ -1,5 +1,5 @@
 <script lang="ts">
-  import UserSignForm from '$lib/components/feature/UserSignForm.svelte';
+  import UserSignForm from '#lib/components/feature/UserSignForm.svelte';
 </script>
 
 <svelte:head>

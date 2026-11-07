@@ -5,10 +5,10 @@ import { Readable } from 'node:stream';
 
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { DATA_DIR } from '$lib/env';
-import { ApiError, HttpStatus } from '$lib/server/api.error';
-import { ensureUser, forbidden, notFound } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
+import { DATA_DIR } from '#lib/env.js';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
+import { ensureUser, forbidden, notFound } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {

@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  import { fetchGroups } from '$lib/client/group.store';
-  import { fetchTags } from '$lib/client/tag.store';
-  import CherryLeaf from '$lib/components/base/CherryLeaf.svelte';
-  import { addToast } from '$lib/components/base/toast/store';
+  import { fetchGroups } from '#lib/client/group.store.js';
+  import { fetchTags } from '#lib/client/tag.store.js';
+  import CherryLeaf from '#lib/components/base/CherryLeaf.svelte';
+  import { addToast } from '#lib/components/base/toast/store.js';
   import BookmarkEditForm, {
     type Event0 as BookmarkEditFormEvent0,
     Event0Type as BookmarkEditFormEvent,
-  } from '$lib/components/bookmark/BookmarkEditForm.svelte';
+  } from '#lib/components/bookmark/BookmarkEditForm.svelte';
 
   import type { PageData } from './$types';
   type Props = {

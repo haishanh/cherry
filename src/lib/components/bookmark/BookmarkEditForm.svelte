@@ -35,16 +35,16 @@
   import { onMount, untrack } from 'svelte';
   import invariant from 'tiny-invariant';
 
-  import { coalesceBase, genAuthHeader } from '$lib/client/backend.util';
-  import { commonRule, validate } from '$lib/client/form.util';
-  import { createGroup, fetchGroups, groupListLoaded, groupListSorted, groupMapById } from '$lib/client/group.store';
-  import { addTagsClientSide, fetchTags, tagList, tagListLoaded, tagMapById } from '$lib/client/tag.store';
-  import Button from '$lib/components/base/Button.svelte';
-  import Field from '$lib/components/base/Field.svelte';
-  import FieldGroup from '$lib/components/base/FieldGroup.svelte';
-  import FieldTag from '$lib/components/base/FieldTag.svelte';
-  import type { BookmarkFromDb, TagFromDb, TagType } from '$lib/type';
-  import { request } from '$lib/utils/http.util';
+  import { coalesceBase, genAuthHeader } from '#lib/client/backend.util.js';
+  import { commonRule, validate } from '#lib/client/form.util.js';
+  import { createGroup, fetchGroups, groupListLoaded, groupListSorted, groupMapById } from '#lib/client/group.store.js';
+  import { addTagsClientSide, fetchTags, tagList, tagListLoaded, tagMapById } from '#lib/client/tag.store.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import Field from '#lib/components/base/Field.svelte';
+  import FieldGroup from '#lib/components/base/FieldGroup.svelte';
+  import FieldTag from '#lib/components/base/FieldTag.svelte';
+  import type { BookmarkFromDb, TagFromDb, TagType } from '#lib/type.js';
+  import { request } from '#lib/utils/http.util.js';
 
   type Group = { id: number; name: string };
   type BookmarkRaw = Omit<BookmarkFromDb, 'id'> & {

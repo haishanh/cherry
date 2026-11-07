@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { fetchGroups } from '$lib/client/group.store';
-  import { fetchTags } from '$lib/client/tag.store';
-  import { addToast } from '$lib/components/base/toast/store';
-  import { request } from '$lib/utils/http.util';
+  import { fetchGroups } from '#lib/client/group.store.js';
+  import { fetchTags } from '#lib/client/tag.store.js';
+  import { addToast } from '#lib/components/base/toast/store.js';
+  import { request } from '#lib/utils/http.util.js';
   import type { Snippet } from 'svelte';
 
   import FileDropZone from './FileDropZone.svelte';

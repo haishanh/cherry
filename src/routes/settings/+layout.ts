@@ -1,4 +1,4 @@
-import type { UserMe } from '$lib/type';
+import type { UserMe } from '#lib/type.js';
 
 import type { LayoutLoad } from './$types';
 

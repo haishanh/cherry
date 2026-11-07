@@ -1,5 +1,3 @@
-import { json } from '@sveltejs/kit';
-
 type ValidationErrorItem = { field: string; message: string };
 
 export class ValidationErrorBuilder {
@@ -12,6 +10,6 @@ export class ValidationErrorBuilder {
 
   response() {
     const errors = this.errors;
-    return json({ errors }, { status: 400 });
+    return Response.json({ errors }, { status: 400 });
   }
 }

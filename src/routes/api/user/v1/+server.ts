@@ -1,15 +1,14 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
-import { dev } from '$app/environment';
-import { COOKIE_KEY_TOKEN, USE_INSECURE_COOKIE } from '$lib/env';
-import { ApiError, HttpStatus } from '$lib/server/api.error';
-import { ensureUser, genPat, requestBody } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { getUserService } from '$lib/server/services/registry';
-import { UserServiceError, UserServiceErrorCode } from '$lib/server/services/user.service';
-import type { UserFromDbHydrated, UserMe } from '$lib/type';
-import * as cookieUtil from '$lib/utils/cookie.util';
+import { dev } from '$app/env';
+import { COOKIE_KEY_TOKEN, USE_INSECURE_COOKIE } from '#lib/env.js';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
+import { ensureUser, genPat, requestBody } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { getUserService } from '#lib/server/services/registry.js';
+import { UserServiceError, UserServiceErrorCode } from '#lib/server/services/user.service.js';
+import type { UserFromDbHydrated, UserMe } from '#lib/type.js';
+import * as cookieUtil from '#lib/utils/cookie.util.js';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -27,7 +26,7 @@ export const GET: RequestHandler = async (event) => {
     const { token } = await genPat({ id: user0.id, username: user0.username, feature: user0.feature });
     const { password, ...userRestProps } = user0;
     const user: UserMe = { ...userRestProps, passwordless: password ? false : true };
-    return json({ token, user });
+    return Response.json({ token, user });
   });
 };
 

@@ -1,4 +1,4 @@
-import * as tagDb from '$lib/server/db/tag.db';
+import * as tagDb from '#lib/server/db/tag.db.js';
 import type {
   InputBatchGetTags,
   InputBatchUpsertTag,
@@ -6,7 +6,7 @@ import type {
   InputDeleteTag,
   InputGetAllTags,
   InputUpdateTag,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import { ApiError, HttpStatus } from '../api.error';
 import { isConflict, lite } from '../db/common.db';

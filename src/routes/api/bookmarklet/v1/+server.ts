@@ -1,12 +1,11 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
-import { ApiError, HttpStatus } from '$lib/server/api.error';
-import { ensureUser, zalidate } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { bookmark as bookmarkSvc } from '$lib/server/services/bookmark.service';
-import { type InputCreateBookmark, SchemaCreateBookmark, type User } from '$lib/type';
-import { fetchMeta } from '$lib/utils/html.util';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
+import { ensureUser, zalidate } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { bookmark as bookmarkSvc } from '#lib/server/services/bookmark.service.js';
+import { type InputCreateBookmark, SchemaCreateBookmark, type User } from '#lib/type.js';
+import { fetchMeta } from '#lib/utils/html.util.js';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -29,7 +28,7 @@ export const GET: RequestHandler = async (event) => {
     }
     const input = zalidate(SchemaCreateBookmark, toValidate);
     const data = bookmarkSvc.createBookmark(input as InputCreateBookmark);
-    return json(data, {
+    return Response.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
       },

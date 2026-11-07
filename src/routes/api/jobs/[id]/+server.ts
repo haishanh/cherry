@@ -1,10 +1,9 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
-import { ensureUser, notFound } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { getJobService } from '$lib/server/services/registry';
-import { ApiError, HttpStatus } from '$lib/server/api.error';
+import { ensureUser, notFound } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { getJobService } from '#lib/server/services/registry.js';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -19,6 +18,6 @@ export const GET: RequestHandler = async (event) => {
     const jobSrv = getJobService();
     const job = jobSrv.get({ id: jobId });
     if (job.userId !== user.userId) return notFound();
-    return json(job);
+    return Response.json(job);
   });
 };

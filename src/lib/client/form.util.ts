@@ -1,4 +1,4 @@
-import { isEmail } from '$lib/utils/common.util';
+import { isEmail } from '#lib/utils/common.util.js';
 
 export const commonRule = {
   email: {

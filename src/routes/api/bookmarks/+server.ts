@@ -1,19 +1,19 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
+
 import assert from 'assert';
 
-import { PAGE_BOOKMARK_LIMIT } from '$lib/env';
-import { ensureInt, ensureUser, requestBody, zalidate } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { bookmark as bookmarkSvc } from '$lib/server/services/bookmark.service';
+import { PAGE_BOOKMARK_LIMIT } from '#lib/env.js';
+import { ensureInt, ensureUser, requestBody, zalidate } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { bookmark as bookmarkSvc } from '#lib/server/services/bookmark.service.js';
 import {
   type GetBookmarksOpts,
   type InputCreateBookmark,
   type InputFindBookmarksOfUser,
   type PageMetaBookmarks,
   SchemaCreateBookmark,
-} from '$lib/type';
-import { fetchMeta } from '$lib/utils/html.util';
+} from '#lib/type.js';
+import { fetchMeta } from '#lib/utils/html.util.js';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -51,7 +51,7 @@ export const GET: RequestHandler = async (event) => {
       }
     }
     if (data) {
-      return json({ meta, data });
+      return Response.json({ meta, data });
     } else {
       return new Response(undefined, { status: 500 });
     }
@@ -75,7 +75,7 @@ export const POST: RequestHandler = async (event) => {
     }
     const input = zalidate(SchemaCreateBookmark, toValidate);
     const data = bookmarkSvc.createBookmark(input as InputCreateBookmark);
-    return json(data);
+    return Response.json(data);
   });
 };
 

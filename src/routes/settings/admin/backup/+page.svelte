@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Button from '$lib/components/base/Button.svelte';
-  import ExternalLink from '$lib/components/base/ExternalLink.svelte';
-  import { promiseToast } from '$lib/components/base/toast/store';
-  import { request } from '$lib/utils/http.util';
+  import Button from '#lib/components/base/Button.svelte';
+  import ExternalLink from '#lib/components/base/ExternalLink.svelte';
+  import { promiseToast } from '#lib/components/base/toast/store.js';
+  import { request } from '#lib/utils/http.util.js';
 
   import type { PageData } from './$types';
 

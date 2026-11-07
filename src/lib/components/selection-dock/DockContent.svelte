@@ -5,9 +5,9 @@
 <script lang="ts">
   import { Folder, Trash, XIcon } from '@lucide/svelte';
 
-  import { groupSelectModal } from '$lib/client/modal.store';
-  import Button from '$lib/components/base/Button.svelte';
-  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import { groupSelectModal } from '#lib/client/modal.store.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import VisuallyHidden from '#lib/components/base/VisuallyHidden.svelte';
 
   type Props = {
     ondock: (event: { op: DockOperation }) => void;

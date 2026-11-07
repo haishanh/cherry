@@ -1,5 +1,5 @@
 <script lang="ts">
-  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import VisuallyHidden from '#lib/components/base/VisuallyHidden.svelte';
   import { EyeIcon, EyeOffIcon } from '@lucide/svelte';
 
   let { show = $bindable(false), onclick } = $props();

@@ -1,4 +1,4 @@
-import { getAdminService } from '$lib/server/services/registry';
+import { getAdminService } from '#lib/server/services/registry.js';
 
 import type { PageServerLoad } from './$types';
 

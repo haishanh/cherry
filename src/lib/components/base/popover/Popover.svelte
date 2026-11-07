@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { popover, type PopoverPlacement } from '$lib/components/actions/popover.action';
+  import { popover, type PopoverPlacement } from '#lib/components/actions/popover.action.js';
   import type { Snippet } from 'svelte';
 
   import Portal from '../misc/Portal.svelte';

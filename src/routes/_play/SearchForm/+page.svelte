@@ -1,6 +1,6 @@
 <script lang="ts">
-  import SearchForm from '$lib/components/SearchForm.svelte';
-  import type { TagType } from '$lib/type';
+  import SearchForm from '#lib/components/SearchForm.svelte';
+  import type { TagType } from '#lib/type.js';
 
   const options: TagType[] = [
     { id: 1, name: '1White' },

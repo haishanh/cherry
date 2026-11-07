@@ -1,6 +1,6 @@
 <script lang="ts">
-  import TagAutocomplete from '$lib/components/autocomplte/TagAutocomplete.svelte';
-  import type { TagType } from '$lib/type';
+  import TagAutocomplete from '#lib/components/autocomplte/TagAutocomplete.svelte';
+  import type { TagType } from '#lib/type.js';
 
   const options: TagType[] = [
     { id: 1, name: '1White' },

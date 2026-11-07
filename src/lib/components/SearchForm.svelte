@@ -2,10 +2,10 @@
   import { onMount } from 'svelte';
 
   import { afterNavigate, goto } from '$app/navigation';
-  import { log } from '$lib/client/logger.util';
-  import { fetchTags, tagList, tagMapById } from '$lib/client/tag.store';
-  import TagAutocomplete from '$lib/components/autocomplte/TagAutocomplete.svelte';
-  import type { TagType } from '$lib/type';
+  import { log } from '#lib/client/logger.util.js';
+  import { fetchTags, tagList, tagMapById } from '#lib/client/tag.store.js';
+  import TagAutocomplete from '#lib/components/autocomplte/TagAutocomplete.svelte';
+  import type { TagType } from '#lib/type.js';
 
   const noop = () => {};
   let { focus0 = noop, blur0 = noop, dryrun = false, inputValue = '' } = $props();

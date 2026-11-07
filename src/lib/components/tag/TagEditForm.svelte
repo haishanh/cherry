@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { updateTagClientSide } from '$lib/client/tag.store';
-  import Button from '$lib/components/base/Button.svelte';
-  import Field from '$lib/components/base/Field.svelte';
-  import { addToast } from '$lib/components/base/toast/store';
-  import type { TagFromDb } from '$lib/type';
-  import { request, RequestError } from '$lib/utils/http.util';
+  import { updateTagClientSide } from '#lib/client/tag.store.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import Field from '#lib/components/base/Field.svelte';
+  import { addToast } from '#lib/components/base/toast/store.js';
+  import type { TagFromDb } from '#lib/type.js';
+  import { request, RequestError } from '#lib/utils/http.util.js';
 
   type Props = {
     updatecompleted: () => void;

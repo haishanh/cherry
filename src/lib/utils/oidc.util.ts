@@ -6,7 +6,7 @@ import {
   GOOGLE_OAUTH_CLIENT_SECRET,
   GOOGLE_OAUTH_REDIRECT_URI,
   GOOGLE_OAUTH_TOKEN_ENDPOINT,
-} from '$lib/env';
+} from '#lib/env.js';
 
 const debug = dbg('cherry:util:oidc');
 

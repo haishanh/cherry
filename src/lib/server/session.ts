@@ -1,7 +1,7 @@
-import { dev } from '$app/environment';
-import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '$lib/env';
-import * as cookieUtil from '$lib/utils/cookie.util';
-import * as jwtUtil from '$lib/utils/jwt.util';
+import { dev } from '$app/env';
+import { COOKIE_KEY_TOKEN, JWT_SECRET, USE_INSECURE_COOKIE } from '#lib/env.js';
+import * as cookieUtil from '#lib/utils/cookie.util.js';
+import * as jwtUtil from '#lib/utils/jwt.util.js';
 
 export async function genPat(user: { id: number; username: string; feature: number }) {
   const { id, username, feature } = user;

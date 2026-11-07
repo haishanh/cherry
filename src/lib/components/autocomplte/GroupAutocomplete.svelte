@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ChevronDownIcon } from '@lucide/svelte';
-  import { makeId } from '$lib/utils/common.util';
+  import { makeId } from '#lib/utils/common.util.js';
 
   import VisuallyHidden from '../base/VisuallyHidden.svelte';
   import { fuzzysearch } from './fuzzy';

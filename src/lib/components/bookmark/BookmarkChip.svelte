@@ -1,9 +1,9 @@
 <script lang="ts">
   import { afterNavigate } from '$app/navigation';
-  import { env } from '$env/dynamic/public';
-  import Popover from '$lib/components/base/popover/Popover.svelte';
-  import PopoverAction from '$lib/components/bookmark-chip/PopoverAction.svelte';
-  import type { BookmarkFromDb } from '$lib/type';
+  import { PUBLIC_ICON_SERVICE } from '$app/env/public';
+  import Popover from '#lib/components/base/popover/Popover.svelte';
+  import PopoverAction from '#lib/components/bookmark-chip/PopoverAction.svelte';
+  import type { BookmarkFromDb } from '#lib/type.js';
   import { untrack } from 'svelte';
 
   import BookmarkTagsPreview from './BookmarkTagsPreview.svelte';
@@ -123,7 +123,7 @@
   }
 
   function buildFavionUrl(bookmark: BookmarkFromDb) {
-    let template = env.PUBLIC_ICON_SERVICE || '/api/favicon/{}';
+    let template = PUBLIC_ICON_SERVICE || '/api/favicon/{}';
     return template.replace('{}', new URL(bookmark.url).hostname);
   }
   function buildFaviconFallback(bookmark: BookmarkFromDb) {

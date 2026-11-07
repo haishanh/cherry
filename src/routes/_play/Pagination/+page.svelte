@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Pagination from '$lib/components/pagination/Pagination.svelte';
+  import Pagination from '#lib/components/pagination/Pagination.svelte';
 </script>
 
 <main>

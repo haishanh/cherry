@@ -2,11 +2,11 @@
   import { formatDistance } from 'date-fns';
 
   import { invalidate } from '$app/navigation';
-  import Button from '$lib/components/base/Button.svelte';
-  import Chip from '$lib/components/base/Chip.svelte';
-  import { addToast } from '$lib/components/base/toast/store';
-  import { JobStatus } from '$lib/type';
-  import { request } from '$lib/utils/http.util';
+  import Button from '#lib/components/base/Button.svelte';
+  import Chip from '#lib/components/base/Chip.svelte';
+  import { addToast } from '#lib/components/base/toast/store.js';
+  import { JobStatus } from '#lib/type.js';
+  import { request } from '#lib/utils/http.util.js';
 
   import type { PageData } from './$types';
 

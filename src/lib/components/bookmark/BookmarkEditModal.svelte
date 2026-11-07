@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Modal from '$lib/components/base/Modal.svelte';
-  import BookmarkEditForm, { type Event0 } from '$lib/components/bookmark/BookmarkEditForm.svelte';
-  import type { BookmarkFromDb } from '$lib/type';
+  import Modal from '#lib/components/base/Modal.svelte';
+  import BookmarkEditForm, { type Event0 } from '#lib/components/bookmark/BookmarkEditForm.svelte';
+  import type { BookmarkFromDb } from '#lib/type.js';
 
   type Props = {
     onopen?: () => void;

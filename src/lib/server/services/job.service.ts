@@ -1,7 +1,7 @@
 import type { Database } from 'better-sqlite3';
 
-// import { DataError, DataErrorCode, lite } from '$lib/server/db/common.db';
-import type * as jobDb from '$lib/server/db/job.db';
+// import { DataError, DataErrorCode, lite } from '#lib/server/db/common.db.js';
+import type * as jobDb from '#lib/server/db/job.db.js';
 import {
   type InputAllJob,
   type InputCreateJob,
@@ -9,7 +9,7 @@ import {
   type InputUpdateJobOutput,
   type JobExportOutput,
   JobOperation,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import type { ExportService } from './export.service';
 

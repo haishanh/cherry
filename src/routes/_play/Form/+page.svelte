@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { commonRule, validate } from '$lib/client/form.util';
-  import Button from '$lib/components/base/Button.svelte';
-  import Field from '$lib/components/base/Field.svelte';
+  import { commonRule, validate } from '#lib/client/form.util.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import Field from '#lib/components/base/Field.svelte';
 
   const name = {
     f0: 'Email',

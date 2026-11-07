@@ -3,9 +3,9 @@ import { base64ToUint8Array, stringToUint8Array } from 'uint8array-extras';
 import { fileTypeFromBuffer } from 'file-type';
 import { createHash } from 'node:crypto';
 
-import { FAVICON_CACHE_MAX_AGE_FOUND, FAVICON_CACHE_MAX_AGE_MISS } from '$lib/env';
-import { ApiError, HttpStatus } from '$lib/server/api.error';
-import { wrap } from '$lib/server/handlers/wrap';
+import { FAVICON_CACHE_MAX_AGE_FOUND, FAVICON_CACHE_MAX_AGE_MISS } from '#lib/env.js';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
 
 import * as favicon from './favicon.util';
 

@@ -1,7 +1,7 @@
-import { PAGE_BOOKMARK_LIMIT } from '$lib/env';
-import * as bookmarkDb from '$lib/server/db/bookmark.db';
-import * as bookmarkDb2 from '$lib/server/db/bookmark2.db';
-import * as tagDb from '$lib/server/db/tag.db';
+import { PAGE_BOOKMARK_LIMIT } from '#lib/env.js';
+import * as bookmarkDb from '#lib/server/db/bookmark.db.js';
+import * as bookmarkDb2 from '#lib/server/db/bookmark2.db.js';
+import * as tagDb from '#lib/server/db/tag.db.js';
 import type {
   BookmarkFromDb,
   InputBatchUpsertBookmark,
@@ -15,7 +15,7 @@ import type {
   InputRestoreMultiBookmarks,
   InputStashMultiBookmarks,
   InputUpdateBookmark,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import { ApiError, HttpStatus } from '../api.error';
 import { DataError, DataErrorCode, lite } from '../db/common.db';

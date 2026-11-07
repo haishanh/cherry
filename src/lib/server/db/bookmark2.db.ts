@@ -4,8 +4,8 @@
 import assert from 'assert';
 import type Sqlite from 'better-sqlite3';
 
-import { PAGE_BOOKMARK_LIMIT } from '$lib/env';
-import type { InputFindBookmarksOfUser, InputGetRandomBookmarksOfUser } from '$lib/type';
+import { PAGE_BOOKMARK_LIMIT } from '#lib/env.js';
+import type { InputFindBookmarksOfUser, InputGetRandomBookmarksOfUser } from '#lib/type.js';
 
 import { Eq, Is, Lte, Match, OrderByDir, select_from } from './builder2';
 import { Column, Table } from './identifier';

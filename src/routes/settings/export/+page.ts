@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-import { JobOperation } from '$lib/type';
+import { JobOperation } from '#lib/type.js';
 
 import type { PageLoad } from './$types';
 

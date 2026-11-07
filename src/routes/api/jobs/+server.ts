@@ -1,11 +1,10 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
-import { ApiError, HttpStatus } from '$lib/server/api.error';
-import { ensureUser, requestBody } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { getExportService, getJobService } from '$lib/server/services/registry';
-import { JobOperation } from '$lib/type';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
+import { ensureUser, requestBody } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { getExportService, getJobService } from '#lib/server/services/registry.js';
+import { JobOperation } from '#lib/type.js';
 
 const ONE_DAY_SECONDS = 24 * 60 * 60;
 
@@ -50,7 +49,7 @@ export const POST: RequestHandler = async (event) => {
         },
       );
 
-    return json(job);
+    return Response.json(job);
   });
 };
 
@@ -66,6 +65,6 @@ export const GET: RequestHandler = async (event) => {
     const limit = isNaN(limit0) ? 10 : limit0;
     const jobSrv = getJobService();
     const jobs = jobSrv.all({ userId: user.userId, op, limit });
-    return json({ items: jobs });
+    return Response.json({ items: jobs });
   });
 };

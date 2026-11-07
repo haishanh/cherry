@@ -1,11 +1,11 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import assert from 'assert';
 
-import { dev } from '$app/environment';
-import { COOKIE_KEY_OAUTH_STATE, USE_INSECURE_COOKIE } from '$lib/env';
-import { logger } from '$lib/server/logger';
-import * as cookieUtil from '$lib/utils/cookie.util';
-import * as oidcUtil from '$lib/utils/oidc.util';
+import { dev } from '$app/env';
+import { COOKIE_KEY_OAUTH_STATE, USE_INSECURE_COOKIE } from '#lib/env.js';
+import { logger } from '#lib/server/logger.js';
+import * as cookieUtil from '#lib/utils/cookie.util.js';
+import * as oidcUtil from '#lib/utils/oidc.util.js';
 
 const ONE_DAY_IN_SECOND = 24 * 3600;
 export const GET: RequestHandler = async ({ params }) => {

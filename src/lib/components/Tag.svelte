@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { deleteTagClientSide } from '$lib/client/tag.store';
+  import { deleteTagClientSide } from '#lib/client/tag.store.js';
 
   type Props = {
     tag: { name: string; id: number; count?: number };
@@ -9,8 +9,8 @@
 
   let { tag, tagVariantTotal = 4, editModal }: Props = $props();
 
-  import type TagEditModal from '$lib/components/tag/TagEditModal.svelte';
-  import { request } from '$lib/utils/http.util';
+  import type TagEditModal from '#lib/components/tag/TagEditModal.svelte';
+  import { request } from '#lib/utils/http.util.js';
 
   import Popover from './base/popover/Popover.svelte';
   import { addToast } from './base/toast/store';

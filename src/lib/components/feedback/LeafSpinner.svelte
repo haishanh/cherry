@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CherryLeaf from '$lib/components/base/CherryLeaf.svelte';
+  import CherryLeaf from '#lib/components/base/CherryLeaf.svelte';
   let { size = 50 }: { size?: number } = $props();
 </script>
 

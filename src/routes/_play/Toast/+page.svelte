@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Button from '$lib/components/base/Button.svelte';
-  import { addToast, promiseToast } from '$lib/components/base/toast/store';
-  import ToastList from '$lib/components/base/toast/ToastList.svelte';
-  import { sleep } from '$lib/utils/common.util';
+  import Button from '#lib/components/base/Button.svelte';
+  import { addToast, promiseToast } from '#lib/components/base/toast/store.js';
+  import ToastList from '#lib/components/base/toast/ToastList.svelte';
+  import { sleep } from '#lib/utils/common.util.js';
 
   const noop = () => undefined;
 

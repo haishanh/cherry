@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Chip from '$lib/components/base/Chip.svelte';
+  import Chip from '#lib/components/base/Chip.svelte';
 </script>
 
 <main>

@@ -3,7 +3,7 @@
   import { fly } from 'svelte/transition';
   import { SvelteMap } from 'svelte/reactivity';
 
-  import Spinner from '$lib/components/feedback/Spinner.svelte';
+  import Spinner from '#lib/components/feedback/Spinner.svelte';
 
   import { removeToast, toasts } from './store';
   import type { ToastItem } from './type';

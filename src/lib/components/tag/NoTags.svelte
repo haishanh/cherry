@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import CherryLeaf from '$lib/components/base/CherryLeaf.svelte';
+  import CherryLeaf from '#lib/components/base/CherryLeaf.svelte';
 </script>
 
 <div class="root">

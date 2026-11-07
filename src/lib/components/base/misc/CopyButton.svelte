@@ -1,5 +1,5 @@
 <script lang="ts">
-  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import VisuallyHidden from '#lib/components/base/VisuallyHidden.svelte';
   import { CircleCheckBig, CopyIcon } from '@lucide/svelte';
 
   let state = $state('none');

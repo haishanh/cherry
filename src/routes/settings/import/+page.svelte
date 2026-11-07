@@ -1,13 +1,13 @@
 <script lang="ts">
-  import firefoxLogoUrl from '$lib/components/base/icons/firefox.svg';
-  import safariLogoUrl from '$lib/components/base/icons/safari.svg';
+  import firefoxLogoUrl from '#lib/components/base/icons/firefox.svg';
+  import safariLogoUrl from '#lib/components/base/icons/safari.svg';
 
-  import CsvFile from '$lib/components/base/icons/CsvFile.svelte';
-  import Pocket from '$lib/components/base/icons/Pocket.svelte';
-  import Chrome from '$lib/components/base/icons/Chrome.svelte';
-  import Tab from '$lib/components/base/tabs/Tab.svelte';
-  import TabPanel from '$lib/components/base/tabs/TabPanel.svelte';
-  import Tabs from '$lib/components/base/tabs/Tabs.svelte';
+  import CsvFile from '#lib/components/base/icons/CsvFile.svelte';
+  import Pocket from '#lib/components/base/icons/Pocket.svelte';
+  import Chrome from '#lib/components/base/icons/Chrome.svelte';
+  import Tab from '#lib/components/base/tabs/Tab.svelte';
+  import TabPanel from '#lib/components/base/tabs/TabPanel.svelte';
+  import Tabs from '#lib/components/base/tabs/Tabs.svelte';
 
   import ImportFromChrome from './ImportFromChrome.svelte';
   import ImportFromCsv from './ImportFromCsv.svelte';

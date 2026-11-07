@@ -1,7 +1,7 @@
 <script lang="ts">
-  import GroupAutocomplete from '$lib/components/autocomplte/GroupAutocomplete.svelte';
-  import type { TagType } from '$lib/type';
-  import { makeId } from '$lib/utils/common.util';
+  import GroupAutocomplete from '#lib/components/autocomplte/GroupAutocomplete.svelte';
+  import type { TagType } from '#lib/type.js';
+  import { makeId } from '#lib/utils/common.util.js';
 
   let id = '' + makeId();
 

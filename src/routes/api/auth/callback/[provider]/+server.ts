@@ -1,13 +1,13 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import assert from 'assert';
 
-import { COOKIE_KEY_OAUTH_STATE } from '$lib/env';
-import { signInUser } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { logger } from '$lib/server/logger';
-import { getUserService } from '$lib/server/services/registry';
-import * as cookieUtil from '$lib/utils/cookie.util';
-import * as oidcUtil from '$lib/utils/oidc.util';
+import { COOKIE_KEY_OAUTH_STATE } from '#lib/env.js';
+import { signInUser } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { logger } from '#lib/server/logger.js';
+import { getUserService } from '#lib/server/services/registry.js';
+import * as cookieUtil from '#lib/utils/cookie.util.js';
+import * as oidcUtil from '#lib/utils/oidc.util.js';
 
 export const GET: RequestHandler = async (event) => {
   return wrap(

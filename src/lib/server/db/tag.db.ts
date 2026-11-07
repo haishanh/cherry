@@ -1,6 +1,6 @@
 import Sqlite from 'better-sqlite3';
 
-import { logger } from '$lib/server/logger';
+import { logger } from '#lib/server/logger.js';
 import type {
   BookmarkFromDb,
   InputBatchGetTags,
@@ -13,7 +13,7 @@ import type {
   InputGetAllTags,
   InputUpdateTag,
   TagFromDb,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import { Eq, OrderByDir, select_from } from './builder2';
 import { DataError, DataErrorCode } from './common.db';

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Tab from '$lib/components/base/tabs/Tab.svelte';
-  import TabPanel from '$lib/components/base/tabs/TabPanel.svelte';
-  import Tabs from '$lib/components/base/tabs/Tabs.svelte';
+  import Tab from '#lib/components/base/tabs/Tab.svelte';
+  import TabPanel from '#lib/components/base/tabs/TabPanel.svelte';
+  import Tabs from '#lib/components/base/tabs/Tabs.svelte';
 </script>
 
 <main>

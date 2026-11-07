@@ -1,4 +1,4 @@
-import { lite } from '$lib/server/db/common.db';
+import { lite } from '#lib/server/db/common.db.js';
 
 export function deleteDangleBookmarkTag() {
   const db = lite();

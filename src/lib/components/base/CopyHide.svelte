@@ -1,7 +1,7 @@
 <script lang="ts">
   let { cnt }: { cnt: string } = $props();
 
-  import CopyButton from '$lib/components/base/misc/CopyButton.svelte';
+  import CopyButton from '#lib/components/base/misc/CopyButton.svelte';
 
   import EyeButton from './misc/EyeButton.svelte';
 

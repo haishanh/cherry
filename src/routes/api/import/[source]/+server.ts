@@ -1,15 +1,14 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
-import { ApiError, HttpStatus } from '$lib/server/api.error';
-import { ensureUser } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
-import { bookmark as bookmarkSvc } from '$lib/server/services/bookmark.service';
-import { bookmarkTagSvc } from '$lib/server/services/bookmarkTag.service';
-import { group as groupSvc } from '$lib/server/services/group.service';
-import { tag as tagSvc } from '$lib/server/services/tag.service';
-import { Parser as NetscapeBookmarkFile1Parser } from '$lib/utils/nbf1Parser.util';
-import { Parser as SimpleCsvParser } from '$lib/utils/SimpleCsvParser.util';
+import { ApiError, HttpStatus } from '#lib/server/api.error.js';
+import { ensureUser } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
+import { bookmark as bookmarkSvc } from '#lib/server/services/bookmark.service.js';
+import { bookmarkTagSvc } from '#lib/server/services/bookmarkTag.service.js';
+import { group as groupSvc } from '#lib/server/services/group.service.js';
+import { tag as tagSvc } from '#lib/server/services/tag.service.js';
+import { Parser as NetscapeBookmarkFile1Parser } from '#lib/utils/nbf1Parser.util.js';
+import { Parser as SimpleCsvParser } from '#lib/utils/SimpleCsvParser.util.js';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {
@@ -22,14 +21,14 @@ export const POST: RequestHandler = async (event) => {
         const cnt = await event.request.text();
         const count = doImport({ html: cnt, userId: user.userId });
         console.log('The import took', Date.now() - t0);
-        return json({ count });
+        return Response.json({ count });
       }
       case 'csv': {
         // expect a csv file as described in https://help.raindrop.io/import/#csv
         const cnt = await event.request.text();
         const count = doImportCsv({ cnt, userId: user.userId });
         console.log('The import took', Date.now() - t0);
-        return json({ count });
+        return Response.json({ count });
       }
       default:
         throw new ApiError(HttpStatus.BAD_REQUEST, undefined, 'Unexpected bookmark source');

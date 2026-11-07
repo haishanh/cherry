@@ -1,20 +1,20 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  import { fetchGroups } from '$lib/client/group.store';
-  import { fetchTags } from '$lib/client/tag.store';
-  import { addToast } from '$lib/components/base/toast/store';
-  import { Event0Type as BEFEvent0Type, type Event0 } from '$lib/components/bookmark/BookmarkEditForm.svelte';
-  import BookmarkEditModal from '$lib/components/bookmark/BookmarkEditModal.svelte';
-  import BookmarkList from '$lib/components/bookmark/BookmarkList.svelte';
+  import { fetchGroups } from '#lib/client/group.store.js';
+  import { fetchTags } from '#lib/client/tag.store.js';
+  import { addToast } from '#lib/components/base/toast/store.js';
+  import { Event0Type as BEFEvent0Type, type Event0 } from '#lib/components/bookmark/BookmarkEditForm.svelte';
+  import BookmarkEditModal from '#lib/components/bookmark/BookmarkEditModal.svelte';
+  import BookmarkList from '#lib/components/bookmark/BookmarkList.svelte';
   import BookmarkToolbar, {
     EVENT_TYPE as TOOLBAR_EVENT_TYPE,
     type EventType as ToolbarEventType,
-  } from '$lib/components/bookmark/BookmarkToolbar.svelte';
-  import GroupSideBar from '$lib/components/home/GroupSideBar.svelte';
-  import SearchForm from '$lib/components/SearchForm.svelte';
-  import type { BookmarkFromDb, PageMetaBookmarks } from '$lib/type';
-  import { RequestError } from '$lib/utils/http.util';
+  } from '#lib/components/bookmark/BookmarkToolbar.svelte';
+  import GroupSideBar from '#lib/components/home/GroupSideBar.svelte';
+  import SearchForm from '#lib/components/SearchForm.svelte';
+  import type { BookmarkFromDb, PageMetaBookmarks } from '#lib/type.js';
+  import { RequestError } from '#lib/utils/http.util.js';
 
   import Empty from './home/Empty.svelte';
   import Pagination from './pagination/Pagination.svelte';

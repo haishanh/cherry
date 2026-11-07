@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ChevronDown, Command, CloudDownload, Info, Settings, CloudUpload, User } from '@lucide/svelte';
   import { afterNavigate } from '$app/navigation';
-  import type { UserMe } from '$lib/type';
+  import type { UserMe } from '#lib/type.js';
 
   type Props = {
     pathname: string;
@@ -10,7 +10,9 @@
 
   let { pathname, user }: Props = $props();
 
-  afterNavigate(() => {
+  afterNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
+
     pathname = location.pathname;
   });
 
@@ -27,10 +29,34 @@
   const trueFn = () => true;
 
   const links = [
-    { href: '/settings/account', Comp0nent: User, label: 'Account', display: trueFn },
-    { href: '/settings/settings', Comp0nent: Settings, label: 'Settings', display: trueFn },
-    { href: '/settings/import', Comp0nent: CloudUpload, label: 'Import', display: trueFn },
-    { href: '/settings/export', Comp0nent: CloudDownload, label: 'Export', display: trueFn },
+    {
+      href: '/settings/account',
+      Comp0nent: User,
+      label: 'Account',
+      display: trueFn,
+    },
+
+    {
+      href: '/settings/settings',
+      Comp0nent: Settings,
+      label: 'Settings',
+      display: trueFn,
+    },
+
+    {
+      href: '/settings/import',
+      Comp0nent: CloudUpload,
+      label: 'Import',
+      display: trueFn,
+    },
+
+    {
+      href: '/settings/export',
+      Comp0nent: CloudDownload,
+      label: 'Export',
+      display: trueFn,
+    },
+
     {
       href: '/settings/admin',
       Comp0nent: Command,
@@ -68,9 +94,7 @@
         {/if}
       </li>
     {:else}
-      <li class:active={href === pathname}>
-        <a class="link" {href}><Comp0nent size={16} /><span>{label}</span></a>
-      </li>
+      <li class:active={href === pathname}><a class="link" {href}><Comp0nent size={16} /><span>{label}</span></a></li>
     {/if}
   {/each}
 </ul>

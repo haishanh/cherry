@@ -1,20 +1,20 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit/hooks';
 
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 import {
   COOKIE_KEY_TOKEN,
   ENABLE_HTTP_REMOTE_USER,
   HTTP_REMOTE_USER_HEADER_NAME,
   JWT_SECRET,
   USE_INSECURE_COOKIE,
-} from '$lib/env';
-import { HttpStatus } from '$lib/server/api.error';
-import { logger } from '$lib/server/logger';
-import { genPat } from '$lib/server/session';
-import { getUserService } from '$lib/server/services/user.registry';
-import { isPublic } from '$lib/utils/access.util';
-import * as cookieUtil from '$lib/utils/cookie.util';
-import * as jwtUtil from '$lib/utils/jwt.util';
+} from '#lib/env.js';
+import { HttpStatus } from '#lib/server/api.error.js';
+import { logger } from '#lib/server/logger.js';
+import { genPat } from '#lib/server/session.js';
+import { getUserService } from '#lib/server/services/user.registry.js';
+import { isPublic } from '#lib/utils/access.util.js';
+import * as cookieUtil from '#lib/utils/cookie.util.js';
+import * as jwtUtil from '#lib/utils/jwt.util.js';
 
 type JwtClaim = {
   userId: number;

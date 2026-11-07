@@ -9,15 +9,16 @@
   import inter800 from '@fontsource/inter/files/inter-latin-800-normal.woff2';
 
   import { afterNavigate, beforeNavigate } from '$app/navigation';
-  import ToastList from '$lib/components/base/toast/ToastList.svelte';
-  import Header from '$lib/components/feature/Header.svelte';
-  import LeafSpinner from '$lib/components/feedback/LeafSpinner.svelte';
+  import ToastList from '#lib/components/base/toast/ToastList.svelte';
+  import Header from '#lib/components/feature/Header.svelte';
+  import LeafSpinner from '#lib/components/feedback/LeafSpinner.svelte';
 
   let { children } = $props();
 
   let isLoading = $state(false);
   let deferShowLoadingTimeout: ReturnType<typeof setTimeout>;
   beforeNavigate((navigation) => {
+    if (navigation.shallow && navigation.type === 'goto') return;
     if (navigation.to?.url.pathname.startsWith('/api/downloads/')) return;
     if (deferShowLoadingTimeout) {
       clearTimeout(deferShowLoadingTimeout);
@@ -26,7 +27,10 @@
       isLoading = true;
     }, 200);
   });
-  afterNavigate(() => {
+
+  afterNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
+
     if (deferShowLoadingTimeout) {
       clearTimeout(deferShowLoadingTimeout);
     }

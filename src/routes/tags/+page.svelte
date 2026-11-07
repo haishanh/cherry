@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  import { tagList } from '$lib/client/tag.store';
-  import Tag from '$lib/components/Tag.svelte';
-  import NoTags from '$lib/components/tag/NoTags.svelte';
-  import TagEditModal from '$lib/components/tag/TagEditModal.svelte';
-  import type { TagFromDb } from '$lib/type';
+  import { tagList } from '#lib/client/tag.store.js';
+  import Tag from '#lib/components/Tag.svelte';
+  import NoTags from '#lib/components/tag/NoTags.svelte';
+  import TagEditModal from '#lib/components/tag/TagEditModal.svelte';
+  import type { TagFromDb } from '#lib/type.js';
 
   import type { PageData } from './$types';
 

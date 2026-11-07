@@ -1,5 +1,4 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
 
 import { ApiError } from '../api.error';
 import { logger } from '../logger';
@@ -12,12 +11,12 @@ export async function wrap(event: Event, fn: (e: Event) => any, fallbackHandler?
     let r = t;
     if (t.then && typeof t.then === 'function') r = await t;
     if (r instanceof Response) return r;
-    if (r && typeof r === 'object') return json(r);
+    if (r && typeof r === 'object') return Response.json(r);
     // With blow line we'll need to deliberately return a Response for status-204 case
     throw new Error('wrap fn not called properly');
   } catch (x) {
     if (x instanceof Response) return x;
-    if (x instanceof ApiError) return json(x.toJSON(), { status: x.status });
+    if (x instanceof ApiError) return Response.json(x.toJSON(), { status: x.status });
     // TODO more context
     logger.error({ error: x }, 'unhandled error');
     if (fallbackHandler) {

@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { COOKIE_KEY_TOKEN } from '$lib/env';
+import { COOKIE_KEY_TOKEN } from '#lib/env.js';
 
 export const GET: RequestHandler = async () => {
   const headers = new Headers();

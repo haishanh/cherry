@@ -2,8 +2,8 @@
   import { tick } from 'svelte';
 
   import { beforeNavigate } from '$app/navigation';
-  import { groupListLoaded, groupListSorted } from '$lib/client/group.store';
-  import Modal, { EVENT_TYPE, type EventType as ModalEventType } from '$lib/components/base/Modal.svelte';
+  import { groupListLoaded, groupListSorted } from '#lib/client/group.store.js';
+  import Modal, { EVENT_TYPE, type EventType as ModalEventType } from '#lib/components/base/Modal.svelte';
 
   import Button from '../base/Button.svelte';
   import CherryLeaf from '../base/CherryLeaf.svelte';
@@ -28,7 +28,9 @@
     filterText = '';
   }
 
-  beforeNavigate(() => {
+  beforeNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
+
     close();
   });
 

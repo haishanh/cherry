@@ -2,8 +2,8 @@
   import { SearchIcon } from '@lucide/svelte';
   import invariant from 'tiny-invariant';
 
-  import ForwardSlash from '$lib/components/base/icons/ForwardSlash.svelte';
-  import type { NewTagType, TagType } from '$lib/type';
+  import ForwardSlash from '#lib/components/base/icons/ForwardSlash.svelte';
+  import type { NewTagType, TagType } from '#lib/type.js';
 
   import Button from '../base/Button.svelte';
   import VisuallyHidden from '../base/VisuallyHidden.svelte';

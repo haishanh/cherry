@@ -10,9 +10,9 @@
   import type { Snippet } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
-  import Button from '$lib/components/base/Button.svelte';
-  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
-  import { decModalZi, incModalZi } from '$lib/utils/common.util';
+  import Button from '#lib/components/base/Button.svelte';
+  import VisuallyHidden from '#lib/components/base/VisuallyHidden.svelte';
+  import { decModalZi, incModalZi } from '#lib/utils/common.util.js';
 
   import Portal from './misc/Portal.svelte';
   import { XIcon } from '@lucide/svelte';

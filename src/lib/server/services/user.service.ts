@@ -1,14 +1,14 @@
 import type { Database } from 'better-sqlite3';
 
-import * as userDb from '$lib/server/db/user.db';
+import * as userDb from '#lib/server/db/user.db.js';
 import type {
   InputChangePassword,
   InputCheckPassword,
   InputCreateUser,
   UserFromDb,
   UserFromDbHydrated,
-} from '$lib/type';
-import * as passwordUtil from '$lib/utils/password.util';
+} from '#lib/type.js';
+import * as passwordUtil from '#lib/utils/password.util.js';
 
 import { ApiError, ApiErrorCode, HttpStatus } from '../api.error';
 import { isConflict } from '../db/common.db';

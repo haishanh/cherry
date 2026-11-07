@@ -6,7 +6,7 @@
   function onSubmit(e: SubmitEvent) {
     e.preventDefault();
     const text = (searchText || '').trim();
-    const url = `/search?q=${encodeURIComponent(text)}`;
+    const url = `/?q=${encodeURIComponent(text)}`;
     goto(url);
   }
 </script>

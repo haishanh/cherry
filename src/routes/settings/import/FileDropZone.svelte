@@ -1,10 +1,10 @@
 <script lang="ts">
   import { CircleArrowUp, Inbox } from '@lucide/svelte';
   // import Dropzone from 'svelte-file-dropzone';
-  import Dropzone from '$lib/components/file-dropzone/Dropzone.svelte';
+  import Dropzone from '#lib/components/file-dropzone/Dropzone.svelte';
 
-  import Button from '$lib/components/base/Button.svelte';
-  import Spinner from '$lib/components/feedback/Spinner.svelte';
+  import Button from '#lib/components/base/Button.svelte';
+  import Spinner from '#lib/components/feedback/Spinner.svelte';
 
   import type { DropzoneFiles } from './import.shared';
 

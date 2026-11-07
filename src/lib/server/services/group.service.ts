@@ -1,11 +1,11 @@
-import * as groupDb from '$lib/server/db/group.db';
+import * as groupDb from '#lib/server/db/group.db.js';
 import type {
   InputBatchUpsertGroup,
   InputCreateGroup,
   InputDeleteGroup,
   InputGetAllGroups,
   InputUpdateGroup,
-} from '$lib/type';
+} from '#lib/type.js';
 
 import { ApiError, HttpStatus } from '../api.error';
 import { isConflict, lite } from '../db/common.db';

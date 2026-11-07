@@ -1,6 +1,6 @@
 import type Sqlite from 'better-sqlite3';
 
-import { lite } from '$lib/server/db/common.db';
+import { lite } from '#lib/server/db/common.db.js';
 
 type CodeException = { code: string };
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import ButtonishLink from '$lib/components/base/ButtonishLink.svelte';
-  import UserSignForm from '$lib/components/feature/UserSignForm.svelte';
+  import ButtonishLink from '#lib/components/base/ButtonishLink.svelte';
+  import UserSignForm from '#lib/components/feature/UserSignForm.svelte';
 
   import type { PageData } from './$types';
 
@@ -28,9 +28,7 @@
 {/if}
 
 {#if data.registration}
-  <section class="signup">
-    <a href={resolve('/signup')}>Sign up now</a>
-  </section>
+  <section class="signup"><a href={resolve('signup')}>Sign up now</a></section>
 {/if}
 
 <style>

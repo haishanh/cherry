@@ -1,6 +1,6 @@
 <script>
   import { Inbox } from '@lucide/svelte';
-  import Dropzone from '$lib/components/file-dropzone/Dropzone.svelte';
+  import Dropzone from '#lib/components/file-dropzone/Dropzone.svelte';
 
   let files = $state({ accepted: [], rejected: [] });
 

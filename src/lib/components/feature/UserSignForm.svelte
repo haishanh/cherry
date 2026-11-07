@@ -6,10 +6,10 @@
   let { kind }: Props = $props();
 
   import { goto } from '$app/navigation';
-  import { commonRule, validate } from '$lib/client/form.util';
-  import Button from '$lib/components/base/Button.svelte';
-  import Field from '$lib/components/base/Field.svelte';
-  import { request, RequestError } from '$lib/utils/http.util';
+  import { commonRule, validate } from '#lib/client/form.util.js';
+  import Button from '#lib/components/base/Button.svelte';
+  import Field from '#lib/components/base/Field.svelte';
+  import { request, RequestError } from '#lib/utils/http.util.js';
   import type { FormEventHandler } from 'svelte/elements';
 
   async function join(opts: { username: string; password: string }) {

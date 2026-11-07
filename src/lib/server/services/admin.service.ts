@@ -5,12 +5,12 @@ import type { Database } from 'better-sqlite3';
 import { format } from 'date-fns';
 import * as tar from 'tar/create';
 import { Duplex } from 'node:stream';
-import { BACKUP_S3_BUCKET, BACKUP_S3_PREFIX, DATA_DIR } from '$lib/env';
-import * as bookmarkDb from '$lib/server/db/bookmark.db';
-import * as groupDb from '$lib/server/db/group.db';
-import * as tagDb from '$lib/server/db/tag.db';
-import * as userDb from '$lib/server/db/user.db';
-import type { InputAdminDeleteUser } from '$lib/type';
+import { BACKUP_S3_BUCKET, BACKUP_S3_PREFIX, DATA_DIR } from '#lib/env.js';
+import * as bookmarkDb from '#lib/server/db/bookmark.db.js';
+import * as groupDb from '#lib/server/db/group.db.js';
+import * as tagDb from '#lib/server/db/tag.db.js';
+import * as userDb from '#lib/server/db/user.db.js';
+import type { InputAdminDeleteUser } from '#lib/type.js';
 
 import { ApiError } from '../api.error';
 import { logger } from '../logger';

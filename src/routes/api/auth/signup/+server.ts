@@ -1,8 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { ENABLE_PUBLIC_REGISTRATION } from '$lib/env';
-import { createUser, requestBody } from '$lib/server/handlers/helper';
-import { wrap } from '$lib/server/handlers/wrap';
+import { ENABLE_PUBLIC_REGISTRATION } from '#lib/env.js';
+import { createUser, requestBody } from '#lib/server/handlers/helper.js';
+import { wrap } from '#lib/server/handlers/wrap.js';
 
 export const POST: RequestHandler = async (event) => {
   return wrap(event, async (event) => {

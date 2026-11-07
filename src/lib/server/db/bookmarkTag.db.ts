@@ -1,6 +1,6 @@
 import type Sqlite from 'better-sqlite3';
 
-import type { InputBatchUpsertBookmarkTag } from '$lib/type';
+import type { InputBatchUpsertBookmarkTag } from '#lib/type.js';
 
 import { BookmarkTagQueryInsertV0 } from './querystring';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { tagMapById } from '$lib/client/tag.store';
-  import type { TagType } from '$lib/type';
+  import { tagMapById } from '#lib/client/tag.store.js';
+  import type { TagType } from '#lib/type.js';
 
   import SimpleTag from './SimpleTag.svelte';
 

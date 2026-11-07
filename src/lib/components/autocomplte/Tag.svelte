@@ -1,7 +1,7 @@
 <script lang="ts">
   import { XIcon as CloseIcon } from '@lucide/svelte';
 
-  import VisuallyHidden from '$lib/components/base/VisuallyHidden.svelte';
+  import VisuallyHidden from '#lib/components/base/VisuallyHidden.svelte';
 
   interface Props {
     color?: keyof typeof colorMap;

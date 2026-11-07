@@ -5,8 +5,8 @@ import type { Response as UndiciResponse } from 'undici';
 import { fileTypeFromBuffer } from 'file-type';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
-import { HTTP_PROXY } from '$lib/env';
-import { logger } from '$lib/server/logger';
+import { HTTP_PROXY } from '#lib/env.js';
+import { logger } from '#lib/server/logger.js';
 
 import * as datauriUtil from './datauri.util';
 
