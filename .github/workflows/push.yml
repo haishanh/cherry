@@ -1,5 +1,5 @@
 name: Deploy workflow
-on: [push]
+on: [push, pull_request]
 concurrency:
   group: push-${{ github.ref }}
   cancel-in-progress: true
@@ -22,17 +22,31 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - run: pnpm i
+      - run: pnpm i --frozen-lockfile
       - run: pnpm lint
       - run: pnpm sync
       - run: pnpm check
       - run: pnpm fetch:signal-tokenizer
-      - run: pnpm test
+      - run: pnpm test --run
       - run: pnpm build
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Browser tests
+        run: pnpm exec playwright test
+      - name: Upload browser test failure artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: browser-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: Send Notification
         uses: haishanh/actions-telegram-notification@aff3b256bb3442512e91f888532ab6f2857c06ef
-        if: ${{ always() }}
+        if: ${{ always() && github.event_name == 'push' }}
         with:
           notification-token: ${{ secrets.TG_NOTIFICATION_TOKEN }}
           job-status: ${{ job.status }}

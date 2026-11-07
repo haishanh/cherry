@@ -9,6 +9,8 @@ build
 db
 docs
 node_modules
+playwright-report
+test-results
 tmp
 *.sqlite
 *.sqlite-shm

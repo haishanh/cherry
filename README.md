@@ -1,5 +1,14 @@
 <img src="https://user-images.githubusercontent.com/1166872/193450149-240171cb-8699-4cdb-a4df-7a63f742d986.png" width="80" height="80" alt="Cherry Logo" />
 
+## Testing
+
+```bash
+pnpm test --run # Unit and HTTP integration tests
+pnpm test:e2e   # Production-build browser tests
+```
+
+See [the testing guide](docs/testing.md) for browser setup, isolation, debugging, and CI.
+
 ## Development
 
 ```bash

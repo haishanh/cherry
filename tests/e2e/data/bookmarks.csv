@@ -1,0 +1,6 @@
+created,folder,tags,url,title,description
+1704067200,Reading,"rust,tools",https://import-e2e.example.test/first,"A ""quoted"", title","A multiline
+description"
+,Reading,tools,https://import-e2e.example.test/second,第二书签,
+,Unused,ignored,https://import-e2e.example.test/first,Duplicate,Ignored
+,Unused,unsafe,javascript:alert(1),Unsafe,Must not be saved

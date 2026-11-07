@@ -5,6 +5,8 @@ node_modules
 /package
 .vercel_build_output/
 .eslintcache
+/playwright-report/
+/test-results/
 .env
 .env.*
 !.env.example
