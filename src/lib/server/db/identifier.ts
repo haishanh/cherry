@@ -4,7 +4,7 @@ export const Table = {
   Tag: { name: 'tag' },
   User: { name: 'user' },
   BookmarkTag: { name: 'bookmark_tag' },
-  BookmarkFts: { name: 'bookmark_fts' },
+  BookmarkFts: { name: 'bookmark_fts_v3' },
   BookmarkStash: { name: 'bookmark_stash' },
   Job: { name: 'job' },
 } as const;
@@ -41,7 +41,7 @@ export const Column = {
     RowId: bookmark_fts_column('rowid'),
     Rank: bookmark_fts_column('rank'),
     // fts field name is the name of the table
-    Fts: { name: 'bookmark_fts' },
+    Fts: { name: 'bookmark_fts_v3' },
   },
   BookmarkTag: {
     BookmarkId: bookmark_tag_column('bookmarkId'),

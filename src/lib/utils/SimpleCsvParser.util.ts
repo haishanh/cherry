@@ -1,99 +1,68 @@
-// Simple naïve CSV parser (don't use in other projects)
-
 const CR = '\r';
 const NL = '\n';
 
 export type VisitorFn = (input: string[]) => unknown;
+export class ParserError extends Error {}
 
-// export class ParserError extends Error {}
-
+// CSV records support escaped quotes, embedded newlines, and empty trailing cells.
 export class Parser {
-  private len: number;
-  private input: string;
-  private idx: number;
-  private visitor: VisitorFn;
-
-  constructor(input: string, visitor: VisitorFn) {
-    this.len = input.length;
-    this.input = input;
-    this.idx = 0;
-    this.visitor = visitor;
-  }
-
-  isNewLine() {
-    return this.input[this.idx] === NL || (this.input[this.idx] === CR && this.input[this.idx + 1] === NL);
-  }
-
-  eatNewLine() {
-    if (this.input[this.idx] === NL) {
-      this.idx++;
-      return true;
-    }
-    if (this.input[this.idx] === CR && this.input[this.idx + 1] === NL) {
-      this.idx = this.idx + 2;
-      return true;
-    }
-  }
-
-  eatComma() {
-    if (this.input[this.idx] === ',') {
-      this.idx++;
-      return true;
-    }
-  }
-
-  // idx should point at the open '"'
-  parseString(): string {
-    // skip open '"'
-    const start = ++this.idx;
-    for (; this.idx < this.len; this.idx++) {
-      if (this.input[this.idx] === '"') {
-        return this.input.substring(start, this.idx++);
-      }
-    }
-    return this.input.substring(start, this.len);
-  }
-
-  parseCell(): string {
-    const start = this.idx;
-    for (; this.idx < this.len; this.idx++) {
-      if (this.input[this.idx] === ',' || this.isNewLine()) {
-        return this.input.substring(start, this.idx);
-      }
-    }
-    return this.input.substring(start, this.len);
-  }
-
-  skipSpaces() {
-    for (; this.idx < this.len; this.idx++) {
-      if (this.input[this.idx] !== ' ') {
-        break;
-      }
-    }
-  }
-
-  parseHeader() {
-    const header: string[] = [];
-    for (; this.idx < this.len;) {
-      const c = this.input[this.idx];
-      if (c === '"') {
-        header.push(this.parseString());
-        this.skipSpaces();
-        this.eatComma();
-      } else if (this.eatNewLine()) {
-        break;
-      } else {
-        header.push(this.parseCell());
-        this.eatComma();
-      }
-    }
-
-    if (header.length !== 0) this.visitor(header);
-  }
+  constructor(
+    private input: string,
+    private visitor: VisitorFn,
+    private maxColumns = Infinity,
+  ) {}
 
   parse() {
-    for (; this.idx < this.len;) {
-      this.parseHeader();
+    let row: string[] = [];
+    let cell = '';
+    let quoted = false;
+    let closedQuote = false;
+    let hasContent = false;
+
+    const finishCell = () => {
+      if (row.length >= this.maxColumns) throw new ParserError(`Too many columns (maximum ${this.maxColumns})`);
+      row.push(cell);
+      cell = '';
+      closedQuote = false;
+    };
+    const finishRow = () => {
+      finishCell();
+      if (hasContent) this.visitor(row);
+      row = [];
+      hasContent = false;
+    };
+
+    for (let i = 0; i < this.input.length; i++) {
+      const c = this.input[i];
+      if (quoted) {
+        if (c !== '"') {
+          cell += c;
+        } else if (this.input[i + 1] === '"') {
+          cell += '"';
+          i++;
+        } else {
+          quoted = false;
+          closedQuote = true;
+        }
+        continue;
+      }
+      if (c === ',') {
+        hasContent = true;
+        finishCell();
+      } else if (c === NL || c === CR) {
+        finishRow();
+        if (c === CR && this.input[i + 1] === NL) i++;
+      } else if (closedQuote) {
+        if (c !== ' ' && c !== '\t') throw new ParserError('Unexpected text after a closing quote');
+      } else if (c === '"' && cell === '') {
+        quoted = true;
+        hasContent = true;
+      } else {
+        cell += c;
+        if (c.trim()) hasContent = true;
+      }
     }
+    if (quoted) throw new ParserError('Unclosed quoted field');
+    if (hasContent) finishRow();
   }
 }

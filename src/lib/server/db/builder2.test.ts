@@ -55,7 +55,7 @@ describe('SelectFrom', () => {
       .join(Bookmark.Id, Column.BookmarkFts.RowId)
       .build();
     const expected =
-      'SELECT t0.id,t0.url,t0.title FROM bookmark t0 JOIN bookmark_tag t1 ON t0.id = t1.bookmarkId JOIN bookmark_fts t2 ON t0.id = t2.rowid WHERE t0.id = ? AND bookmark_fts = ? ORDER BY t0.id DESC';
+      'SELECT t0.id,t0.url,t0.title FROM bookmark t0 JOIN bookmark_tag t1 ON t0.id = t1.bookmarkId JOIN bookmark_fts_v3 t2 ON t0.id = t2.rowid WHERE t0.id = ? AND bookmark_fts_v3 = ? ORDER BY t0.id DESC';
     expect(ret.source).toEqual(expected);
     expect(ret.params).toEqual([3, 'hello world']);
   });

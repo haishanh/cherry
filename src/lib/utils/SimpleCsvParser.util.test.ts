@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 
-import { Parser as SimpleCsvParser } from './SimpleCsvParser.util';
+import { Parser as SimpleCsvParser, ParserError } from './SimpleCsvParser.util';
 
 test('basic', () => {
   const input = `folder,url,  title  ,description,tags,created
@@ -36,4 +36,19 @@ Folder/Nested folder   ,    http://yahoo.com,Yahoo,   Another search engine,"sea
     ],
   ];
   expect(rows).toEqual(expected);
+});
+
+test('escaped quotes, empty trailing cells, and CR-only records', () => {
+  const rows: string[][] = [];
+  new SimpleCsvParser('a,b,c\r"He said ""hello""",,\r', (row) => rows.push(row)).parse();
+  expect(rows).toEqual([
+    ['a', 'b', 'c'],
+    ['He said "hello"', '', ''],
+  ]);
+});
+
+test('rejects malformed quotes and optionally limits columns', () => {
+  expect(() => new SimpleCsvParser('"unclosed', () => {}).parse()).toThrow(ParserError);
+  expect(() => new SimpleCsvParser('"closed"oops', () => {}).parse()).toThrow(ParserError);
+  expect(() => new SimpleCsvParser('a,b,c', () => {}, 2).parse()).toThrow(ParserError);
 });

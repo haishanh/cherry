@@ -3,6 +3,7 @@
   // import Dropzone from 'svelte-file-dropzone';
   import Dropzone from '#lib/components/file-dropzone/Dropzone.svelte';
 
+  import { IMPORT_MAX_BYTES } from '#lib/import.js';
   import Button from '#lib/components/base/Button.svelte';
   import Spinner from '#lib/components/feedback/Spinner.svelte';
 
@@ -12,9 +13,11 @@
     startImport: (files: DropzoneFiles) => unknown;
     loading: boolean;
     accept: string | string[];
+    onselect?: () => void;
+    buttonLabel?: string;
   };
 
-  let { startImport, loading, accept }: Props = $props();
+  let { startImport, loading, accept, onselect, buttonLabel = 'Import' }: Props = $props();
 
   const filesInitial: DropzoneFiles = { accepted: [], rejected: [] };
   let files = $state(filesInitial);
@@ -28,6 +31,7 @@
 
     files.accepted = [...acceptedFiles];
     files.rejected = [...fileRejections];
+    onselect?.();
   }
 
   let dragenter = $state(false);
@@ -45,6 +49,8 @@
   <Dropzone
     containerClasses="dzone {dragenter ? 'dragenter' : ''}"
     multiple={false}
+    disabled={loading}
+    maxSize={IMPORT_MAX_BYTES}
     {accept}
     disableDefaultStyles
     ondrop={handleFilesSelect}
@@ -56,7 +62,7 @@
     <p>Click or drag your file here</p>
     {#if files.accepted[0]}
       <p class="note">File: {files.accepted[0].name}</p>
-      <p>Click button below to import</p>
+      <p>Click the button below to preview</p>
     {:else if files.rejected[0]}
       {@const err = files.rejected[0].errors?.[0]?.message ?? 'Invalid file'}
       <p class="note rejected-file">Error: {err}</p>
@@ -72,7 +78,7 @@
     {/snippet}
 
     <Button disabled={loading || !files.accepted[0]} onclick={handleClickImport} {icon}>
-      <span>Import</span>
+      <span>{buttonLabel}</span>
     </Button>
   </div>
 </div>

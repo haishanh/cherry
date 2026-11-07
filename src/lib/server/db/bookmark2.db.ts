@@ -9,6 +9,7 @@ import type { InputFindBookmarksOfUser, InputGetRandomBookmarksOfUser } from '#l
 
 import { Eq, Is, Lte, Match, OrderByDir, select_from } from './builder2';
 import { Column, Table } from './identifier';
+import { toFtsQuery } from './search';
 
 function paramKey() {
   let i = 0;
@@ -82,7 +83,7 @@ export function getBookmarks(db: Sqlite.Database, input: InputFindBookmarksOfUse
   if (text) {
     builder
       .join(Bookmark.Id, Column.BookmarkFts.RowId)
-      .where(Match(Column.BookmarkFts.Fts, text))
+      .where(Match(Column.BookmarkFts.Fts, toFtsQuery(text)))
       .orderBy(Column.BookmarkFts.Rank);
   } else {
     builder.orderBy(Bookmark.UpdatedAt, OrderByDir.Descending).orderBy(Bookmark.Id, OrderByDir.Descending);

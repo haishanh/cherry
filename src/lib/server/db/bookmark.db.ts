@@ -29,6 +29,7 @@ import { DataError, DataErrorCode, isConflict } from './common.db';
 import { Column, Table } from './identifier';
 import { BookmarkTagQueryDeleteV0 } from './querystring';
 import * as tagDb from './tag.db';
+import { toFtsQuery } from './search';
 
 const BOOKMARK_PROPS0 = 'id,title,desc,url,groupId,updatedAt,createdAt';
 const BOOKMARK_PROPS1 = 'b.id,b.title,b.desc,b.url,b.groupId,b.updatedAt,b.createdAt';
@@ -73,7 +74,7 @@ export function getBookmarks(
     join.push('bookmark_fts_v3 on (bookmark_fts_v3.rowid = b.id)');
     where.push('bookmark_fts_v3 match ?');
 
-    params.push(text);
+    params.push(toFtsQuery(text));
 
     tokens.orderBy = 'bookmark_fts_v3.rank';
   } else {
